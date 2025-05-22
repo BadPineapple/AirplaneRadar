@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Bolha Radar</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
+    <link rel="stylesheet" href="css/Bubble_Style.css">
+  </head>
+  <body>
+    <div id="bubble" title="Mostrar Radar">
+      <i class="fa-solid fa-plane-up"></i>
+    </div>
+    <script>
+      const { ipcRenderer } = require("electron");
+      let dragging = false,
+        offsetX = 0,
+        offsetY = 0;
+
+      const bubble = document.getElementById("bubble");
+
+      // Arrastar a bolha pela tela
+      bubble.addEventListener("mousedown", (e) => {
+        dragging = true;
+        offsetX = e.clientX;
+        offsetY = e.clientY;
+        document.body.style.cursor = "grabbing";
+      });
+      document.addEventListener("mouseup", (e) => {
+        dragging = false;
+        document.body.style.cursor = "";
+      });
+      document.addEventListener("mousemove", (e) => {
+        if (!dragging) return;
+        // Pega a posição da janela atual e move conforme o mouse
+        const { screenX, screenY } = window;
+        let nx = screenX + (e.clientX - offsetX);
+        let ny = screenY + (e.clientY - offsetY);
+        ipcRenderer.send("move-bubble", { x: nx, y: ny });
+      });
+
+      // Clicar na bolha restaura o widget
+      bubble.addEventListener("click", (e) => {
+        if (!dragging) {
+          ipcRenderer.send("restore-from-bubble");
+        }
+      });
+    </script>
+  </body>
+</html>
