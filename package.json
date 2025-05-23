@@ -1,6 +1,6 @@
 {
   "name": "airplane-radar-widget",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Radar de aviões em tempo real com Electron e OpenSky.",
   "main": "src/js/Main.js",
   "author": "Renato Montenegro de Oliveira",
@@ -25,17 +25,23 @@
       {
         "from": "assets/sound/",
         "to": "sound",
-        "filter": ["**/*"]
+        "filter": [
+          "**/*"
+        ]
       }
     ],
     "win": {
       "target": "nsis",
       "icon": "assets/img/icon.png"
+    },
+    "nsis": {
+      "include": "build/installer.nsh"
     }
   },
   "dependencies": {
     "@electron/remote": "^2.1.2",
     "auto-launch": "^5.0.5",
+    "dotenv": "^16.5.0",
     "node-fetch": "^2.6.7"
   },
   "devDependencies": {

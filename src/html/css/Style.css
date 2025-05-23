@@ -5,17 +5,22 @@ body {
   background: rgba(30, 30, 30, 0.6);
   color: white;
   font-family: sans-serif;
-  width: 250px;
-  max-width: 250px;
+  width: 275px;
+  max-width: 275px;
   height: 100%;
   user-select: none;
   box-sizing: border-box;
+  overflow: hidden; 
 }
 #container {
   padding: 8px 5px 8px 8px;
   max-width: 250px;
   width: 100%;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
 }
 #dragbar {
   -webkit-app-region: drag;
@@ -115,10 +120,12 @@ body {
   margin-top: 8px;
   font-size: 0.93em;
   max-width: 98%;
+  overflow-y: auto;
   overflow-x: hidden;
   padding-left: 5px;
   padding-right: 2px;
   text-shadow: 0 1px 2px #000a;
+  flex: 1; 
 }
 .plane {
   margin-bottom: 5px;

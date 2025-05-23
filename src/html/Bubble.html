@@ -7,7 +7,7 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
     />
-    <link rel="stylesheet" href="css/Bubble_Style.css">
+    <link rel="stylesheet" href="css/Bubble_Style.css" />
   </head>
   <body>
     <div id="bubble" title="Mostrar Radar">
@@ -42,10 +42,8 @@
       });
 
       // Clicar na bolha restaura o widget
-      bubble.addEventListener("click", (e) => {
-        if (!dragging) {
-          ipcRenderer.send("restore-from-bubble");
-        }
+      bubble.addEventListener("dblclick", () => {
+        ipcRenderer.send("restore-from-bubble");
       });
     </script>
   </body>
