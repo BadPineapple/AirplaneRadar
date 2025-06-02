@@ -11,16 +11,33 @@
   </head>
   <body>
     <div id="bubble" title="Mostrar Radar">
-      <i class="fa-solid fa-plane-up"></i>
+      <i id="bubble-icon" class="fa-solid fa-plane-up"></i>
     </div>
     <script>
+      const fs = require('fs');
+      const path = require('path');
+
+      const configPath = path.join(__dirname, '../../config/config.json');
+      let config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+
       const { ipcRenderer } = require("electron");
       let dragging = false,
         offsetX = 0,
         offsetY = 0;
 
       const bubble = document.getElementById("bubble");
+      const icon = document.getElementById('bubble-icon');
 
+      // Aplica tamanho
+      const size = config.bubble?.size || 60;
+      bubble.style.width = `${size}px`;
+      bubble.style.height = `${size}px`;
+
+      // Cor de fundo e do ícone
+      bubble.style.background = config.bubble?.color || '#1982d2';
+      icon.style.color = config.bubble?.iconColor || 'white';
+
+      
       // Arrastar a bolha pela tela
       bubble.addEventListener("mousedown", (e) => {
         dragging = true;

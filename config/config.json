@@ -1,17 +1,52 @@
 {
   "widget": {
-    "x": 875,
-    "y": 33,
-    "width": 250,
-    "height": 430
+    "x": 1024,
+    "y": 12,
+    "width": 275,
+    "height": 430,
+    "bgColor": "#1e1e1e",
+    "mapiconcolor": "#ffd700",
+    "titlecolor": "#ffd700",
+    "textcolor": "#ffffff",
+    "bgOpacity": 0.6
   },
   "bubble": {
-    "x": 1292,
-    "y": 651
+    "x": 20,
+    "y": 600,
+    "color": "#1982d2",
+    "size": 50,
+    "iconColor": "#ffffff"
   },
   "map": {
-    "lat": -22.810364823480946,
-    "lon": -43.24012756347656,
-    "zoom": 8
+    "lat": -16.6809,
+    "lon": -49.2539,
+    "zoom": 13
+  },
+  "search": {
+    "radius": 50,
+    "filters": [
+      "comercial",
+      "privado",
+      "militar",
+      "helicoptero",
+      "outros"
+    ]
+  },
+  "alert": {
+    "general": "",
+    "favorite": ""
+  },
+  "shortcuts": {
+    "zoomin": "Ctrl+0",
+    "zoomout": "Ctrl+9",
+    "refresh": "Ctrl+R",
+    "minimize": "Ctrl+M",
+    "restore": "Ctrl+Shift+M"
+  },
+  "accounts": {
+    "opensky": {
+      "username": "",
+      "password": ""
+    }
   }
 }

@@ -1,56 +1,37 @@
-// shortcuts.js
-
 const { globalShortcut } = require('electron');
 
-function registerShortcuts(widgetWindow) {
+function applyShortcuts(widgetWindow, config) {
+  globalShortcut.unregisterAll();
 
- // 1. Zoom In: Ctrl+=, Ctrl+Shift+=, Ctrl+Plus, Ctrl+Shift+I
- globalShortcut.register('CommandOrControl+=', () => {
-    if (widgetWindow) widgetWindow.webContents.send('shortcut-zoomin');
-    console.log("[DEBUG] Shortcuts registered");
-  });
-  globalShortcut.register('CommandOrControl+Plus', () => {
-    if (widgetWindow) widgetWindow.webContents.send('shortcut-zoomin');
-    console.log("[DEBUG] Shortcuts registered");
-  });
-  globalShortcut.register('CommandOrControl+Shift+=', () => {
-    if (widgetWindow) widgetWindow.webContents.send('shortcut-zoomin');
-    console.log("[DEBUG] Shortcuts registered");
-  });
-  globalShortcut.register('CommandOrControl+Shift+I', () => {
-    if (widgetWindow) widgetWindow.webContents.send('shortcut-zoomin');
-    console.log("[DEBUG] Shortcuts registered");
-  });
+  const shortcuts = config.shortcuts || {};
 
-  // 2. Zoom Out: Ctrl+-, Ctrl+Shift+O
-  globalShortcut.register('CommandOrControl+-', () => {
-    if (widgetWindow) widgetWindow.webContents.send('shortcut-zoomout');
-    console.log("[DEBUG] Shortcuts registered");
-  });
-  globalShortcut.register('CommandOrControl+Shift+O', () => {
-    if (widgetWindow) widgetWindow.webContents.send('shortcut-zoomout');
-    console.log("[DEBUG] Shortcuts registered");
-  });
+  const map = [
+    { combo: shortcuts.zoomin || 'CommandOrControl+=', event: 'shortcut-zoomin' },
+    { combo: shortcuts.zoomout || 'CommandOrControl+-', event: 'shortcut-zoomout' },
+    { combo: shortcuts.refresh || 'CommandOrControl+R', event: 'shortcut-refresh-now' },
+    { combo: shortcuts.minimize || 'CommandOrControl+M', event: 'shortcut-minimize-to-bubble' },
+    { combo: shortcuts.restore || 'CommandOrControl+Shift+M', event: 'shortcut-restore-from-bubble' }
+  ];
 
-  // 3. Forçar refresh agora (Ctrl + R)
-  globalShortcut.register('CommandOrControl+R', () => {
-    if (widgetWindow) widgetWindow.webContents.send('shortcut-refresh-now');
-    console.log("[DEBUG] Shortcuts registered");
-  });
-
-  // 4. Minimizar/maximizar (Ctrl + M)
-  globalShortcut.register('CommandOrControl+M', () => {
-    if (widgetWindow && widgetWindow.isVisible()) {
-      widgetWindow.webContents.send('shortcut-minimize-to-bubble');
-    } else if (widgetWindow && !widgetWindow.isVisible()) {
-      widgetWindow.webContents.send('shortcut-restore-from-bubble');
+  map.forEach(({ combo, event }) => {
+    try {
+      globalShortcut.register(combo, () => {
+        if (widgetWindow && widgetWindow.webContents) {
+          widgetWindow.webContents.send(event);
+        }
+        console.log(`[DEBUG] Shortcut triggered: ${event}`);
+      });
+    } catch (err) {
+      console.warn(`Erro ao registrar atalho "${combo}":`, err);
     }
-    console.log("[DEBUG] Shortcuts registered");
   });
+
+  console.log("[DEBUG] Shortcuts applied com base no config");
 }
 
 function unregisterShortcuts() {
   globalShortcut.unregisterAll();
+  console.log("[DEBUG] Shortcuts unregistered");
 }
 
-module.exports = { registerShortcuts, unregisterShortcuts };
+module.exports = { applyShortcuts, unregisterShortcuts };

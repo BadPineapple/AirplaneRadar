@@ -4,7 +4,7 @@ const path = require('path');
 const configPath = path.join(__dirname, '../../config/config.json');
 
 const defaultConfig = {
-  widget: { x: 20, y: 600, width: 250, height: 430 },
+  widget: { x: 20, y: 600, width: 275, height: 430 },
   bubble: { x: 20, y: 600 },
   map: { lat: -16.6809, lon: -49.2539, zoom: 13 }
 };

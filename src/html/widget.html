@@ -12,12 +12,15 @@
     <div id="dragbar">
       ⠿ Radar Aéreo
       <div id="window-btns">
+        <button class="window-btn" id="settingsbtn" title="Configurações">
+          <i class="fa-solid fa-gear"></i>
+        </button>
         <button class="window-btn" id="minbtn" title="Minimizar">—</button>
         <button class="window-btn" id="closebtn" title="Fechar">✕</button>
       </div>
     </div>
-    <div id="weather" style="margin: 0 0 6px 0; text-align: center; font-size:0.96em; color: #FFD700;">
-      <i class="fa-solid fa-cloud-sun" style="color: #FFD700"></i> Carregando clima...
+    <div id="weather" style="margin: 0 0 6px 0; text-align: center; font-size:0.96em; color: var(--title-color, #ffd700);">
+      <i class="fa-solid fa-cloud-sun" style="color: var(--title-color, #ffd700)"></i> Carregando clima...
     </div>
     <div id="setloc-container">
       <button id="setloc-btn" title="Definir localização manual">Alterar Localização</button>

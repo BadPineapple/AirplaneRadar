@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Configurações</title>
+    <link rel="stylesheet" href="css/settings_style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div id="settings-container">
+      <h2><i class="fa-solid fa-gear"></i> Configurações</h2>
+
+      <div id="tabs">
+        <button class="tab-btn active" data-tab="style-tab">Estilo</button>
+        <button class="tab-btn" data-tab="shortcuts-tab">Atalhos</button>
+        <button class="tab-btn" data-tab="accounts-tab">Contas</button>
+      </div>
+
+      <div class="tab-content" id="style-tab">
+        <!-- Cor de Fundo -->
+        <h3>Widget:</h3>
+        <div class="setting-group">
+          <label for="bgcolor">Cor de Fundo do Widget:</label>
+          <input type="color" id="bgcolor" />
+        </div>
+        
+        <div class="setting-group">
+          <label for="map-icon-color">Cor dos Icones Mapa:</label>
+          <input type="color" id="map-icon-color" />
+        </div>
+        <div class="setting-group">
+          <label for="title-color">Cor da Fonte Titulo do Widget:</label>
+          <input type="color" id="title-color" />
+        </div>
+        <div class="setting-group">
+          <label for="text-color">Cor da Fonte Texto do Widget:</label>
+          <input type="color" id="text-color" />
+        </div>
+
+        <div class="setting-group">
+          <label for="bgopacity">Transparência do Fundo:</label>
+          <input type="range" id="bgopacity" min="0.1" max="1" step="0.05" />
+          <span id="opacity-value">60%</span>
+        </div>
+
+        <!-- Cor e tamanho da bolha -->
+        <hr />
+        <h3>Bolha:</h3>
+        <div class="setting-group">
+          <label for="bubble-color">Cor da Bolha:</label>
+          <input type="color" id="bubble-color" />
+        </div>
+        <div class="setting-group">
+          <label for="icon-color">Cor do Ícone da Bolha:</label>
+          <input type="color" id="icon-color" />
+        </div>
+        <div class="setting-group">
+          <label for="bubble-size">Tamanho da Bolha (px):</label>
+          <input type="range" id="bubble-size" min="30" max="100" step="5" />
+          <span id="bubble-size-value">50px</span>
+        </div>
+
+        <!-- Radar e filtros -->
+        <hr />
+        <h3>Radar e Pesquisa:</h3>
+        <div class="setting-group">
+          <label for="search-radius">Raio de Pesquisa (km):</label>
+          <input type="range" id="search-radius" min="10" max="100" step="10" />
+          <span id="radius-value">50 km</span>
+        </div>
+
+        <div class="setting-group">
+          <label>Tipos de Aeronaves Visíveis:</label>
+          <div id="aircraft-filters">
+            <label
+              ><input type="checkbox" value="comercial" checked />
+              Comerciais</label
+            >
+            <label
+              ><input type="checkbox" value="privado" checked /> Privados</label
+            >
+            <label
+              ><input type="checkbox" value="militar" checked />
+              Militares</label
+            >
+            <label
+              ><input type="checkbox" value="helicoptero" checked />
+              Helicópteros</label
+            >
+            <label
+              ><input type="checkbox" value="outros" checked /> Outros</label
+            >
+          </div>
+        </div>
+
+        <!-- Alertas sonoros -->
+        <hr />
+        <h3>Alertas Sonoros</h3>
+        
+        <div class="setting-group">
+          <label for="upload-sound">Adicionar novo som:</label>
+          <input type="file" id="upload-sound" accept=".mp3" />
+          <div id="sound-drop-zone" class="drop-zone">
+            <p>Arraste e solte um arquivo .mp3 aqui</p>
+          </div>
+        </div>
+
+        <div class="setting-group">
+          <label for="alert-general">Som para Detecção Geral:</label>
+          <select id="alert-general"></select>
+        </div>
+        <div class="setting-group">
+          <label for="alert-favorite">Som para Aeronaves Favoritas:</label>
+          <select id="alert-favorite"></select>
+        </div>
+      </div>
+
+      <!-- Aba: Atalhos -->
+      <div class="tab-content hidden" id="shortcuts-tab">
+        <div class="setting-group">
+          <label for="shortcut-zoomin">Zoom In:</label>
+          <input type="text" id="shortcut-zoomin" class="shortcut-input" readonly />
+        </div>
+        <div class="setting-group">
+          <label for="shortcut-zoomout">Zoom Out:</label>
+          <input type="text" id="shortcut-zoomout" class="shortcut-input" readonly />
+        </div>
+        <div class="setting-group">
+          <label for="shortcut-refresh">Refresh Imediato:</label>
+          <input type="text" id="shortcut-refresh" class="shortcut-input" readonly />
+        </div>
+        <div class="setting-group">
+          <label for="shortcut-minimize">Minimizar para Bolha:</label>
+          <input type="text" id="shortcut-minimize" class="shortcut-input" readonly />
+        </div>
+        <div class="setting-group">
+          <label for="shortcut-restore">Restaurar da Bolha:</label>
+          <input type="text" id="shortcut-restore" class="shortcut-input" readonly />
+        </div>
+        <small style="opacity: 0.8"
+          >Clique no campo e pressione a combinação desejada (Ctrl, Alt, Shift,
+          etc.).</small
+        >
+      </div>
+
+      <!-- Aba: Contas -->
+      <div class="tab-content hidden" id="accounts-tab">
+        <div class="setting-group">
+          <label for="opensky-username">OpenSky Username:</label>
+          <input type="text" id="opensky-username" />
+        </div>
+        <div class="setting-group">
+          <label for="opensky-password">OpenSky Password:</label>
+          <input type="password" id="opensky-password" />
+        </div>
+      </div>
+
+      <!-- Botões -->
+      <div id="buttons">
+        <button id="save-btn">
+          <i class="fa-solid fa-floppy-disk"></i> Salvar
+        </button>
+        <button id="cancel-btn">
+          <i class="fa-solid fa-xmark"></i> Cancelar
+        </button>
+      </div>
+    </div>
+
+    <script src="../js/settings.js"></script>
+  </body>
+</html>

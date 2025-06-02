@@ -3,7 +3,7 @@ const path = require('path');
 const AutoLaunch = require('auto-launch');
 const remoteMain = require('@electron/remote/main');
 const { checkNearbyPlanes } = require('./Background');
-const { registerShortcuts, unregisterShortcuts } = require('./Shortcuts');
+const { applyShortcuts, unregisterShortcuts } = require('./Shortcuts');
 const { ensureConfigFile, loadConfig, saveConfig } = require('./ConfigManager');
 
 ensureConfigFile(); // Cria config.json padrão se não existir ou estiver inválido
@@ -11,6 +11,7 @@ let config = loadConfig(); // Carrega config válido
 let tray = null;
 let widgetWindow = null;
 let bubbleWindow = null;
+let settingsWindow = null;
 let userLocation = { lat: config.map.lat, lon: config.map.lon }; // Inicial pela config
 
 // --- IPC: Widget pede config para iniciar ---
@@ -63,7 +64,7 @@ ipcMain.on('move-bubble', (event, pos) => {
 
 // --- IPC: Refresh imediato pelo atalho ---
 ipcMain.on('force-refresh', async () => {
-  const planes = await checkNearbyPlanes(userLocation);
+  const planes = await checkNearbyPlanes(userLocation, config);
   if (widgetWindow) {
     widgetWindow.webContents.send('update-planes', planes);
   }
@@ -75,10 +76,27 @@ ipcMain.on('force-refresh', async () => {
   }
 });
 
+// --- IPC: Abrir tela de Config ---
+ipcMain.on('open-settings', () => {
+  createSettingsWindow();
+});
+
+ipcMain.on('update-config', (event, newCfg) => {
+  Object.assign(config, newCfg);
+  saveConfig(config);
+  applyShortcuts(widgetWindow, config);
+
+  if (widgetWindow) {
+    console.log("[DEBUG] Entrando no widgetStyle");
+    widgetWindow.webContents.send('apply-style', config);
+  }
+});
+
+
 // --- CRIA JANELA PRINCIPAL (WIDGET) ---
 function createWidgetWindow() {
   widgetWindow = new BrowserWindow({
-    width: config.widget.width || 250,
+    width: config.widget.width || 280,
     height: config.widget.height || 430,
     x: config.widget.x || 20,
     y: config.widget.y || 600,
@@ -135,8 +153,35 @@ function createBubbleWindow() {
       enableRemoteModule: true
     }
   });
-  bubbleWindow.loadFile('src/html/bubble.html');
+  bubbleWindow.loadFile(path.join(__dirname, '../html/bubble.html'));
   bubbleWindow.on('closed', () => { bubbleWindow = null; });
+}
+
+// --- CRIAR JANELA DE CONFIG (WIDGET) ---
+function createSettingsWindow() {
+  if (settingsWindow) {
+    settingsWindow.focus();
+    return;
+  }
+
+  settingsWindow = new BrowserWindow({
+    width: 400,
+    height: 500,
+    resizable: false,
+    title: 'Configurações',
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false
+    }
+  });
+
+  settingsWindow.setMenuBarVisibility(false);
+
+  settingsWindow.loadFile(path.join(__dirname, '../html/settings.html'));
+
+  settingsWindow.on('closed', () => {
+    settingsWindow = null;
+  });
 }
 
 app.whenReady().then(async () => {
@@ -146,12 +191,12 @@ app.whenReady().then(async () => {
   autoLauncher.enable();
 
   createWidgetWindow();
-  registerShortcuts(widgetWindow);
+  applyShortcuts(widgetWindow, config);
 
   // Atualiza aviões a cada 30 segundos
   setInterval(async () => {
     console.log("[DEBUG] Performing periodic check for nearby planes...");
-    const planes = await checkNearbyPlanes(userLocation);
+    const planes = await checkNearbyPlanes(userLocation, config);
     if (widgetWindow) {
       widgetWindow.webContents.send('update-planes', planes);
     }

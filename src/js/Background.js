@@ -34,10 +34,12 @@ function getDirection(lat1, lon1, lat2, lon2) {
 }
 
 // Busca aviões próximos (raio ~50 km do centro)
-async function checkNearbyPlanes(userLocation) {
+async function checkNearbyPlanes(userLocation, config) {
   try {
     const { lat, lon } = userLocation;
-    const delta = 0.5; // ~50km
+    const radiusKm = config?.search?.radius ?? 50;
+
+    const delta = radiusKm / 111;
     const lamin = lat - delta;
     const lomin = lon - delta;
     const lamax = lat + delta;
@@ -52,6 +54,17 @@ async function checkNearbyPlanes(userLocation) {
     const data = await response.json();
 
     if (!data.states) return [];
+
+    function getAircraftType(plane) {
+      const cs = plane[1]?.trim().toUpperCase() || "";
+      if (cs.startsWith("AF") || cs.startsWith("FAB") || cs.includes("MIL")) return "militar";
+      if (cs.includes("HEL")) return "helicoptero";
+      if (cs.includes("PRIV") || cs.includes("EXEC")) return "privado";
+      if (cs.includes("B") || cs.includes("A") || cs.includes("VOO")) return "comercial";
+      return "outros";
+    }
+
+    const allowedTypes = config?.search?.filters || ['comercial', 'privado', 'militar', 'helicoptero', 'outros'];
 
     // [0] icao24, [1] callsign, [2] origin_country, [3], [4],
     // [5] longitude, [6] latitude, [7] baro_altitude, [8], [9], [10] true_track
@@ -70,9 +83,16 @@ async function checkNearbyPlanes(userLocation) {
           ,
           true_track, // heading em graus
         ] = state;
+
         if (latitude === null || longitude === null) return null;
+
         const distance = calculateDistanceKm(lat, lon, latitude, longitude);
+        if (distance > radiusKm) return null;
+
         const direction = getDirection(lat, lon, latitude, longitude);
+        const type = getAircraftType(state);
+        
+        if (!allowedTypes.includes(type)) return null;
 
         return {
           icao24,
@@ -84,6 +104,7 @@ async function checkNearbyPlanes(userLocation) {
           distance: Math.round(distance),
           direction,
           heading: true_track || 0, // <-- Direção de voo em graus para o ícone
+          type,
           title: `Voo ${
             callsign?.trim() || icao24 || "Desconhecido"
           } (${Math.round(distance)} km)`,
@@ -96,7 +117,7 @@ async function checkNearbyPlanes(userLocation) {
       })
       .filter(Boolean)
       .sort((a, b) => a.distance - b.distance)
-      .filter((p) => p.distance <= 50);
+
       console.log("[DEBUG] Found planes:", planes); // até 50km
 
     // Retorna os 5 mais próximos
