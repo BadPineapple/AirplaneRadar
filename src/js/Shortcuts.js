@@ -26,7 +26,7 @@ function applyShortcuts(widgetWindow, config) {
     }
   });
 
-  console.log("[DEBUG] Shortcuts applied com base no config");
+  console.log("[DEBUG] Shortcuts applied com base no config", shortcuts);
 }
 
 function unregisterShortcuts() {

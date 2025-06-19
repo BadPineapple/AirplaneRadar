@@ -1,4 +1,4 @@
-html
+html,
 body {
   margin: 0;
   padding: 0;
@@ -119,6 +119,7 @@ body {
 #zoom-controls button:hover {
   background: rgba(255, 255, 255, 0.13);
 }
+
 #list {
   margin-top: 8px;
   font-size: 0.93em;
@@ -130,11 +131,50 @@ body {
   text-shadow: 0 1px 2px #000a;
   flex: 1; 
 }
+#list::-webkit-scrollbar {
+  width: 6px;
+}
+#list::-webkit-scrollbar-thumb {
+  background: rgba(255, 215, 0, 0.2);
+  border-radius: 4px;
+}
+
 .plane {
   margin-bottom: 5px;
   padding-bottom: 2px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   font-size: 0.93em;
+}
+.tooltip-alert {
+  position: relative;
+  display: inline-block;
+  font-weight: bold;
+  margin-left: 6px;
+  cursor: help;
+}
+
+.tooltip-alert .tooltip-text {
+  visibility: hidden;
+  background-color: #222;
+  color: #ffd700;
+  text-align: center;
+  padding: 5px 8px;
+  border-radius: 6px;
+  position: absolute;
+  z-index: 9999;
+  bottom: 120%;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.2s;
+  white-space: nowrap;
+  font-size: 0.75em;
+  box-shadow: 0 2px 8px #0008;
+}
+
+.tooltip-alert:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
 }
 .voce {
   color: #0ff;

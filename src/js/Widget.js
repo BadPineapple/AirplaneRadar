@@ -5,9 +5,9 @@ let userLat,
   initialZoom = 13;
 let map,
   userMarker,
-  planeMarkers = [];
+  planeMarkers   = [];
 let planeHistory = {}; // histórico de coordenadas por icao
-let planeTrails = {}; // polylines desenhadas no mapa
+let planeTrails  = {}; // polylines desenhadas no mapa
 let lastSeenIcao = [];
 let manualLocation = false;
 
@@ -22,11 +22,11 @@ function hexToRgba(hex, opacity) {
 
 ipcRenderer.invoke("get-config").then((config) => {
   console.log("[DEBUG] getConfig", config);
-  const bgColor = config.widget?.bgColor || "#1e1e1e";
-  const bgopacity = config.widget?.bgOpacity ?? 0.6;
+  const bgColor      = config.widget?.bgColor || "#1e1e1e";
+  const bgopacity    = config.widget?.bgOpacity ?? 0.6;
   const mapiconcolor = config.widget?.mapiconcolor || "#ffd700";
-  const titlecolor = config.widget?.titlecolor || "#ffd700";
-  const textcolor = config.widget?.textcolor || "#ffffff";
+  const titlecolor   = config.widget?.titlecolor || "#ffd700";
+  const textcolor    = config.widget?.textcolor || "#ffffff";
 
   const Background = document.getElementById("container");
 
@@ -35,29 +35,22 @@ ipcRenderer.invoke("get-config").then((config) => {
   document.body.style.setProperty("--icon-color", mapiconcolor);
   document.body.style.setProperty("--title-color", titlecolor);
   document.body.style.setProperty("--text-color", textcolor);
-});
 
-ipcRenderer.invoke("get-config").then((cfg) => {
-  if (cfg && cfg.map) {
-    userLat = cfg.map.lat;
-    userLon = cfg.map.lon;
-    initialZoom = cfg.map.zoom || 13;
-  } else {
-    userLat = -16.6809;
-    userLon = -49.2539;
-    initialZoom = 13;
-  }
+  userLat     = config.map?.lat ?? -16.6809;
+  userLon     = config.map?.lon ?? -49.2539;
+  initialZoom = config.map?.zoom ?? 13;
+  
   startMap();
   fetchWeather(userLat, userLon);
 });
 
 ipcRenderer.on("apply-style", (event, style) => {
   console.log("[DEBUG] Novo estilo recebido:", style);
-  const bgColor = style.widget?.bgColor || "#1e1e1e";
-  const bgopacity = style.widget?.bgOpacity ?? 0.6;
+  const bgColor      = style.widget?.bgColor || "#1e1e1e";
+  const bgopacity    = style.widget?.bgOpacity ?? 0.6;
   const mapiconcolor = style.widget?.mapiconcolor || "#ffd700";
-  const titlecolor = style.widget?.titlecolor || "#ffd700";
-  const textcolor = style.widget?.textcolor || "#ffffff";
+  const titlecolor   = style.widget?.titlecolor || "#ffd700";
+  const textcolor    = style.widget?.textcolor || "#ffffff";
 
   const Background = document.getElementById("container");
 
@@ -237,9 +230,23 @@ function updatePlanes(planes) {
       '<div class="plane">Nenhum avião encontrado na sua região agora.</div>';
   } else {
     planes.forEach((p, i) => {
-      listHtml += `<div class="plane"><b>${i + 1}.</b> ${p.title}<br><small>${
-        p.body
-      }</small></div>`;
+      const alerta = (p.emergencia || p.squawk)
+        ? `<span class="tooltip-alert">
+            ⚠️
+            <span class="tooltip-text">${
+              p.squawk
+                ? `Squawk ${p.squawk} detectado (${
+                    {
+                      '7500': 'Sequestro',
+                      '7600': 'Falha de Comunicação',
+                      '7700': 'Emergência Geral',
+                    }[p.squawk] || 'Código Especial'
+                  })`
+                : 'Transponder SPI ativado (emergência ou destaque pelo radar)'
+            }</span>
+          </span>`
+        : '';
+      listHtml += `<div class="plane"><b>${i + 1}.</b> ${p.title}${alerta}<br><small>${p.body}</small></div>`;
     });
   }
   document.getElementById("list").innerHTML = listHtml;

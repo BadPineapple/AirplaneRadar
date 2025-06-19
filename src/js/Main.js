@@ -3,6 +3,7 @@ const path = require('path');
 const AutoLaunch = require('auto-launch');
 const remoteMain = require('@electron/remote/main');
 const { checkNearbyPlanes } = require('./Background');
+const { getOpenSkyToken } = require('../../config/OpenSkyAuth');
 const { applyShortcuts, unregisterShortcuts } = require('./Shortcuts');
 const { ensureConfigFile, loadConfig, saveConfig } = require('./ConfigManager');
 

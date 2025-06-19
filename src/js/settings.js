@@ -203,8 +203,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('shortcut-minimize').value = sc.minimize || 'Ctrl+M';
     document.getElementById('shortcut-restore').value = sc.restore || 'Ctrl+Shift+M';
 
-    document.getElementById('opensky-username').value = cfg.accounts?.opensky?.username || '';
-    document.getElementById('opensky-password').value = cfg.accounts?.opensky?.password || '';
+    document.getElementById('opensky-clientid').value = cfg.accounts?.opensky?.client_id || '';
+    document.getElementById('opensky-clientsecret').value = cfg.accounts?.opensky?.client_secret || '';
+
   });
 
   document.getElementById('bgopacity').addEventListener('input', e => {
@@ -256,8 +257,8 @@ document.addEventListener('DOMContentLoaded', () => {
       shortcuts: updatedShortcuts,
       accounts: {
         opensky: {
-          username: document.getElementById('opensky-username').value.trim(),
-          password: document.getElementById('opensky-password').value.trim()
+          client_id: document.getElementById('opensky-clientid').value.trim(),
+          client_secret: document.getElementById('opensky-clientsecret').value.trim()
         }
       }
     };

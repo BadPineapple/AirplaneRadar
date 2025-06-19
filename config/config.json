@@ -1,7 +1,7 @@
 {
   "widget": {
-    "x": 1024,
-    "y": 12,
+    "x": 917,
+    "y": 23,
     "width": 275,
     "height": 430,
     "bgColor": "#1e1e1e",
@@ -18,9 +18,9 @@
     "iconColor": "#ffffff"
   },
   "map": {
-    "lat": -16.6809,
-    "lon": -49.2539,
-    "zoom": 13
+    "lat": -22.91033339315192,
+    "lon": -43.363287705605394,
+    "zoom": 9
   },
   "search": {
     "radius": 50,
@@ -45,8 +45,10 @@
   },
   "accounts": {
     "opensky": {
-      "username": "",
-      "password": ""
+      "username": "renatomontenegrodeoliveira@gmail.com",
+      "password": "Monte.negro1",
+      "client_id": "renatomontenegrodeoliveira@gmail.com-api-client",
+      "client_secret": "wsJgUedxeDWnZxoqirNzX5RMlISDXV2Y"
     }
   }
 }
