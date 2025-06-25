@@ -1,4 +1,5 @@
 const { globalShortcut } = require('electron');
+const { log, warn, error } = require('./Logger');
 
 function applyShortcuts(widgetWindow, config) {
   globalShortcut.unregisterAll();
@@ -15,23 +16,29 @@ function applyShortcuts(widgetWindow, config) {
 
   map.forEach(({ combo, event }) => {
     try {
-      globalShortcut.register(combo, () => {
+      const success = globalShortcut.register(combo, () => {
         if (widgetWindow && widgetWindow.webContents) {
           widgetWindow.webContents.send(event);
         }
-        console.log(`[DEBUG] Shortcut triggered: ${event}`);
+        log(`[SHORTCUT] Atalho acionado: ${combo} → ${event}`);
       });
+
+      if (!success) {
+        warn(`[SHORTCUT] Falha ao registrar atalho: ${combo}`);
+      } else {
+        log(`[SHORTCUT] Registrado com sucesso: ${combo}`);
+      }
     } catch (err) {
-      console.warn(`Erro ao registrar atalho "${combo}":`, err);
+      error(`[SHORTCUT] Erro ao registrar atalho "${combo}":`, err);
     }
   });
 
-  console.log("[DEBUG] Shortcuts applied com base no config", shortcuts);
+  log("[SHORTCUT] Atalhos aplicados com base no config:", shortcuts);
 }
 
 function unregisterShortcuts() {
   globalShortcut.unregisterAll();
-  console.log("[DEBUG] Shortcuts unregistered");
+  log("[SHORTCUT] Todos os atalhos foram desregistrados");
 }
 
 module.exports = { applyShortcuts, unregisterShortcuts };

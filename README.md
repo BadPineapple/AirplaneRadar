@@ -1,5 +1,5 @@
 # AirplaneRadar  
-Radar Aéreo Widget – Documentação Versão 1.1.0
+Radar Aéreo Widget – Documentação Versão 1.3.0
 
 ===============================================
 Descrição
@@ -9,52 +9,75 @@ Radar Aéreo Widget é um aplicativo desktop (Windows) desenvolvido com Electron
 -----------------------------------------------
 Funcionalidades Principais
 -----------------------------------------------
-- Widget com mapa interativo (Leaflet/OpenStreetMap)
-- Lista dos aviões mais próximos, atualizada automaticamente
-- Trilhas de voo recentes desenhadas no mapa com L.polyline
-- Scroll independente da lista de aviões (mantém cabeçalho e mapa fixos)
-- Pin central para localização do usuário (detectado por IP ou definido manualmente)
-- Clima atual da localização central
-- Notificações sonoras e pop-up quando aviões estão próximos
-- Minimizar para bolha flutuante arrastável ("bubble"), que pode ser restaurada com duplo clique
-- Ícones personalizados de avião com rotação (heading)
+- Widget com mapa interativo (Leaflet/OpenStreetMap)  
+- Lista dos aviões mais próximos, atualizada automaticamente  
+- Trilhas de voo recentes desenhadas no mapa com L.polyline  
+- Scroll independente da lista de aviões (mantém cabeçalho e mapa fixos)  
+- Pin central para localização do usuário (detectado por IP ou definido manualmente)  
+- Clima atual da localização central  
+- **Exibição de modelo da aeronave, se disponível**  
+- Notificações sonoras e pop-up quando aviões estão próximos  
+- Bolha flutuante arrastável com ícone e ação de restaurar por duplo clique  
+- Ícones personalizados de avião com rotação (heading)  
 - Atalhos globais de teclado:
-    - Zoom in/out
-    - Refresh imediato
-    - Minimizar/maximizar para bolha
-- Salva e restaura posição/tamanho do widget, bolha e mapa (center/zoom)
-- Inicia automaticamente com o Windows
+  - Zoom in/out
+  - Refresh imediato
+  - Minimizar/maximizar para bolha  
+- **Tela de configurações com opções de personalização**  
+- Salva/restaura posição, tamanho do widget, bolha, centro e zoom do mapa  
+- Inicia automaticamente com o Windows  
 - Instalação inteligente via NSIS:
-    - Bloqueia execução simultânea de instaladores
-    - Detecta versões instaladas e evita downgrade
-- Preparado para integração futura com APIs protegidas (OpenSky metadata)
-- Configuração via arquivo externo e `.env` para desenvolvedores
+  - Bloqueia execução simultânea
+  - Verifica se já está instalado e evita downgrade  
+- Compatível com integração futura de APIs autenticadas (OpenSky Metadata)
+
+## Personalização e Configurações (v1.3.0+)
+Acesse a tela de configurações clicando no ícone de engrenagem no canto superior direito do widget.
+
+### Opções disponíveis:
+- Cor de fundo do widget  
+- Cor da fonte  
+- Opacidade do widget  
+- Tamanho da bolha flutuante  
+- Cor da bolha e do ícone  
+- Estilo dos ícones de avião  
+- Filtro por tipo de aeronave  
+- Resetar para configurações padrão  
+- Botões de salvar e cancelar alterações
+
+As preferências são persistidas no arquivo `config/config.json`.
 
 -----------------------------------------------
 Estrutura do Projeto
 -----------------------------------------------
 /airplane-radar-widget/  
 ├─ src/  
-│  ├─ js/  
-│  │  ├─ Main.js            – Processo principal do Electron  
-│  │  ├─ Background.js      – Busca de aviões, cálculos e comunicação com API  
-│  │  ├─ Shortcuts.js       – Atalhos globais  
-│  │  ├─ ConfigManager.js   – Carregamento/salvamento da config JSON  
-│  │  └─ widget.js          – Lógica da interface do widget  
-│  ├─ html/  
-│  │  ├─ widget.html        – Interface principal  
-│  │  └─ bubble.html        – Janela da bolha  
+│  ├─ js/ 
+│  │  ├─ Settings.js          – Configurações
+│  │  ├─ Main.js              – Processo principal do Electron  
+│  │  ├─ Background.js        – Busca de aviões, cálculos e comunicação com API  
+│  │  ├─ Shortcuts.js         – Atalhos globais  
+│  │  ├─ ConfigManager.js     – Carregamento/salvamento da config JSON  
+│  │  └─ widget.js            – Lógica da interface do widget  
+│  ├─ html/
+│  │  ├─ css/
+│  │  │  ├─ Bubble_Style.js   – Css da Bolha
+│  │  │  ├─ settings_style.js – Css das Configurações
+│  │  │  └─ Style.js          – Css Principal
+│  │  ├─ settings.html        – Interface de Configurações 
+│  │  ├─ widget.html          – Interface principal  
+│  │  └─ bubble.html          – Janela da bolha  
 ├─ assets/  
-│  ├─ img/                  – Ícones do app  
-│  ├─ sound/                – Sons de notificação  
-│  └─ styles/               – CSS (Style.css, Bubble_Style.css)  
+│  ├─ img/                    – Ícones do app  
+│  ├─ sound/                  – Sons de notificação   
 ├─ config/  
-│  └─ config.json           – Arquivo com posições/salvos do usuário  
-├─ build/  
-│  └─ installer.nsh         – Script NSIS customizado para controle do instalador  
-├─ .env                     – Variáveis protegidas (não versionadas)  
-├─ package.json             – Configuração do projeto e scripts de build  
-└─ dist/                    – Saída do build (instalador .exe e arquivos unpacked)
+│  └─ config.json             – Arquivo com posições/salvos do usuário  
+├─ build/
+│  ├─ OpenSkyAuth.js          – Autenticação da API  
+│  └─ installer.nsh           – Script NSIS customizado para controle do instalador  
+├─ .env                       – Variáveis protegidas (não versionadas)  
+├─ package.json               – Configuração do projeto e scripts de build  
+└─ dist/                      – Saída do build (instalador .exe e arquivos unpacked)
 
 -----------------------------------------------
 Como Usar

@@ -1,0 +1,1084 @@
+
+[2025-06-25 00:52:16] [LOG] === App iniciado (processo principal) ===
+[2025-06-25 00:52:16] [LOG] WidgetWindow criado: {"x":1010,"y":80,"width":275,"height":430,"bgColor":"#1e1e1e","mapiconcolor":"#ffd700","titlecolor":"#ffd700","textcolor":"#ffffff","bgOpacity":0.6}
+[2025-06-25 00:52:16] [LOG] Atalhos aplicados.
+[2025-06-25 00:52:18] [LOG] Aviões obtidos: 6
+[2025-06-25 00:52:18] [LOG] Aviões atualizados: e4894e, e48120, e49523, e495cd, e490c2
+[2025-06-25 00:52:18] [LOG] Salvando mapa: {"lat":-22.878705724951253,"lon":-43.26824375878984,"zoom":10}
+[2025-06-25 01:01:16] [LOG] === App iniciado (processo principal) ===
+[2025-06-25 01:01:17] [LOG] WidgetWindow criado: {"x":1010,"y":80,"width":275,"height":430,"bgColor":"#1e1e1e","mapiconcolor":"#ffd700","titlecolor":"#ffd700","textcolor":"#ffffff","bgOpacity":0.6}
+[2025-06-25 01:01:17] [LOG] [SHORTCUT] Registrado com sucesso: Ctrl+0
+[2025-06-25 01:01:17] [LOG] [SHORTCUT] Registrado com sucesso: Ctrl+9
+[2025-06-25 01:01:17] [LOG] [SHORTCUT] Registrado com sucesso: Ctrl+R
+[2025-06-25 01:01:17] [LOG] [SHORTCUT] Registrado com sucesso: Ctrl+M
+[2025-06-25 01:01:17] [LOG] [SHORTCUT] Registrado com sucesso: Ctrl+Shift+M
+[2025-06-25 01:01:17] [LOG] [SHORTCUT] Atalhos aplicados com base no config: {"zoomin":"Ctrl+0","zoomout":"Ctrl+9","refresh":"Ctrl+R","minimize":"Ctrl+M","restore":"Ctrl+Shift+M"}
+[2025-06-25 01:01:17] [LOG] Atalhos aplicados.
+[2025-06-25 01:01:20] [LOG] Aviões obtidos: 6
+[2025-06-25 01:01:20] [LOG] Aviões atualizados: e490c2, e483dd, e48273, e494bb, e48b01
+[2025-06-25 01:01:21] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:21] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:21] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:21] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:21] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:21] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:21] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:21] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:21] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:21] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:21] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:21] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:21] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:21] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:21] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:21] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:21] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:21] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:21] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:21] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:21] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:21] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:21] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:21] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:21] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:21] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:21] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:21] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:21] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:21] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:21] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:21] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:21] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:21] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:21] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:21] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:21] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:21] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:21] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:21] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:21] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:21] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:21] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:21] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:21] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:21] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:21] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:21] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:21] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:21] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:22] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:27] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:28] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:28] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:28] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:28] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:28] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:28] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:28] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:28] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:28] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:28] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:28] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:28] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:28] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:28] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:28] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:28] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:28] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:28] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:28] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:28] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:28] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:28] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:28] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:28] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:28] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:28] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:28] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:28] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:28] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:28] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:28] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:28] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:28] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:28] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:28] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:28] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:28] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:28] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:28] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:28] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:28] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:28] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:29] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:32] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:32] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:32] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:32] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:32] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:32] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:32] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:32] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:32] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:32] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:32] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:32] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:32] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:33] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:33] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:33] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:33] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:33] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:33] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:33] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:33] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:33] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:33] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:33] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:33] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:33] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:33] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:01:33] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:16:54] [LOG] === App iniciado (processo principal) ===
+[2025-06-25 01:16:54] [LOG] WidgetWindow criado: {"x":907,"y":215,"width":275,"height":430,"bgColor":"#1e1e1e","mapiconcolor":"#ffd700","titlecolor":"#ffd700","textcolor":"#ffffff","bgOpacity":0.6}
+[2025-06-25 01:16:54] [LOG] [SHORTCUT] Registrado com sucesso: Ctrl+0
+[2025-06-25 01:16:54] [LOG] [SHORTCUT] Registrado com sucesso: Ctrl+9
+[2025-06-25 01:16:54] [LOG] [SHORTCUT] Registrado com sucesso: Ctrl+R
+[2025-06-25 01:16:54] [LOG] [SHORTCUT] Registrado com sucesso: Ctrl+M
+[2025-06-25 01:16:54] [LOG] [SHORTCUT] Registrado com sucesso: Ctrl+Shift+M
+[2025-06-25 01:16:54] [LOG] [SHORTCUT] Atalhos aplicados com base no config: {"zoomin":"Ctrl+0","zoomout":"Ctrl+9","refresh":"Ctrl+R","minimize":"Ctrl+M","restore":"Ctrl+Shift+M"}
+[2025-06-25 01:16:54] [LOG] Atalhos aplicados.
+[2025-06-25 01:16:57] [LOG] Aviões obtidos: 4
+[2025-06-25 01:16:57] [LOG] Aviões atualizados: e49524, e48b01, e80604, e49522
+[2025-06-25 01:18:49] [LOG] === App iniciado (processo principal) ===
+[2025-06-25 01:18:49] [LOG] WidgetWindow criado: {"x":907,"y":215,"width":275,"height":430,"bgColor":"#1e1e1e","mapiconcolor":"#ffd700","titlecolor":"#ffd700","textcolor":"#ffffff","bgOpacity":0.6}
+[2025-06-25 01:18:49] [LOG] [SHORTCUT] Registrado com sucesso: Ctrl+0
+[2025-06-25 01:18:49] [LOG] [SHORTCUT] Registrado com sucesso: Ctrl+9
+[2025-06-25 01:18:49] [LOG] [SHORTCUT] Registrado com sucesso: Ctrl+R
+[2025-06-25 01:18:49] [LOG] [SHORTCUT] Registrado com sucesso: Ctrl+M
+[2025-06-25 01:18:49] [LOG] [SHORTCUT] Registrado com sucesso: Ctrl+Shift+M
+[2025-06-25 01:18:49] [LOG] [SHORTCUT] Atalhos aplicados com base no config: {"zoomin":"Ctrl+0","zoomout":"Ctrl+9","refresh":"Ctrl+R","minimize":"Ctrl+M","restore":"Ctrl+Shift+M"}
+[2025-06-25 01:18:49] [LOG] Atalhos aplicados.
+[2025-06-25 01:18:52] [LOG] Aviões obtidos: 4
+[2025-06-25 01:18:52] [LOG] Aviões atualizados: e49524, e48e49, e80604, e49522
+[2025-06-25 01:18:54] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:54] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:54] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:54] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:54] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:54] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:54] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:54] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:54] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:54] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:54] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:54] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:54] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:54] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:54] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:54] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:54] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:54] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:54] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:54] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:54] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:54] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:54] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:54] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:54] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:54] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:54] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:54] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:54] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:54] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:54] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:54] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:54] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:54] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:54] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:54] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:54] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:54] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:54] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:54] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:54] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:54] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:54] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:54] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:54] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:54] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:54] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:54] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:54] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:54] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:54] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:54] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:54] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:54] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:54] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:54] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:54] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:54] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:54] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:55] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:55] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:55] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:55] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:55] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:55] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:55] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:55] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:55] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:55] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:18:55] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:21:56] [LOG] === App iniciado (processo principal) ===
+[2025-06-25 01:21:57] [LOG] WidgetWindow criado: {"x":866,"y":83,"width":275,"height":430,"bgColor":"#1e1e1e","mapiconcolor":"#ffd700","titlecolor":"#ffd700","textcolor":"#ffffff","bgOpacity":0.6}
+[2025-06-25 01:21:57] [LOG] [SHORTCUT] Registrado com sucesso: Ctrl+0
+[2025-06-25 01:21:57] [LOG] [SHORTCUT] Registrado com sucesso: Ctrl+9
+[2025-06-25 01:21:57] [LOG] [SHORTCUT] Registrado com sucesso: Ctrl+R
+[2025-06-25 01:21:57] [LOG] [SHORTCUT] Registrado com sucesso: Ctrl+M
+[2025-06-25 01:21:57] [LOG] [SHORTCUT] Registrado com sucesso: Ctrl+Shift+M
+[2025-06-25 01:21:57] [LOG] [SHORTCUT] Atalhos aplicados com base no config: {"zoomin":"Ctrl+0","zoomout":"Ctrl+9","refresh":"Ctrl+R","minimize":"Ctrl+M","restore":"Ctrl+Shift+M"}
+[2025-06-25 01:21:57] [LOG] Atalhos aplicados.
+[2025-06-25 01:22:00] [LOG] Aviões obtidos: 7
+[2025-06-25 01:22:00] [LOG] Aviões atualizados: e48e49, e49aa9, e49524, e49522, e49511
+[2025-06-25 01:22:00] [LOG] Salvando mapa: {"lat":-22.878705724951253,"lon":-43.26824375878984,"zoom":10}
+[2025-06-25 01:22:00] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:22:01] [LOG] [SHORTCUT] Todos os atalhos foram desregistrados
+[2025-06-25 01:23:12] [LOG] === App iniciado (processo principal) ===
+[2025-06-25 01:23:12] [LOG] WidgetWindow criado: {"x":866,"y":83,"width":275,"height":430,"bgColor":"#1e1e1e","mapiconcolor":"#ffd700","titlecolor":"#ffd700","textcolor":"#ffffff","bgOpacity":0.6}
+[2025-06-25 01:23:12] [LOG] [SHORTCUT] Registrado com sucesso: Ctrl+0
+[2025-06-25 01:23:12] [LOG] [SHORTCUT] Registrado com sucesso: Ctrl+9
+[2025-06-25 01:23:12] [LOG] [SHORTCUT] Registrado com sucesso: Ctrl+R
+[2025-06-25 01:23:12] [LOG] [SHORTCUT] Registrado com sucesso: Ctrl+M
+[2025-06-25 01:23:12] [LOG] [SHORTCUT] Registrado com sucesso: Ctrl+Shift+M
+[2025-06-25 01:23:12] [LOG] [SHORTCUT] Atalhos aplicados com base no config: {"zoomin":"Ctrl+0","zoomout":"Ctrl+9","refresh":"Ctrl+R","minimize":"Ctrl+M","restore":"Ctrl+Shift+M"}
+[2025-06-25 01:23:12] [LOG] Atalhos aplicados.
+[2025-06-25 01:23:14] [LOG] Aviões obtidos: 7
+[2025-06-25 01:23:14] [LOG] Aviões atualizados: e48e49, e49522, e49aa9, e80440, e49511
+[2025-06-25 01:28:14] [LOG] === App iniciado (processo principal) ===
+[2025-06-25 01:28:14] [LOG] WidgetWindow criado: {"x":866,"y":83,"width":275,"height":430,"bgColor":"#1e1e1e","mapiconcolor":"#ffd700","titlecolor":"#ffd700","textcolor":"#ffffff","bgOpacity":0.6}
+[2025-06-25 01:28:14] [LOG] [SHORTCUT] Registrado com sucesso: Ctrl+0
+[2025-06-25 01:28:14] [LOG] [SHORTCUT] Registrado com sucesso: Ctrl+9
+[2025-06-25 01:28:14] [LOG] [SHORTCUT] Registrado com sucesso: Ctrl+R
+[2025-06-25 01:28:14] [LOG] [SHORTCUT] Registrado com sucesso: Ctrl+M
+[2025-06-25 01:28:14] [LOG] [SHORTCUT] Registrado com sucesso: Ctrl+Shift+M
+[2025-06-25 01:28:14] [LOG] [SHORTCUT] Atalhos aplicados com base no config: {"zoomin":"Ctrl+0","zoomout":"Ctrl+9","refresh":"Ctrl+R","minimize":"Ctrl+M","restore":"Ctrl+Shift+M"}
+[2025-06-25 01:28:14] [LOG] Atalhos aplicados.
+[2025-06-25 01:28:16] [LOG] Aviões obtidos: 4
+[2025-06-25 01:28:16] [LOG] Aviões atualizados: e49475, e49aa9, e48395, e80440
+[2025-06-25 01:28:16] [LOG] [MAP] Salvando mapa: {"lat":-22.878705724951253,"lon":-43.26824375878984,"zoom":10}
+[2025-06-25 01:28:16] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:17] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:17] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:17] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:17] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:17] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:17] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:17] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:17] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:17] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:17] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:17] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:17] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:17] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:17] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:17] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:17] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:17] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:17] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:17] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:17] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:17] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:17] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:17] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:17] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:17] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:17] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:17] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:17] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:17] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:17] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:17] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:17] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:17] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:17] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:17] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:17] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:17] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:17] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:17] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:17] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:17] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:17] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:17] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:17] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:17] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:17] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:17] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:17] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:17] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:17] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:17] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:17] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:17] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:18] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:28:34] [LOG] [SHORTCUT] Todos os atalhos foram desregistrados
+[2025-06-25 01:30:40] [LOG] === App iniciado (processo principal) ===
+[2025-06-25 01:30:40] [LOG] WidgetWindow criado: {"x":568,"y":133,"width":275,"height":430,"bgColor":"#1e1e1e","mapiconcolor":"#ffd700","titlecolor":"#ffd700","textcolor":"#ffffff","bgOpacity":0.6}
+[2025-06-25 01:30:40] [LOG] [SHORTCUT] Registrado com sucesso: Ctrl+0
+[2025-06-25 01:30:40] [LOG] [SHORTCUT] Registrado com sucesso: Ctrl+9
+[2025-06-25 01:30:40] [LOG] [SHORTCUT] Registrado com sucesso: Ctrl+R
+[2025-06-25 01:30:40] [LOG] [SHORTCUT] Registrado com sucesso: Ctrl+M
+[2025-06-25 01:30:40] [LOG] [SHORTCUT] Registrado com sucesso: Ctrl+Shift+M
+[2025-06-25 01:30:40] [LOG] [SHORTCUT] Atalhos aplicados com base no config: {"zoomin":"Ctrl+0","zoomout":"Ctrl+9","refresh":"Ctrl+R","minimize":"Ctrl+M","restore":"Ctrl+Shift+M"}
+[2025-06-25 01:30:40] [LOG] Atalhos aplicados.
+[2025-06-25 01:30:41] [LOG] [WIDGET] Nova posição salva: 568 133
+[2025-06-25 01:30:41] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:41] [LOG] [WIDGET] Nova posição salva: 578 135
+[2025-06-25 01:30:41] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:41] [LOG] [WIDGET] Nova posição salva: 584 135
+[2025-06-25 01:30:41] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:41] [LOG] [WIDGET] Nova posição salva: 590 136
+[2025-06-25 01:30:41] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:41] [LOG] [WIDGET] Nova posição salva: 593 136
+[2025-06-25 01:30:41] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:41] [LOG] [WIDGET] Nova posição salva: 599 136
+[2025-06-25 01:30:41] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:41] [LOG] [WIDGET] Nova posição salva: 602 136
+[2025-06-25 01:30:41] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:41] [LOG] [WIDGET] Nova posição salva: 604 137
+[2025-06-25 01:30:41] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:41] [LOG] [WIDGET] Nova posição salva: 607 137
+[2025-06-25 01:30:41] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:41] [LOG] [WIDGET] Nova posição salva: 608 137
+[2025-06-25 01:30:41] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:41] [LOG] [WIDGET] Nova posição salva: 610 137
+[2025-06-25 01:30:41] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:41] [LOG] [WIDGET] Nova posição salva: 613 137
+[2025-06-25 01:30:41] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:41] [LOG] [WIDGET] Nova posição salva: 615 137
+[2025-06-25 01:30:41] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:41] [LOG] [WIDGET] Nova posição salva: 618 137
+[2025-06-25 01:30:41] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:41] [LOG] [WIDGET] Nova posição salva: 621 137
+[2025-06-25 01:30:41] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:41] [LOG] [WIDGET] Nova posição salva: 625 137
+[2025-06-25 01:30:41] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:41] [LOG] [WIDGET] Nova posição salva: 629 137
+[2025-06-25 01:30:41] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:41] [LOG] [WIDGET] Nova posição salva: 637 136
+[2025-06-25 01:30:41] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:41] [LOG] [WIDGET] Nova posição salva: 641 136
+[2025-06-25 01:30:41] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:41] [LOG] [WIDGET] Nova posição salva: 646 135
+[2025-06-25 01:30:41] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:41] [LOG] [WIDGET] Nova posição salva: 648 135
+[2025-06-25 01:30:41] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:41] [LOG] [WIDGET] Nova posição salva: 649 135
+[2025-06-25 01:30:41] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:42] [LOG] [WIDGET] Nova posição salva: 649 136
+[2025-06-25 01:30:42] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:42] [LOG] Aviões obtidos: 5
+[2025-06-25 01:30:42] [LOG] Aviões atualizados: e48395, e80440, e49475, e49aa9, e49b52
+[2025-06-25 01:30:42] [LOG] [MAP] Salvando mapa: {"lat":-22.878705724951253,"lon":-43.26824375878984,"zoom":10}
+[2025-06-25 01:30:42] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 664 138
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 671 139
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 682 142
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 692 143
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 713 146
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 727 145
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 737 145
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 747 145
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 753 144
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 756 144
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 758 144
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 758 143
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 759 143
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 760 142
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 761 140
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 762 139
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 763 136
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 763 135
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 763 134
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 763 133
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 763 132
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 763 131
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 761 129
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 760 129
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 759 128
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 754 127
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 751 127
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 743 127
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 731 127
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 722 127
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 710 129
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 700 129
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 688 130
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 682 130
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 676 132
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 671 132
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 666 132
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 664 133
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 662 134
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 661 135
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 661 136
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 660 136
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 660 138
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 660 140
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 660 143
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 663 149
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 666 154
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 670 159
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 675 164
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 681 168
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 685 170
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 694 174
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 699 174
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 710 175
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 719 175
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 727 175
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 732 174
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 737 172
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 741 170
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 743 168
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 745 166
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 748 164
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 749 161
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 750 156
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 751 153
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 752 150
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 752 149
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 752 148
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 752 149
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 752 152
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 753 158
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 755 165
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 759 168
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 768 172
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 776 177
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 783 179
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:44] [LOG] [WIDGET] Nova posição salva: 797 180
+[2025-06-25 01:30:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:45] [LOG] [WIDGET] Nova posição salva: 807 180
+[2025-06-25 01:30:45] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:45] [LOG] [WIDGET] Nova posição salva: 819 179
+[2025-06-25 01:30:45] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:45] [LOG] [WIDGET] Nova posição salva: 829 177
+[2025-06-25 01:30:45] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:45] [LOG] [WIDGET] Nova posição salva: 835 176
+[2025-06-25 01:30:45] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:45] [LOG] [WIDGET] Nova posição salva: 840 173
+[2025-06-25 01:30:45] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:45] [LOG] [WIDGET] Nova posição salva: 846 170
+[2025-06-25 01:30:45] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:45] [LOG] [WIDGET] Nova posição salva: 848 168
+[2025-06-25 01:30:45] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:45] [LOG] [WIDGET] Nova posição salva: 849 166
+[2025-06-25 01:30:45] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:45] [LOG] [WIDGET] Nova posição salva: 850 164
+[2025-06-25 01:30:45] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:45] [LOG] [WIDGET] Nova posição salva: 851 164
+[2025-06-25 01:30:45] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:30:46] [LOG] [SHORTCUT] Todos os atalhos foram desregistrados
+[2025-06-25 01:32:04] [LOG] === App iniciado (processo principal) ===
+[2025-06-25 01:32:04] [LOG] WidgetWindow criado: {"x":851,"y":164,"width":275,"height":430,"bgColor":"#1e1e1e","mapiconcolor":"#ffd700","titlecolor":"#ffd700","textcolor":"#ffffff","bgOpacity":0.6}
+[2025-06-25 01:32:04] [LOG] [SHORTCUT] Registrado com sucesso: Ctrl+0
+[2025-06-25 01:32:04] [LOG] [SHORTCUT] Registrado com sucesso: Ctrl+9
+[2025-06-25 01:32:04] [LOG] [SHORTCUT] Registrado com sucesso: Ctrl+R
+[2025-06-25 01:32:04] [LOG] [SHORTCUT] Registrado com sucesso: Ctrl+M
+[2025-06-25 01:32:04] [LOG] [SHORTCUT] Registrado com sucesso: Ctrl+Shift+M
+[2025-06-25 01:32:04] [LOG] [SHORTCUT] Atalhos aplicados com base no config: {"zoomin":"Ctrl+0","zoomout":"Ctrl+9","refresh":"Ctrl+R","minimize":"Ctrl+M","restore":"Ctrl+Shift+M"}
+[2025-06-25 01:32:04] [LOG] Atalhos aplicados.
+[2025-06-25 01:32:06] [LOG] Aviões obtidos: 4
+[2025-06-25 01:32:06] [LOG] Aviões atualizados: e48395, e49475, e80440, e49b52
+[2025-06-25 01:32:06] [LOG] [MAP] Salvando mapa: {"lat":-22.878705724951253,"lon":-43.26824375878984,"zoom":10}
+[2025-06-25 01:32:06] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:32:07] [LOG] [WIDGET] Posição salva após mover: 653 88
+[2025-06-25 01:32:07] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:32:11] [LOG] [WIDGET] Posição salva após mover: 923 130
+[2025-06-25 01:32:11] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:32:13] [LOG] [WIDGET] Posição salva após mover: 351 140
+[2025-06-25 01:32:13] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:32:15] [LOG] [WIDGET] Posição salva após mover: 711 204
+[2025-06-25 01:32:15] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:32:19] [LOG] [SHORTCUT] Todos os atalhos foram desregistrados
+[2025-06-25 01:32:22] [LOG] === App iniciado (processo principal) ===
+[2025-06-25 01:32:22] [LOG] WidgetWindow criado: {"x":711,"y":204,"width":275,"height":430,"bgColor":"#1e1e1e","mapiconcolor":"#ffd700","titlecolor":"#ffd700","textcolor":"#ffffff","bgOpacity":0.6}
+[2025-06-25 01:32:22] [LOG] [SHORTCUT] Registrado com sucesso: Ctrl+0
+[2025-06-25 01:32:22] [LOG] [SHORTCUT] Registrado com sucesso: Ctrl+9
+[2025-06-25 01:32:22] [LOG] [SHORTCUT] Registrado com sucesso: Ctrl+R
+[2025-06-25 01:32:22] [LOG] [SHORTCUT] Registrado com sucesso: Ctrl+M
+[2025-06-25 01:32:22] [LOG] [SHORTCUT] Registrado com sucesso: Ctrl+Shift+M
+[2025-06-25 01:32:22] [LOG] [SHORTCUT] Atalhos aplicados com base no config: {"zoomin":"Ctrl+0","zoomout":"Ctrl+9","refresh":"Ctrl+R","minimize":"Ctrl+M","restore":"Ctrl+Shift+M"}
+[2025-06-25 01:32:22] [LOG] Atalhos aplicados.
+[2025-06-25 01:32:23] [LOG] [SHORTCUT] Todos os atalhos foram desregistrados
+[2025-06-25 01:35:30] [LOG] === App iniciado (processo principal) ===
+[2025-06-25 01:35:30] [LOG] WidgetWindow criado: {"x":711,"y":204,"width":275,"height":430,"bgColor":"#1e1e1e","mapiconcolor":"#ffd700","titlecolor":"#ffd700","textcolor":"#ffffff","bgOpacity":0.6}
+[2025-06-25 01:35:30] [LOG] [SHORTCUT] Registrado com sucesso: Ctrl+0
+[2025-06-25 01:35:30] [LOG] [SHORTCUT] Registrado com sucesso: Ctrl+9
+[2025-06-25 01:35:30] [LOG] [SHORTCUT] Registrado com sucesso: Ctrl+R
+[2025-06-25 01:35:30] [LOG] [SHORTCUT] Registrado com sucesso: Ctrl+M
+[2025-06-25 01:35:30] [LOG] [SHORTCUT] Registrado com sucesso: Ctrl+Shift+M
+[2025-06-25 01:35:30] [LOG] [SHORTCUT] Atalhos aplicados com base no config: {"zoomin":"Ctrl+0","zoomout":"Ctrl+9","refresh":"Ctrl+R","minimize":"Ctrl+M","restore":"Ctrl+Shift+M"}
+[2025-06-25 01:35:30] [LOG] Atalhos aplicados.
+[2025-06-25 01:35:32] [LOG] Aviões obtidos: 5
+[2025-06-25 01:35:32] [LOG] Aviões atualizados: e80440, e48395, 3965a7, e49b52, e49475
+[2025-06-25 01:35:32] [LOG] [MAP] Salvando mapa: {"lat":-22.878705724951253,"lon":-43.26824375878984,"zoom":10}
+[2025-06-25 01:35:32] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:33] [LOG] [SHORTCUT] Atalho acionado: Ctrl+M → shortcut-minimize-to-bubble
+[2025-06-25 01:35:33] [LOG] BubbleWindow criada.
+[2025-06-25 01:35:36] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:36] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:36] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:36] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:36] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:36] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:36] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:36] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:36] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:36] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:36] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:36] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:36] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:36] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:36] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:36] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:36] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:36] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:36] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:36] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:36] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:37] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:37] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:37] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:37] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:37] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:37] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:37] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:37] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:37] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:37] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:37] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:37] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:37] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:37] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:37] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:37] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:37] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:37] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:37] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:37] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:37] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:37] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:37] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:37] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:37] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:37] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:37] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:37] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:37] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:37] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:37] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:37] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:37] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:37] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:37] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:37] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:37] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:37] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:37] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:37] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:37] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:37] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:37] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:37] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:37] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:37] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:37] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:37] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:37] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:37] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:37] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:37] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:37] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:37] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:37] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:38] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:38] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:38] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:38] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:38] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:38] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:38] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:38] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:38] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:38] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:38] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:38] [LOG] [BUBBLE] Posição salva: {"x":672,"y":458}
+[2025-06-25 01:35:40] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:40] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:40] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:40] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:40] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:40] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:40] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:40] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:40] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:40] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:40] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:40] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:40] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:40] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:40] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:40] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:40] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:40] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:40] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:40] [LOG] [BUBBLE] Posição salva: {"x":762,"y":407}
+[2025-06-25 01:35:43] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:43] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:43] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:43] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:43] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:43] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:43] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:43] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:43] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:43] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:43] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:43] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:43] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:43] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:43] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:43] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:43] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:43] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:43] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:43] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:43] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:43] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:43] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:43] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:43] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:43] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:43] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:43] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:43] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:43] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:43] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:43] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:43] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:43] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:43] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:43] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:43] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:43] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:43] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:43] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:43] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:43] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:43] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:43] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:44] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:35:44] [LOG] [BUBBLE] Posição salva: {"x":1241,"y":625}
+[2025-06-25 01:35:48] [LOG] [SHORTCUT] Todos os atalhos foram desregistrados
+[2025-06-25 01:36:07] [LOG] === App iniciado (processo principal) ===
+[2025-06-25 01:36:08] [LOG] WidgetWindow criado: {"x":711,"y":204,"width":275,"height":430,"bgColor":"#1e1e1e","mapiconcolor":"#ffd700","titlecolor":"#ffd700","textcolor":"#ffffff","bgOpacity":0.6}
+[2025-06-25 01:36:08] [LOG] [SHORTCUT] Registrado com sucesso: Ctrl+0
+[2025-06-25 01:36:08] [LOG] [SHORTCUT] Registrado com sucesso: Ctrl+9
+[2025-06-25 01:36:08] [LOG] [SHORTCUT] Registrado com sucesso: Ctrl+R
+[2025-06-25 01:36:08] [LOG] [SHORTCUT] Registrado com sucesso: Ctrl+M
+[2025-06-25 01:36:08] [LOG] [SHORTCUT] Registrado com sucesso: Ctrl+Shift+M
+[2025-06-25 01:36:08] [LOG] [SHORTCUT] Atalhos aplicados com base no config: {"zoomin":"Ctrl+0","zoomout":"Ctrl+9","refresh":"Ctrl+R","minimize":"Ctrl+M","restore":"Ctrl+Shift+M"}
+[2025-06-25 01:36:08] [LOG] Atalhos aplicados.
+[2025-06-25 01:36:10] [LOG] [SHORTCUT] Atalho acionado: Ctrl+M → shortcut-minimize-to-bubble
+[2025-06-25 01:36:10] [LOG] BubbleWindow criada.
+[2025-06-25 01:36:10] [LOG] Aviões obtidos: 5
+[2025-06-25 01:36:10] [LOG] Aviões atualizados: e80440, e48395, 3965a7, e49b52, e49475
+[2025-06-25 01:36:10] [LOG] [MAP] Salvando mapa: {"lat":-22.878705724951253,"lon":-43.26824375878984,"zoom":10}
+[2025-06-25 01:36:10] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:36:16] [LOG] [CONFIG] Configuração salva com sucesso.
+[2025-06-25 01:36:16] [LOG] [BUBBLE] Posição salva: {"x":30,"y":578}
+[2025-06-25 01:36:19] [LOG] [SHORTCUT] Atalho acionado: Ctrl+M → shortcut-minimize-to-bubble
+[2025-06-25 01:36:21] [LOG] [SHORTCUT] Atalho acionado: Ctrl+M → shortcut-minimize-to-bubble
+[2025-06-25 01:36:39] [LOG] Aviões obtidos: 4
+[2025-06-25 01:36:39] [LOG] Aviões atualizados: e80440, e49b52, 3965a7, e49475
+[2025-06-25 01:37:09] [LOG] Aviões obtidos: 4
+[2025-06-25 01:37:09] [LOG] Aviões atualizados: e80440, e49b52, 3965a7, e49475
+[2025-06-25 01:37:11] [LOG] [SHORTCUT] Todos os atalhos foram desregistrados

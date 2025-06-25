@@ -1,8 +1,6 @@
-const { ipcRenderer, remote } = require("electron");
+const { ipcRenderer } = require("electron");
 
-let userLat,
-  userLon,
-  initialZoom = 13;
+let userLat, userLon, initialZoom = 13;
 let map,
   userMarker,
   planeMarkers   = [];
@@ -11,6 +9,7 @@ let planeTrails  = {}; // polylines desenhadas no mapa
 let lastSeenIcao = [];
 let manualLocation = false;
 
+/* ---------- util  ------------------------------------------------------- */
 function hexToRgba(hex, opacity) {
   const parsed = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
   if (!parsed) return `rgba(30,30,30,${opacity})`; // fallback
@@ -20,6 +19,7 @@ function hexToRgba(hex, opacity) {
   return `rgba(${r}, ${g}, ${b}, ${opacity})`;
 }
 
+/* ---------- carrega config --------------------------------------------- */
 ipcRenderer.invoke("get-config").then((config) => {
   console.log("[DEBUG] getConfig", config);
   const bgColor      = config.widget?.bgColor || "#1e1e1e";
@@ -44,6 +44,7 @@ ipcRenderer.invoke("get-config").then((config) => {
   fetchWeather(userLat, userLon);
 });
 
+/* ---------- atualização de estilo dinâmica ----------------------------- */
 ipcRenderer.on("apply-style", (event, style) => {
   console.log("[DEBUG] Novo estilo recebido:", style);
   const bgColor      = style.widget?.bgColor || "#1e1e1e";
@@ -60,6 +61,7 @@ ipcRenderer.on("apply-style", (event, style) => {
   document.body.style.setProperty("--text-color", textcolor);
 });
 
+/* ---------- Leaflet ----------------------------------------------------- */
 function startMap() {
   map = L.map("map", {
     zoomControl: false,

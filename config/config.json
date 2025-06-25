@@ -1,7 +1,7 @@
 {
   "widget": {
-    "x": 917,
-    "y": 23,
+    "x": 711,
+    "y": 204,
     "width": 275,
     "height": 430,
     "bgColor": "#1e1e1e",
@@ -11,16 +11,16 @@
     "bgOpacity": 0.6
   },
   "bubble": {
-    "x": 20,
-    "y": 600,
+    "x": 30,
+    "y": 578,
     "color": "#1982d2",
     "size": 50,
     "iconColor": "#ffffff"
   },
   "map": {
-    "lat": -22.91033339315192,
-    "lon": -43.363287705605394,
-    "zoom": 9
+    "lat": -22.878705724951253,
+    "lon": -43.26824375878984,
+    "zoom": 10
   },
   "search": {
     "radius": 50,
@@ -45,8 +45,6 @@
   },
   "accounts": {
     "opensky": {
-      "username": "renatomontenegrodeoliveira@gmail.com",
-      "password": "Monte.negro1",
       "client_id": "renatomontenegrodeoliveira@gmail.com-api-client",
       "client_secret": "wsJgUedxeDWnZxoqirNzX5RMlISDXV2Y"
     }

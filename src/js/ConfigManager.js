@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const { log, warn, error } = require('./Logger');
 
 const configPath = path.join(__dirname, '../../config/config.json');
 
@@ -13,7 +14,7 @@ const defaultConfig = {
 function ensureConfigFile() {
   try {
     if (!fs.existsSync(configPath)) {
-      console.log("[INFO] config.json não encontrado. Criando com padrão...");
+      log("[CONFIG] config.json não encontrado. Criando com padrão...");
       saveConfig(defaultConfig);
     } else {
       const data = fs.readFileSync(configPath);
@@ -21,7 +22,7 @@ function ensureConfigFile() {
       return parsed;
     }
   } catch (err) {
-    console.warn("[WARN] config.json inválido ou corrompido. Recriando...");
+    warn("[CONFIG] config.json inválido ou corrompido. Recriando...");
     saveConfig(defaultConfig);
   }
   return defaultConfig;
@@ -33,7 +34,7 @@ function loadConfig() {
     const raw = fs.readFileSync(configPath);
     return JSON.parse(raw);
   } catch (err) {
-    console.error("[ERROR] Falha ao carregar config.json:", err);
+    error("[CONFIG] Falha ao carregar config.json:", err);
     return defaultConfig;
   }
 }
@@ -42,8 +43,9 @@ function loadConfig() {
 function saveConfig(config) {
   try {
     fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
+    log("[CONFIG] Configuração salva com sucesso.");
   } catch (err) {
-    console.error("[ERROR] Falha ao salvar config.json:", err);
+    error("[CONFIG] Falha ao salvar config.json:", err);
   }
 }
 

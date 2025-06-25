@@ -1,67 +1,50 @@
-const fetch = require("node-fetch"); // v2!
+/* ──────────────────────────────  Background.js  ─────────────────────────── */
+/* eslint-disable no-console */
+const path  = require("path");
+const fs    = require("fs");
+const fetch = require("node-fetch");           // v2
 const { getOpenSkyToken } = require("../../config/OpenSkyAuth");
+const { log, warn, error } = require("./Logger"); // <<  Logger global
 
-// Função para calcular a distância Haversine entre dois pontos
+/* ───────────────────────  Cache de modelos  (24h)  ──────────────────────── */
+const cacheFile = path.join(__dirname, '../../config/aircraft_cache.json');
+
+function loadDiskCache() {
+  try {
+    if (fs.existsSync(cacheFile)) return JSON.parse(fs.readFileSync(cacheFile, "utf8"));
+  } catch (e) { warn("[CACHE] Falha ao ler cache:", e); }
+  return {};
+}
+const modelCache = loadDiskCache();                 // vive na memória
+
+function persistCache() {
+  try { fs.writeFileSync(cacheFile, JSON.stringify(modelCache, null, 2), "utf8"); }
+  catch (e) { error("[CACHE] Falha ao salvar cache:", e); }
+}
+/* ─────────────────────────────────────────────────────────────────────────── */
+
+/* ---------- utilidades ---------------------------------------------------- */
 function calculateDistanceKm(lat1, lon1, lat2, lon2) {
   const R = 6371;
   const dLat = ((lat2 - lat1) * Math.PI) / 180;
   const dLon = ((lon2 - lon1) * Math.PI) / 180;
   const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.sin(dLat / 2) ** 2 +
     Math.cos((lat1 * Math.PI) / 180) *
       Math.cos((lat2 * Math.PI) / 180) *
-      Math.sin(dLon / 2) *
-      Math.sin(dLon / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c;
+      Math.sin(dLon / 2) ** 2;
+  return 2 * R * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
-// Função para obter a direção cardinal (não usado no heading do ícone)
 function getDirection(lat1, lon1, lat2, lon2) {
-  const y =
-    Math.sin(((lon2 - lon1) * Math.PI) / 180) *
-    Math.cos((lat2 * Math.PI) / 180);
+  const y = Math.sin(((lon2 - lon1) * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180);
   const x =
     Math.cos((lat1 * Math.PI) / 180) * Math.sin((lat2 * Math.PI) / 180) -
     Math.sin((lat1 * Math.PI) / 180) *
       Math.cos((lat2 * Math.PI) / 180) *
       Math.cos(((lon2 - lon1) * Math.PI) / 180);
-  const brng = (Math.atan2(y, x) * 180) / Math.PI;
-  const degrees = (brng + 360) % 360;
-  if (degrees < 45 || degrees >= 315) return "Norte";
-  if (degrees < 135) return "Leste";
-  if (degrees < 225) return "Sul";
-  return "Oeste";
-}
-
-async function getAircraftModel(icao24, config) {
-  if (!icao24) return null;
-
-  const token = await getOpenSkyToken(config);
-  if (!token) {
-    console.warn(`[OpenSky] Sem token para buscar modelo de ${icao24}`);
-    return null;
-  }
-
-  const url = `https://opensky-network.org/api/metadata/aircraft/icao/${icao24}`;
-  try {
-    const res = await fetch(url, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
-
-    if (!res.ok) {
-      console.warn(`[OpenSky] Falha ao buscar modelo de ${icao24}:`, res.status, res.statusText);
-      return null;
-    }
-
-    const json = await res.json();
-    return json?.model || null;
-  } catch (err) {
-    console.error(`[OpenSky] Erro ao obter modelo de ${icao24}:`, err);
-    return null;
-  }
+  const deg = ((Math.atan2(y, x) * 180) / Math.PI + 360) % 360;
+  return deg < 45 || deg >= 315 ? "Norte" : deg < 135 ? "Leste" : deg < 225 ? "Sul" : "Oeste";
 }
 
 function getAircraftType(state) {
@@ -73,106 +56,96 @@ function getAircraftType(state) {
   return "outros";
 }
 
-// Busca aviões próximos (raio ~50 km do centro)
+/* ----------  getAircraftModel com cache ----------------------------------- */
+async function getAircraftModel(icao24, config) {
+  if (!icao24) return null;
+
+  const entry = modelCache[icao24];
+  if (entry && Date.now() - new Date(entry.fetchedAt).getTime() < 24 * 3600_000) {
+    return entry.model;                       // cache hit
+  }
+
+  const token = await getOpenSkyToken(config);
+  if (!token) { warn("[OpenSky] Sem token para", icao24); return null; }
+
+  const url = `https://opensky-network.org/api/metadata/aircraft/icao/${icao24}`;
+  try {
+    const res = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
+    if (!res.ok) { warn("[OpenSky] HTTP", res.status, res.statusText); return null; }
+
+    const { model = null } = await res.json();
+    if (model) {
+      modelCache[icao24] = { model, fetchedAt: new Date().toISOString() };
+      persistCache();
+    }
+    return model;
+  } catch (e) {
+    error("[OpenSky] Erro ao buscar modelo:", e);
+    return null;
+  }
+}
+
+/* ────────────────────────  Busca aviões próximos  ───────────────────────── */
 async function checkNearbyPlanes(userLocation, config) {
   try {
     const { lat, lon } = userLocation;
     const radiusKm = config?.search?.radius ?? 50;
-    const allowedTypes = config?.search?.filters || ['comercial', 'privado', 'militar', 'helicoptero', 'outros'];
-   
+    const allowed  = config?.search?.filters || ["comercial","privado","militar","helicoptero","outros"];
+
     const delta = radiusKm / 111;
-    const lamin = lat - delta;
-    const lomin = lon - delta;
-    const lamax = lat + delta;
-    const lomax = lon + delta;
+    const lamin = lat - delta, lamax = lat + delta;
+    const lomin = lon - delta, lomax = lon + delta;
 
-    const url = `https://opensky-network.org/api/states/all?lamin=${lamin}&lomin=${lomin}&lamax=${lamax}&lomax=${lomax}`;
-    const response = await fetch(url);
+    const url  = `https://opensky-network.org/api/states/all?lamin=${lamin}&lomin=${lomin}&lamax=${lamax}&lomax=${lomax}`;
+    const resp = await fetch(url);
+    if (!resp.ok) throw new Error(`HTTP ${resp.status} – ${resp.statusText}`);
 
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status} - ${response.statusText}`);
-    }
-    const data = await response.json();
-
+    const data = await resp.json();
     if (!data.states) return [];
 
-    const planes = (await Promise.all(data.states
-      .map(async (state) => {
-        const [
-              icao24,          // 0  Código hexadecimal de 24 bits exclusivo da aeronave
-              callsign,        // 1  Código de chamada do voo
-              origin_country,  // 2  País de origem do registro da aeronave.
-              time_position,   // 3  Timestamp (Unix) da última posição conhecida.
-              last_contact,    // 4  Timestamp do último contato recebido de qualquer tipo.
-              longitude,       // 5  Longitude atual da aeronave (graus).
-              latitude,        // 6  Latitude atual da aeronave (graus).
-              baro_altitude,   // 7  Altitude barométrica estimada, em metros.
-              on_ground,       // 8  Booleano indicando se a aeronave está no solo.
-              velocity,        // 9  Velocidade horizontal em m/s.
-              true_track,      // 10 Direção real do movimento
-              vertical_rate,   // 11 Taxa de subida/descida em m/s.
-              sensors,         // 12 Dados sobre sensores usados
-              geo_altitude,    // 13 Altitude com base em modelo geodésico
-              squawk,          // 14 Código de transponder 
-              spi,             // 15 Special Position Indicator (booleano).
-              position_source  // 16 Origem dos dados de posição.
-        ] = state;
+    const planes = (await Promise.all(data.states.map(async state => {
+      const [ icao24, callsign, origin_country,, , longitude, latitude,
+              baro_altitude, , , true_track, , , , squawk, spi ] = state;
 
-        let tipoModelo = 'Desconhecido';
+      if (latitude == null || longitude == null) return null;
 
-             if (callsign?.startsWith('GLO')) tipoModelo = 'Gol Linhas Aéreas';
-        else if (callsign?.startsWith('TAM')) tipoModelo = 'LATAM Airlines';
-        else if (callsign?.startsWith('AZU')) tipoModelo = 'Azul Linhas Aéreas';
-        else if (callsign?.startsWith('VOE')) tipoModelo = 'Voepass Linhas Aéreas';
-        else if (callsign?.startsWith('BAW')) tipoModelo = 'British Airways';
-        else if (callsign?.startsWith('ARG')) tipoModelo = 'Aerolíneas Argentinas';
-        else if (callsign?.startsWith('CARG')) tipoModelo = 'Carga';
-        else if (callsign?.startsWith('HEL')) tipoModelo = 'Helicóptero';
+      const distance = calculateDistanceKm(lat, lon, latitude, longitude);
+      if (distance > radiusKm) return null;
 
-        if (latitude === null || longitude === null) return null;
+      const type = getAircraftType(state);
+      if (!allowed.includes(type)) return null;
 
-        const distance = calculateDistanceKm(lat, lon, latitude, longitude);
-        if (distance > radiusKm) return null;
+      const direction = getDirection(lat, lon, latitude, longitude);
+      const model     = await getAircraftModel(icao24, config);
 
-        const direction = getDirection(lat, lon, latitude, longitude);
-        const type = getAircraftType(state);
-        if (!allowedTypes.includes(type)) return null;
+      return {
+        icao24,
+        callsign : callsign?.trim() || "Desconhecido",
+        origin_country,
+        lat : latitude,
+        lon : longitude,
+        altitude : Math.round(baro_altitude || 0),
+        distance : Math.round(distance),
+        direction,
+        squawk   : squawk || null,
+        spi      : !!spi,
+        emergencia: ["7500","7600","7700"].includes(squawk) || !!spi,
+        heading  : true_track || 0,
+        model    : model || "none",
+        type,
+        title: `Voo ${callsign?.trim() || icao24}, ${model} (${Math.round(distance)} km)`,
+        body : `${origin_country} - ${direction} - Alt: ${Math.round(baro_altitude || 0)} m`,
+        userLat: lat,
+        userLon: lon
+      };
+    }))).filter(Boolean).sort((a,b) => a.distance - b.distance);
 
-        const model = await getAircraftModel(icao24, config);
-
-        return {
-          icao24,
-          callsign: callsign ? callsign.trim() : "Desconhecido",
-          origin_country,
-          lat: latitude,
-          lon: longitude,
-          altitude: Math.round(baro_altitude || 0),
-          distance: Math.round(distance),
-          direction,
-          squawk: squawk || null,
-          spi: !!spi,
-          emergencia: ['7500', '7600', '7700'].includes(squawk) || !!spi,
-          heading: true_track || 0,
-          model: model || "",
-          type,
-          title: `Voo ${callsign?.trim() || icao24 || "Desconhecido"}, ${model} (${Math.round(distance)} km)`,
-          body: `${tipoModelo} - ${origin_country} - ${direction} - Alt: ${Math.round(baro_altitude || 0)} m`,
-          userLat: lat, // Centro do radar, útil para o widget
-          userLon: lon,
-        };
-      })))
-      .filter(Boolean)
-      .sort((a, b) => a.distance - b.distance)
-
-      console.log("[DEBUG] Found planes:", planes); // até 50km
-
-    // Retorna os 5 mais próximos
-    return planes.slice(0, 5);
-  } catch (err) {
-    console.error("Erro ao buscar aviões do OpenSky:", err);
+    log("Aviões obtidos:", planes.length);
+    return planes.slice(0,5);
+  } catch (e) {
+    error("Falha checkNearbyPlanes:", e);
     return [];
   }
 }
 
-// Exporta as funções para o main.js
 module.exports = { checkNearbyPlanes };
