@@ -21,6 +21,8 @@ out/
 .env
 .env.local
 config/config.json
+config/aircraft_cache.json
+logs/runtime.log
 
 # VSCode e sistema
 .vscode/
