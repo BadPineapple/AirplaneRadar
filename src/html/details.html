@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="css/details_style.css" />
+</head>
+<body>
+    <div id="drag-region">
+        <span style="font-size: 11px; font-weight: bold; letter-spacing: 2px; color: var(--accent);">
+            <i class="fa-solid fa-microchip"></i> TELEMETRIA_SYSTEM_V1.4
+        </span>
+        <div class="close-btn" onclick="require('electron').ipcRenderer.send('close-details-window')">
+            <i class="fa-solid fa-xmark"></i>
+        </div>
+    </div>
+
+    <div id="main-content">
+        <div class="photo-container">
+            <img id="plane-photo" src="" alt="">
+            <div id="photo-loader" style="position:absolute; color:#444; font-size:10px;">BUSCANDO IMAGEM...</div>
+        </div>
+
+        <div class="tech-grid" id="data-fields">
+            <div class="info-box full"><label>Modelo</label><div id="model" class="value">---</div></div>
+            <div class="info-box"><label>Registro</label><div id="registration_number" class="value">---</div></div>
+            <div class="info-box"><label>Código ICAO</label><div id="icaoCode" class="value">---</div></div>
+            <div class="info-box full"><label>Operador</label><div id="plane_owner" class="value">---</div></div>
+            
+            <div class="section-header">ESPECIFICAÇÕES TÉCNICAS</div>
+            <div class="info-box"><label>Motores</label><div id="engines_count" class="value">---</div></div>
+            <div class="info-box"><label>Combustível/Tipo</label><div id="engines_type" class="value">---</div></div>
+            <div class="info-box"><label>Vel. Cruzeiro</label><div id="max_speed" class="value">---</div></div>
+            <div class="info-box"><label>Autonomia</label><div id="max_range" class="value">---</div></div>
+            
+            <div class="section-header">DIMENSÕES</div>
+            <div class="info-box"><label>Comprimento</label><div id="length" class="value">---</div></div>
+            <div class="info-box"><label>Envergadura</label><div id="wingspan" class="value">---</div></div>
+            <div class="info-box"><label>Altura</label><div id="height" class="value">---</div></div>
+            <div class="info-box"><label>Classe OACI</label><div id="plane_class" class="value">---</div></div>
+
+            <div class="section-header">HISTÓRICO</div>
+            <div class="info-box"><label>Idade (Anos)</label><div id="plane_age" class="value">---</div></div>
+            <div class="info-box"><label>Status Célula</label><div id="Plane_Status" class="value">---</div></div>
+            <div class="info-box full"><label>Linha de Montagem</label><div id="Production_line" class="value">---</div></div>
+        </div>
+    </div>
+
+    <script>
+        // Dentro do <script> no final do details.html
+const { ipcRenderer } = require('electron');
+
+console.log("Aguardando sinal de telemetria...");
+
+ipcRenderer.on('display-details', (event, data) => {
+    console.log("DADOS RECEBIDOS:", data); // Isso deve aparecer no DevTools (Ctrl+Shift+I) da janela de detalhes
+
+    if (!data) return;
+
+    // Preencher campos de texto
+    Object.keys(data).forEach(key => {
+        const el = document.getElementById(key);
+        if (el) {
+            el.innerText = (data[key] && data[key] !== "N/A" && data[key] !== "---") ? data[key] : "Não disponível";
+        }
+    });
+
+    // Atualizar Foto
+    const img = document.getElementById('plane-photo');
+    if (data.photo) {
+        img.src = data.photo;
+        img.onload = () => img.classList.add('loaded');
+    }
+});
+    </script>
+</body>
+</html>

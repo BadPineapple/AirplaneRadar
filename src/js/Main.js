@@ -19,6 +19,7 @@ let widgetWindow = null;
 let bubbleWindow = null;
 let settingsWindow = null;
 let userLocation = { lat: config.map.lat, lon: config.map.lon };
+let detailsWindow = null;
 
 // Inicializa o Remote (para compatibilidade com seu código antigo)
 remoteMain.initialize();
@@ -45,6 +46,67 @@ ipcMain.on("restore-from-bubble", () => {
 });
 
 ipcMain.on("open-settings", () => createSettingsWindow());
+
+ipcMain.on("open-details-window", (event, planeData) => {
+
+    if (detailsWindow) {
+        if (detailsWindow.isMinimized()) detailsWindow.restore();
+        detailsWindow.focus();
+        
+        // Envia os novos dados do avião selecionado
+        detailsWindow.webContents.send("display-details", planeData);
+        log("[DETAILS] Atualizando telemetria para:", planeData.callsign);
+        return;
+    }
+
+    // Criar nova janela de detalhes
+    detailsWindow = new BrowserWindow({
+        width: 420,
+        height: 700,
+        x: config.details?.x,
+        y: config.details?.y,
+        frame: false,
+        transparent: true,
+        alwaysOnTop: true,
+        resizable: false, 
+        skipTaskbar: false, 
+        webPreferences: {
+            nodeIntegration: true,
+            contextIsolation: false,
+            enableRemoteModule: true 
+        }
+    });
+
+    remoteMain.enable(detailsWindow.webContents);
+
+    detailsWindow.loadFile(path.join(__dirname, "../html/details.html"));
+
+    // Envia os dados assim que o DOM estiver pronto
+    detailsWindow.webContents.on('did-finish-load', () => {
+        detailsWindow.webContents.send('display-details', planeData);
+    });
+
+    let detailsPosTimeout;
+    detailsWindow.on("move", () => {
+        clearTimeout(detailsPosTimeout);
+        detailsPosTimeout = setTimeout(() => {
+            const [x, y] = detailsWindow.getPosition();
+            if (!config.details) config.details = {};
+            config.details.x = x;
+            config.details.y = y;
+            saveConfig(config);
+            log("[DETAILS] Posição da telemetria salva.");
+        }, 500);
+    });
+
+    detailsWindow.on("closed", () => {
+        detailsWindow = null;
+    });
+});
+
+ipcMain.on("close-details-window", () => {
+    if (detailsWindow) detailsWindow.close();
+});
 
 // --- CRIAÇÃO DE JANELAS ---
 

@@ -1,0 +1,22 @@
+{
+    
+        "A319": { "length": "33.84m", "wingspan": "34.1m", "height": "11.76m", "max_speed": "871 km/h", "max_range": "6,950 km", "engines_count": "2", "engines_type": "Jet", "plane_class": "L2J" },
+        "A320": { "length": "37.57m", "wingspan": "35.8m", "height": "11.76m", "max_speed": "871 km/h", "max_range": "6,100 km", "engines_count": "2", "engines_type": "Jet", "plane_class": "L2J" },
+        "A321": { "length": "44.51m", "wingspan": "35.8m", "height": "11.76m", "max_speed": "871 km/h", "max_range": "5,950 km", "engines_count": "2", "engines_type": "Jet", "plane_class": "L2J" },
+        "A332": { "length": "58.82m", "wingspan": "60.3m", "height": "17.39m", "max_speed": "871 km/h", "max_range": "13,450 km", "engines_count": "2", "engines_type": "Jet", "plane_class": "L2J" },
+        "B737": { "length": "31.2m", "wingspan": "35.8m", "height": "12.6m", "max_speed": "876 km/h", "max_range": "6,230 km", "engines_count": "2", "engines_type": "Jet", "plane_class": "L2J" },
+        "B738": { "length": "39.5m", "wingspan": "35.8m", "height": "12.5m", "max_speed": "876 km/h", "max_range": "5,765 km", "engines_count": "2", "engines_type": "Jet", "plane_class": "L2J" },
+        "B38M": { "length": "39.5m", "wingspan": "35.9m", "height": "12.3m", "max_speed": "839 km/h", "max_range": "6,570 km", "engines_count": "2", "engines_type": "Jet (MAX)", "plane_class": "L2J" },
+
+        "E190": { "length": "36.24m", "wingspan": "28.72m", "height": "10.57m", "max_speed": "871 km/h", "max_range": "4,537 km", "engines_count": "2", "engines_type": "Jet", "plane_class": "L2J" },
+        "E195": { "length": "38.65m", "wingspan": "28.72m", "height": "10.55m", "max_speed": "871 km/h", "max_range": "4,260 km", "engines_count": "2", "engines_type": "Jet", "plane_class": "L2J" },
+        "E2"  : { "length": "41.5m", "wingspan": "35.1m", "height": "10.9m", "max_speed": "870 km/h", "max_range": "4,815 km", "engines_count": "2", "engines_type": "Jet", "plane_class": "L2J" },
+
+        "AT72": { "length": "27.17m", "wingspan": "27.05m", "height": "7.65m", "max_speed": "510 km/h", "max_range": "1,528 km", "engines_count": "2", "engines_type": "Turboprop", "plane_class": "L2P" },
+        "AT42": { "length": "22.67m", "wingspan": "24.57m", "height": "7.59m", "max_speed": "560 km/h", "max_range": "1,326 km", "engines_count": "2", "engines_type": "Turboprop", "plane_class": "L2P" },
+
+        "C208": { "length": "12.67m", "wingspan": "15.87m", "height": "4.52m", "max_speed": "344 km/h", "max_range": "1,982 km", "engines_count": "1", "engines_type": "Turboprop", "plane_class": "L1P" },
+        "C172": { "length": "8.28m", "wingspan": "11.0m", "height": "2.72m", "max_speed": "226 km/h", "max_range": "1,185 km", "engines_count": "1", "engines_type": "Piston", "plane_class": "L1P" },
+        "R44" : { "length": "11.66m", "wingspan": "10.0m", "height": "3.3m", "max_speed": "202 km/h", "max_range": "560 km", "engines_count": "1", "engines_type": "Piston", "plane_class": "H1P" },
+        "R66" : { "length": "11.66m", "wingspan": "10.0m", "height": "3.48m", "max_speed": "222 km/h", "max_range": "601 km", "engines_count": "1", "engines_type": "Turboshaft", "plane_class": "H1T" }
+}
