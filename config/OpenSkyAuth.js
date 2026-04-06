@@ -3,11 +3,8 @@ const { log, warn, error } = require("../src/js/Logger");
 
 let cachedToken = null;
 let tokenExpiration = null;
+let isRefreshing = null;
 
-/**
- * Autentica com OpenSky e retorna um token válido (JWT).
- * O token é mantido em cache enquanto for válido para evitar spam na API de auth.
- */
 async function getOpenSkyToken(config) {
     const clientId = config.accounts?.opensky?.client_id || '';
     const clientSecret = config.accounts?.opensky?.client_secret || '';
@@ -22,20 +19,27 @@ async function getOpenSkyToken(config) {
         return cachedToken;
     }
 
+    if (isRefreshing) {
+        log("[AUTH] Já existe um pedido em curso, aguardando...");
+        return isRefreshing;
+    }
+
     log("[AUTH] Solicitando novo token de acesso...");
 
-    const params = new URLSearchParams();
-    params.append('grant_type', 'client_credentials');
-    params.append('client_id', clientId);
-    params.append('client_secret', clientSecret);
+    isRefreshing = (async () => {
+        try {
+            log("[AUTH] Solicitando novo token de acesso...");
+            const params = new URLSearchParams({
+                grant_type: 'client_credentials',
+                client_id: clientId,
+                client_secret: clientSecret
+            });
 
-    try {
-        // Usando o fetch nativo do Electron/Node
-        const res = await fetch("https://auth.opensky-network.org/auth/realms/opensky-network/protocol/openid-connect/token", {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: params.toString()
-        });
+            const res = await fetch("https://auth.opensky-network.org/auth/realms/opensky-network/protocol/openid-connect/token", {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: params.toString()
+            });
 
         if (!res.ok) {
             const errorData = await res.json().catch(() => ({}));
@@ -43,25 +47,20 @@ async function getOpenSkyToken(config) {
             return null;
         }
 
-        const json = await res.json();
-        
-        if (!json.access_token) {
-            error("[AUTH] Resposta da API não contém o access_token.");
+            const json = await res.json();
+            cachedToken = json.access_token;
+            tokenExpiration = Date.now() + (json.expires_in * 1000);
+            
+            return cachedToken;
+        } catch (err) {
+            error("[AUTH] Erro ao renovar token:", err.message);
             return null;
+        } finally {
+            isRefreshing = null; // Libera a trava
         }
+    })();
 
-        // Atualiza cache e expiração
-        cachedToken = json.access_token;
-        // expires_in geralmente é 600 segundos (10 min)
-        tokenExpiration = Date.now() + (json.expires_in * 1000);
-        
-        log("[AUTH] Token renovado com sucesso.");
-        return cachedToken;
-
-    } catch (err) {
-        error("[AUTH] Erro de rede/conexão ao autenticar:", err.message);
-        return null;
-    }
+    return isRefreshing;
 }
 
 /**

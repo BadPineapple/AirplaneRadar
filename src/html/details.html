@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
     <meta charset="utf-8">
+    <title>Telemetria</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="css/details_style.css" />
 </head>
@@ -10,7 +11,7 @@
         <span style="font-size: 11px; font-weight: bold; letter-spacing: 2px; color: var(--accent);">
             <i class="fa-solid fa-microchip"></i> TELEMETRIA_SYSTEM_V1.4
         </span>
-        <div class="close-btn" onclick="require('electron').ipcRenderer.send('close-details-window')">
+        <div class="close-btn" onclick="window.closeDetails()">
             <i class="fa-solid fa-xmark"></i>
         </div>
     </div>
@@ -46,32 +47,6 @@
         </div>
     </div>
 
-    <script>
-        // Dentro do <script> no final do details.html
-const { ipcRenderer } = require('electron');
-
-console.log("Aguardando sinal de telemetria...");
-
-ipcRenderer.on('display-details', (event, data) => {
-    console.log("DADOS RECEBIDOS:", data); // Isso deve aparecer no DevTools (Ctrl+Shift+I) da janela de detalhes
-
-    if (!data) return;
-
-    // Preencher campos de texto
-    Object.keys(data).forEach(key => {
-        const el = document.getElementById(key);
-        if (el) {
-            el.innerText = (data[key] && data[key] !== "N/A" && data[key] !== "---") ? data[key] : "Não disponível";
-        }
-    });
-
-    // Atualizar Foto
-    const img = document.getElementById('plane-photo');
-    if (data.photo) {
-        img.src = data.photo;
-        img.onload = () => img.classList.add('loaded');
-    }
-});
-    </script>
+    <script src="../js/Details.js"></script>
 </body>
 </html>
