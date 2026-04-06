@@ -1,18 +1,19 @@
 {
   "name": "airplane-radar-widget",
-  "version": "1.3.2",
-  "description": "Radar de aviões em tempo real com Electron e OpenSky.",
+  "version": "1.4.0",
+  "description": "Radar de aviões em tempo real com Electron e OpenSky (Refatorado).",
   "main": "src/js/Main.js",
   "author": "BadPineapple",
   "license": "MIT",
   "scripts": {
     "start": "electron .",
-    "build": "electron-builder"
+    "build": "electron-builder",
+    "dist": "electron-builder --win --publish never"
   },
   "build": {
     "appId": "com.renato.airplaneradar",
     "productName": "Airplane Radar Widget",
-    "asar": false,
+    "asar": true,
     "directories": {
       "output": "dist"
     },
@@ -30,17 +31,17 @@
     ],
     "win": {
       "target": "nsis",
-      "icon": "assets/img/icon.ico"
+      "icon": "assets/img/icon.ico",
+      "artifactName": "${productName}-Setup-${version}.${ext}"
     }
   },
   "dependencies": {
     "@electron/remote": "^2.1.2",
-    "auto-launch": "^5.0.5",
-    "dotenv": "^16.5.0",
-    "node-fetch": "^2.6.7"
+    "auto-launch": "^5.0.6",
+    "dotenv": "^16.4.0"
   },
   "devDependencies": {
-    "electron": "^28.2.3",
-    "electron-builder": "^24.13.2"
+    "electron": "^41.1.1",
+    "electron-builder": "^26.8.1"
   }
 }

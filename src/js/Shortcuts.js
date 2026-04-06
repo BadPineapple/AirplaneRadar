@@ -1,44 +1,62 @@
-const { globalShortcut } = require('electron');
+/* ─────────────────────────────  Shortcuts.js  ───────────────────────────── */
+const { globalShortcut, ipcMain } = require('electron');
 const { log, warn, error } = require('./Logger');
 
-function applyShortcuts(widgetWindow, config) {
-  globalShortcut.unregisterAll();
+/**
+ * Aplica os atalhos globais baseados no arquivo de configuração.
+ * @param {BrowserWindow} widgetWindow - Referência da janela principal
+ * @param {Object} config - Objeto de configuração carregado
+ * @param {Function} refreshCallback - Função para disparar o refresh de dados no Main.js
+ */
+function applyShortcuts(widgetWindow, config, refreshCallback) {
+    // Limpa registros anteriores para evitar duplicatas ou vazamento de memória
+    globalShortcut.unregisterAll();
 
-  const shortcuts = config.shortcuts || {};
+    const s = config.shortcuts || {};
 
-  const map = [
-    { combo: shortcuts.zoomin || 'CommandOrControl+=', event: 'shortcut-zoomin' },
-    { combo: shortcuts.zoomout || 'CommandOrControl+-', event: 'shortcut-zoomout' },
-    { combo: shortcuts.refresh || 'CommandOrControl+R', event: 'shortcut-refresh-now' },
-    { combo: shortcuts.minimize || 'CommandOrControl+M', event: 'shortcut-minimize-to-bubble' },
-    { combo: shortcuts.restore || 'CommandOrControl+Shift+M', event: 'shortcut-restore-from-bubble' }
-  ];
-
-  map.forEach(({ combo, event }) => {
-    try {
-      const success = globalShortcut.register(combo, () => {
-        if (widgetWindow && widgetWindow.webContents) {
-          widgetWindow.webContents.send(event);
+    // Mapeamento de combinações e ações
+    const shortcutMap = [
+        { combo: s.zoomin  || 'CommandOrControl+Equal', event: 'shortcut-zoomin' },
+        { combo: s.zoomout || 'CommandOrControl+Minus', event: 'shortcut-zoomout' },
+        { combo: s.minimize || 'CommandOrControl+Shift+H', event: 'shortcut-minimize-to-bubble' },
+        { combo: s.restore || 'CommandOrControl+Shift+B', event: 'shortcut-restore-from-bubble' },
+        { 
+            combo: s.refresh || 'CommandOrControl+Shift+R', 
+            action: () => {
+                log("[SHORTCUT] Refresh forçado via teclado.");
+                if (refreshCallback) refreshCallback(); // Chama a função do Main.js
+                if (widgetWindow) widgetWindow.webContents.send('shortcut-refresh-now');
+            }
         }
-        log(`[SHORTCUT] Atalho acionado: ${combo} → ${event}`);
-      });
+    ];
 
-      if (!success) {
-        warn(`[SHORTCUT] Falha ao registrar atalho: ${combo}`);
-      } else {
-        log(`[SHORTCUT] Registrado com sucesso: ${combo}`);
-      }
-    } catch (err) {
-      error(`[SHORTCUT] Erro ao registrar atalho "${combo}":`, err);
-    }
-  });
+    shortcutMap.forEach(({ combo, event, action }) => {
+        try {
+            const isRegistered = globalShortcut.register(combo, () => {
+                // Se houver uma ação direta (como o refresh), executa ela
+                if (action) {
+                    action();
+                } else if (widgetWindow && !widgetWindow.isDestroyed()) {
+                    // Caso contrário, envia o evento para o Renderer (HTML/JS)
+                    widgetWindow.webContents.send(event);
+                }
+                log(`[SHORTCUT] Acionado: ${combo}`);
+            });
 
-  log("[SHORTCUT] Atalhos aplicados com base no config:", shortcuts);
+            if (!isRegistered) {
+                warn(`[SHORTCUT] O sistema recusou o atalho: ${combo} (Pode estar em uso por outro app)`);
+            }
+        } catch (err) {
+            error(`[SHORTCUT] Erro fatal ao registrar "${combo}":`, err.message);
+        }
+    });
+
+    log("[SHORTCUT] Sistema de atalhos inicializado.");
 }
 
 function unregisterShortcuts() {
-  globalShortcut.unregisterAll();
-  log("[SHORTCUT] Todos os atalhos foram desregistrados");
+    globalShortcut.unregisterAll();
+    log("[SHORTCUT] Todos os atalhos foram removidos.");
 }
 
 module.exports = { applyShortcuts, unregisterShortcuts };
