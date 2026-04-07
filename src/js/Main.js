@@ -4,7 +4,7 @@ const AutoLaunch  = require("auto-launch");
 const remoteMain  = require("@electron/remote/main");
 
 // Módulos internos
-const { checkNearbyPlanes } = require("./Background");
+const { checkNearbyPlanes, getAircraftFullDetails } = require("./Background");
 const { applyShortcuts, unregisterShortcuts } = require("./Shortcuts");
 const { ensureConfigFile, loadConfig, saveConfig } = require("./ConfigManager");
 const { log, error } = require('./Logger');
@@ -21,7 +21,7 @@ let settingsWindow = null;
 let userLocation = { lat: config.map.lat, lon: config.map.lon };
 let detailsWindow = null;
 
-// Inicializa o Remote (para compatibilidade com seu código antigo)
+// Inicializa o Remote
 remoteMain.initialize();
 
 // --- HANDLERS IPC (Comunicação) ---
@@ -47,19 +47,17 @@ ipcMain.on("restore-from-bubble", () => {
 
 ipcMain.on("open-settings", () => createSettingsWindow());
 
-ipcMain.on("open-details-window", (event, planeData) => {
+// --- GERENCIAMENTO DA JANELA DE DETALHES ---
 
+ipcMain.on("open-details-window", (event, icao24) => {
     if (detailsWindow) {
         if (detailsWindow.isMinimized()) detailsWindow.restore();
         detailsWindow.focus();
-        
-        // Envia os novos dados do avião selecionado
-        detailsWindow.webContents.send("display-details", planeData);
-        log("[DETAILS] Atualizando telemetria para:", planeData.callsign);
+        detailsWindow.webContents.send("load-icao", icao24);
+        log("[DETAILS] Solicitada nova telemetria para o ICAO:", icao24);
         return;
     }
 
-    // Criar nova janela de detalhes
     detailsWindow = new BrowserWindow({
         width: 420,
         height: 700,
@@ -77,27 +75,23 @@ ipcMain.on("open-details-window", (event, planeData) => {
         }
     });
 
-    remoteMain.enable(detailsWindow.webContents);
+    if (remoteMain && typeof remoteMain.enable === 'function') {
+        remoteMain.enable(detailsWindow.webContents);
+    }
 
     detailsWindow.loadFile(path.join(__dirname, "../html/details.html"));
 
-    // Envia os dados assim que o DOM estiver pronto
     detailsWindow.webContents.on('did-finish-load', () => {
-        detailsWindow.webContents.send('display-details', planeData);
+        setTimeout(() => {
+            if (detailsWindow && !detailsWindow.isDestroyed()) {
+                detailsWindow.webContents.send('load-icao', icao24);
+                detailsWindow.webContents.send("apply-style", config);
+                log("[DETAILS] Janela aberta e ICAO enviado com sucesso:", icao24);
+            }
+        }, 300); 
     });
 
-    let detailsPosTimeout;
-    detailsWindow.on("move", () => {
-        clearTimeout(detailsPosTimeout);
-        detailsPosTimeout = setTimeout(() => {
-            const [x, y] = detailsWindow.getPosition();
-            if (!config.details) config.details = {};
-            config.details.x = x;
-            config.details.y = y;
-            saveConfig(config);
-            log("[DETAILS] Posição da telemetria salva.");
-        }, 500);
-    });
+    // O EVENTO DE "MOVE" AUTOMÁTICO FOI REMOVIDO DAQUI
 
     detailsWindow.on("closed", () => {
         detailsWindow = null;
@@ -106,6 +100,25 @@ ipcMain.on("open-details-window", (event, planeData) => {
 
 ipcMain.on("close-details-window", () => {
     if (detailsWindow) detailsWindow.close();
+});
+
+// NOVO: Handler para salvar a posição manualmente sob demanda
+ipcMain.on("save-details-position", () => {
+    if (detailsWindow && !detailsWindow.isDestroyed()) {
+        const [x, y] = detailsWindow.getPosition();
+        if (!config.details) config.details = {};
+        config.details.x = x;
+        config.details.y = y;
+        saveConfig(config);
+        log("[DETAILS] Posição salva manualmente:", x, y);
+    }
+});
+
+// --- ROTA DE DADOS PARA A TELEMETRIA ---
+ipcMain.handle("fetch-plane-details-direct", async (event, icao24) => {
+    log("[MAIN] A aba de detalhes solicitou busca pesada para:", icao24);
+    const fullData = await getAircraftFullDetails(icao24, config, true);
+    return fullData;
 });
 
 // --- CRIAÇÃO DE JANELAS ---
@@ -122,7 +135,7 @@ function createWidgetWindow() {
         resizable: false,
         skipTaskbar: true,
         webPreferences: {
-            nodeIntegration: true, // Mantido para seu código atual funcionar
+            nodeIntegration: true, 
             contextIsolation: false,
             enableRemoteModule: true
         }
@@ -132,7 +145,6 @@ function createWidgetWindow() {
     widgetWindow.setAlwaysOnTop(true, "screen-saver");
     widgetWindow.loadFile(path.join(__dirname, "../html/widget.html"));
 
-    // Otimização: Salva posição apenas após terminar de mover
     let saveTimeout;
     widgetWindow.on("move", () => {
         clearTimeout(saveTimeout);
@@ -192,7 +204,6 @@ async function refreshPlanes() {
 // --- LIFECYCLE ---
 
 app.whenReady().then(async () => {
-    // Configurar ícone na bandeja (Tray)
     const iconPath = path.join(__dirname, "../../assets/img/icon.png");
     tray = new Tray(iconPath);
     const contextMenu = Menu.buildFromTemplate([
@@ -204,7 +215,6 @@ app.whenReady().then(async () => {
     tray.setToolTip('Airplane Radar Widget');
     tray.setContextMenu(contextMenu);
 
-    // Auto-launch (Opcional: mover para uma config de usuário depois)
     const autoLauncher = new AutoLaunch({ name: "AirplaneRadarWidget" });
     autoLauncher.isEnabled().then(isEnabled => {
         if (!isEnabled) autoLauncher.enable();
@@ -213,12 +223,11 @@ app.whenReady().then(async () => {
     createWidgetWindow();
     applyShortcuts(widgetWindow, config, refreshPlanes);
 
-    // Loop de atualização
     setInterval(refreshPlanes, 30_000);
     refreshPlanes(); 
 });
 
 app.on("will-quit", unregisterShortcuts);
 app.on("window-all-closed", e => {
-    if (process.platform !== 'darwin') e.preventDefault(); // Mantém o app rodando no Tray
+    if (process.platform !== 'darwin') e.preventDefault(); 
 });

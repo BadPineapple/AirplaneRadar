@@ -20,7 +20,7 @@ const defaultConfig = {
         y: 600 
     },
     map: { 
-        lat: -16.6809, // Goiânia (sua config original)
+        lat: -16.6809,
         lon: -49.2539, 
         zoom: 13 
     },

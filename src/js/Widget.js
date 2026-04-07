@@ -150,9 +150,9 @@ function updatePlaneListUI(planes) {
     let html = planes.map((p, i) => {
         const emergencyClass = p.emergencia ? 'alert-blink' : '';
         const squawkLabel = p.squawk ? `<span class="badge">SQ ${p.squawk}</span>` : '';
-        
+
         return `
-            <div class="plane-item ${emergencyClass}" onclick="showPlaneDetails('${p.icao24}')">
+            <div class="plane-item ${emergencyClass}" onclick="showPlaneDetails('${p.icaoCode}')">
                 <div class="plane-info">
                     <strong>${i+1}. ${p.callsign}</strong> ${squawkLabel}
                     <span>${p.model}</span>
@@ -170,10 +170,14 @@ function updatePlaneListUI(planes) {
 }
 
 function showPlaneDetails(icao24) {
-    const planeBasic = window.lastPlanesData.find(p => p.icao24 === icao24);
+    if (!icao24 || icao24 === "undefined") {
+        console.error("[WIDGET] Erro: Código ICAO inválido no clique.");
+        return;
+    }
     
-    ipcRenderer.send("open-details-window", planeBasic);
-   
+    console.log("[WIDGET] Enviando ICAO para o Main:", icao24);
+    
+    ipcRenderer.send("open-details-window", icao24);
 }
 
 
