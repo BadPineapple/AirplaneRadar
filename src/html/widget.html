@@ -2,10 +2,19 @@
 <html>
 <head>
   <meta charset="utf-8" />
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'none';
+    script-src 'self';
+    style-src 'self' 'unsafe-inline';
+    img-src 'self' data: https://*.tile.openstreetmap.org;
+    font-src 'self';
+    media-src 'self' file:;
+    connect-src https://api.open-meteo.com;
+  " />
   <title>Radar Aéreo Widget</title>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-  <link rel="stylesheet" href="css/Style.css">
+  <link rel="stylesheet" href="../../assets/vendor/leaflet/leaflet.css" />
+  <link rel="stylesheet" href="../../assets/vendor/fontawesome/all.min.css" />
+  <link rel="stylesheet" href="css/Style.css" />
 </head>
 <body>
   <div id="container">
@@ -19,23 +28,28 @@
         <button class="window-btn" id="closebtn" title="Fechar">✕</button>
       </div>
     </div>
-    <div id="weather" style="margin: 0 0 6px 0; text-align: center; font-size:0.96em; color: var(--title-color, #ffd700);">
-      <i class="fa-solid fa-cloud-sun" style="color: var(--title-color, #ffd700)"></i> Carregando clima...
+
+    <div id="weather">
+      <i class="fa-solid fa-cloud-sun"></i> Carregando clima...
     </div>
+
     <div id="setloc-container">
       <button id="setloc-btn" title="Definir localização manual">Alterar Localização</button>
     </div>
-    <div style="position:relative;">
+
+    <div id="map-wrapper">
       <div id="map"></div>
       <div id="zoom-controls">
         <button id="zoomin" title="Zoom In">+</button>
         <button id="zoomout" title="Zoom Out">−</button>
       </div>
     </div>
+
     <div id="list"><b>Aviões mais próximos:</b></div>
     <audio id="notifysound" preload="auto"></audio>
   </div>
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-  <script src="../js/widget.js"></script>
+
+  <script src="../../assets/vendor/leaflet/leaflet.js"></script>
+  <script src="../js/Widget.js"></script>
 </body>
 </html>

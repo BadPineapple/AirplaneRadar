@@ -120,6 +120,25 @@ body {
   background: rgba(255, 255, 255, 0.13);
 }
 
+#weather {
+  margin: 0 0 6px 0;
+  text-align: center;
+  font-size: 0.96em;
+  color: var(--title-color, #ffd700);
+}
+#weather i { color: var(--title-color, #ffd700); }
+
+#map-wrapper { position: relative; }
+
+/* Atribuição do OpenStreetMap — exigida pela Tile Usage Policy */
+.leaflet-control-attribution {
+  font-size: 8px;
+  background: rgba(0, 0, 0, 0.45) !important;
+  color: #999 !important;
+  padding: 0 3px;
+}
+.leaflet-control-attribution a { color: #bbb !important; }
+
 #list {
   margin-top: 8px;
   font-size: 0.93em;
@@ -186,3 +205,78 @@ b {
 audio {
   display: none;
 }
+
+/* Ícones do mapa */
+.plane-div-icon, .user-div-icon { background: none; border: none; }
+
+.plane-icon {
+  font-size: 14px;
+  line-height: 1;
+  transition: transform 0.5s linear;
+  text-shadow: 0 0 3px #000;
+}
+
+.user-icon { color: #0ff; font-size: 13px; text-shadow: 0 0 4px #000; }
+
+/* Lista */
+.plane-item {
+  padding: 4px 2px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.plane-item:hover { background: rgba(255, 255, 255, 0.06); }
+
+.plane-info strong { color: var(--title-color, #ffd700); }
+.plane-info span   { margin-left: 6px; opacity: 0.85; }
+.plane-meta        { font-size: 0.85em; opacity: 0.7; }
+
+.badge {
+  background: rgba(255, 80, 80, 0.25);
+  color: #ff8080;
+  font-size: 0.75em;
+  padding: 1px 4px;
+  border-radius: 3px;
+  margin-left: 4px;
+}
+
+.empty-msg { opacity: 0.6; padding: 8px 2px; font-style: italic; }
+
+/* Ícones do mapa */
+.plane-div-icon, .user-div-icon { background: none; border: none; }
+
+.plane-icon {
+  font-size: 14px;
+  line-height: 1;
+  transition: transform 0.5s linear;
+  text-shadow: 0 0 3px #000;
+}
+
+.user-icon { color: #0ff; font-size: 13px; text-shadow: 0 0 4px #000; }
+
+/* Lista */
+.plane-item {
+  padding: 4px 2px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.plane-item:hover { background: rgba(255, 255, 255, 0.06); }
+
+.plane-info strong { color: var(--title-color, #ffd700); }
+.plane-info span   { margin-left: 6px; opacity: 0.85; }
+.plane-meta        { font-size: 0.85em; opacity: 0.7; }
+
+.badge {
+  background: rgba(255, 80, 80, 0.25);
+  color: #ff8080;
+  font-size: 0.75em;
+  padding: 1px 4px;
+  border-radius: 3px;
+  margin-left: 4px;
+}
+
+.empty-msg { opacity: 0.6; padding: 8px 2px; font-style: italic; }
+
+@keyframes blink { 0%, 100% { background: transparent; } 50% { background: rgba(255, 0, 0, 0.18); } }
+.alert-blink { animation: blink 1s infinite; }

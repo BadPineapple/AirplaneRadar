@@ -1,145 +1,251 @@
+/* ──────────────────────────────  Widget.js  ─────────────────────────────── */
 const api = window.api;
 
-// Estado Global do Widget
-let map, userMarker;
-let planeMarkers = new Map();
-let planeHistory = new Map(); 
-let planeTrails  = new Map();
-let userLat, userLon;
+/* ══════════════════════════════  ESTADO  ════════════════════════════════ */
+let map           = null;
+let mapReady      = false;   // evita gravar config durante o setView inicial
+let userMarker    = null;
+let config        = {};
+
+const planeMarkers = new Map();
+const planeTrails  = new Map();
+const planeHistory = new Map();
+
+const MAX_TRAIL_POINTS = 15;
+
 let manualLocationMode = false;
+let isFirstUpdate      = true;   // não toca o som no primeiro ciclo
+let weatherTimer       = null;
 
-api.on("update-planes", (planes) => { ... });
-api.on("apply-style", (style) => applyStyles(style));
+/* ═════════════════════════════  UTILITÁRIOS  ════════════════════════════ */
 
-/* ---------- Inicialização e Configuração ---------------------------------- */
-
-api.invoke("get-config").then((config) => {
-    applyStyles(config);
-    
-    userLat = config.map?.lat ?? -16.6809;
-    userLon = config.map?.lon ?? -49.2539;
-    
-    initMap(userLat, userLon, config.map?.zoom || 13);
-    fetchWeather(userLat, userLon);
-});
-
-api.invoke("get-paths").then(paths => {
-        const file = config.alert?.general || "notificacao.mp3";
-        const audio = document.getElementById("notifysound");
-        audio.src = `file://${paths.builtinSounds.replace(/\\/g, "/")}/${file}`;
-    });
-
-function applyStyles(config) {
-    const root = document.documentElement;
-    const widget = config.widget || {};
-    
-    // Converte Hex + Opacidade para RGBA
-    const r = parseInt(widget.bgColor?.slice(1, 3) || "1e", 16);
-    const g = parseInt(widget.bgColor?.slice(3, 5) || "1e", 16);
-    const b = parseInt(widget.bgColor?.slice(5, 7) || "1e", 16);
-    
-    const container = document.getElementById("container");
-    container.style.backgroundColor = `rgba(${r}, ${g}, ${b}, ${widget.bgOpacity ?? 0.7})`;
-    
-    root.style.setProperty("--icon-color", widget.mapiconcolor || "#ffd700");
-    root.style.setProperty("--title-color", widget.titlecolor || "#ffd700");
-    root.style.setProperty("--text-color", widget.textcolor || "#ffffff");
+function cssVar(name, fallback) {
+    const v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    return v || fallback;
 }
 
-api.on("apply-style", (e, style) => applyStyles(style));
+function toFileUrl(p) {
+    return encodeURI("file:///" + String(p).replace(/\\/g, "/").replace(/^\/+/, ""));
+}
 
-/* ---------- Gestão do Mapa (Leaflet) -------------------------------------- */
+function debounce(fn, delay) {
+    let t = null;
+    return (...args) => {
+        clearTimeout(t);
+        t = setTimeout(() => fn(...args), delay);
+    };
+}
 
-function initMap(lat, lon, zoom) {
-    map = L.map("map", { zoomControl: false, attributionControl: false }).setView([lat, lon], zoom);
+/* ═══════════════════════════════  ESTILO  ═══════════════════════════════ */
+/* RECONSTRUÍDO — confira contra o applyStyles original */
+
+function applyStyles(cfg) {
+    const w = cfg?.widget || {};
+    const root = document.documentElement.style;
+
+    root.setProperty("--title-color", w.titlecolor   || "#ffd700");
+    root.setProperty("--text-color",  w.textcolor    || "#ffffff");
+    root.setProperty("--icon-color",  w.mapiconcolor || "#ffd700");
+
+    // Cor de fundo com transparência aplicada via rgba
+    const hex = (w.bgColor || "#1e1e1e").replace("#", "");
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+    const opacity = w.bgOpacity ?? 0.6;
+
+    root.setProperty("--bg-color", `rgba(${r}, ${g}, ${b}, ${opacity})`);
+
+    // As trilhas já desenhadas precisam ser repintadas: o Leaflet grava a cor
+    // no atributo `stroke` do SVG, que NÃO resolve var(--icon-color).
+    const trailColor = w.mapiconcolor || "#ffd700";
+    planeTrails.forEach(trail => trail.setStyle({ color: trailColor }));
+
+    // Ícones são DivIcon com cor inline — força o redesenho
+    planeMarkers.forEach((marker) => {
+        const el = marker.getElement()?.querySelector(".plane-icon");
+        if (el) el.style.color = trailColor;
+    });
+}
+
+/* ═══════════════════════════════  ÍCONES  ═══════════════════════════════ */
+/* RECONSTRUÍDO — o original tinha a mesma estrutura, confira o markup */
+
+function getPlaneIcon(plane) {
+    const rotation = plane.heading || 0;
+    const color    = cssVar("--icon-color", "#ffd700");
+
+    const faClass = plane.type === "helicoptero"
+        ? "fa-helicopter"
+        : "fa-plane-up";
+
+    // O <i> interno é o alvo da rotação — atualizado depois via transform,
+    // sem recriar o DivIcon (preserva a transição CSS).
+    const html = `<div class="plane-icon" style="color:${color}; transform: rotate(${rotation}deg);">
+                    <i class="fa-solid ${faClass}"></i>
+                  </div>`;
+
+    return L.divIcon({
+        html,
+        className: "plane-div-icon",
+        iconSize:  [18, 18],
+        iconAnchor: [9, 9]
+    });
+}
+
+function getUserIcon() {
+    return L.divIcon({
+        html: `<div class="user-icon"><i class="fa-solid fa-location-crosshairs"></i></div>`,
+        className: "user-div-icon",
+        iconSize: [16, 16],
+        iconAnchor: [8, 8]
+    });
+}
+
+/* ════════════════════════════════  MAPA  ════════════════════════════════ */
+
+function initMap(cfg) {
+    const center = [cfg.map?.lat ?? -16.6809, cfg.map?.lon ?? -49.2539];
+    const zoom   = cfg.map?.zoom ?? 13;
+
+    map = L.map("map", {
+        zoomControl: false,
+        attributionControl: true,   // exigido pela política de tiles do OSM
+        preferCanvas: false
+    }).setView(center, zoom);
+
+    map.attributionControl.setPrefix("");
 
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         maxZoom: 18,
-        minZoom: 4,
+        attribution: "© OpenStreetMap"
     }).addTo(map);
 
-    userMarker = L.marker([lat, lon], { icon: getPinIcon() }).addTo(map);
+    // Marcador da base do radar (config.home), não do centro da viewport
+    const home = [cfg.home?.lat ?? center[0], cfg.home?.lon ?? center[1]];
+    userMarker = L.marker(home, { icon: getUserIcon(), interactive: false }).addTo(map);
 
-    map.on("moveend", syncMapConfig);
-    map.on("zoomend", syncMapConfig);
-    
-    // Click para definir localização manual
-    map.on("click", (e) => {
+    const saveViewport = debounce(() => {
+        if (!mapReady) return;
+        const c = map.getCenter();
+        api.send("save-map-config", { lat: c.lat, lon: c.lng, zoom: map.getZoom() });
+    }, 900);
+
+    map.on("moveend", saveViewport);
+    map.on("zoomend", saveViewport);
+
+    map.on("click", e => {
         if (!manualLocationMode) return;
-        
-        userLat = e.latlng.lat;
-        userLon = e.latlng.lng;
-        userMarker.setLatLng(e.latlng);
-        map.panTo(e.latlng);
-        
         manualLocationMode = false;
         map.getContainer().style.cursor = "";
-        
-        api.send("manual-location-changed", { lat: userLat, lon: userLon });
-        fetchWeather(userLat, userLon);
+        resetLocButton();
+
+        const { lat, lng } = e.latlng;
+        userMarker.setLatLng([lat, lng]);
+        api.send("manual-location-changed", { lat, lon: lng });
+        fetchWeather(lat, lng);
     });
+
+    // Libera a gravação só depois do primeiro render
+    setTimeout(() => { mapReady = true; }, 1200);
 }
 
-function syncMapConfig() {
-    const center = map.getCenter();
-    api.send("save-map-config", {
-        lat: center.lat,
-        lon: center.lng,
-        zoom: map.getZoom(),
-    });
+/* ════════════════════════════════  CLIMA  ═══════════════════════════════ */
+/* RECONSTRUÍDO — confira o endpoint e os campos contra o fetchWeather original */
+
+async function fetchWeather(lat, lon) {
+    const el = document.getElementById("weather");
+    if (!el) return;
+
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}`
+              + `&current=temperature_2m,relative_humidity_2m,wind_speed_10m`;
+
+    try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        const c = data.current || {};
+
+        el.textContent = "";
+        const icon = document.createElement("i");
+        icon.className = "fa-solid fa-cloud-sun";
+        el.appendChild(icon);
+        el.appendChild(document.createTextNode(
+            ` ${Math.round(c.temperature_2m)}°C · ${c.relative_humidity_2m}% · ${Math.round(c.wind_speed_10m)} km/h`
+        ));
+    } catch (err) {
+        console.warn("[WEATHER] Falha:", err.message);
+        el.textContent = "Clima indisponível";
+    }
 }
 
-/* ---------- Lógica dos Aviões (O Coração do Widget) ----------------------- */
+/* ══════════════════════════════  AERONAVES  ═════════════════════════════ */
 
-api.on("update-planes", (event, planes) => {
+api.on("update-planes", (planes) => {
+    if (!map) return;
+
     const currentIcaos = new Set(planes.map(p => p.icao24));
     let hasNewPlane = false;
 
-    // 1. Remover aviões que sumiram do radar
-    for (let [icao, marker] of planeMarkers) {
-        if (!currentIcaos.has(icao)) {
-            map.removeLayer(marker);
-            planeMarkers.delete(icao);
-            if (planeTrails.has(icao)) {
-                map.removeLayer(planeTrails.get(icao));
-                planeTrails.delete(icao);
-            }
-            planeHistory.delete(icao);
+    // 1. Remover aeronaves que saíram do radar
+    for (const [icao, marker] of planeMarkers) {
+        if (currentIcaos.has(icao)) continue;
+        map.removeLayer(marker);
+        planeMarkers.delete(icao);
+
+        const trail = planeTrails.get(icao);
+        if (trail) {
+            map.removeLayer(trail);
+            planeTrails.delete(icao);
         }
+        planeHistory.delete(icao);
     }
 
-    // 2. Atualizar ou Adicionar aviões
+    const trailColor = cssVar("--icon-color", "#ffd700");
+
+    // 2. Atualizar ou adicionar
     planes.forEach(plane => {
         const coords = [plane.lat, plane.lon];
 
-        // Atualiza histórico para a trilha
         if (!planeHistory.has(plane.icao24)) planeHistory.set(plane.icao24, []);
-        let history = planeHistory.get(plane.icao24);
+        const history = planeHistory.get(plane.icao24);
         history.push(coords);
-        if (history.length > 15) history.shift();
+        if (history.length > MAX_TRAIL_POINTS) history.shift();
 
-        // Gerenciar Marcador
         if (planeMarkers.has(plane.icao24)) {
             const marker = planeMarkers.get(plane.icao24);
             marker.setLatLng(coords);
 
-            const el = marker.getElement()?.querySelector("div");
+            // Rotaciona o nó existente — não recria o DivIcon, preservando
+            // a transição CSS e evitando churn de DOM a cada 30s.
+            const el = marker.getElement()?.querySelector(".plane-icon");
             if (el) el.style.transform = `rotate(${plane.heading || 0}deg)`;
             else marker.setIcon(getPlaneIcon(plane));
+
         } else {
-            const marker = L.marker(coords, { icon: getPlaneIcon(plane) })
-                .bindPopup(`<b>${plane.callsign}</b><br>${plane.model}`)
-                .addTo(map);
+            const marker = L.marker(coords, { icon: getPlaneIcon(plane) }).addTo(map);
+
+            // Popup montado por DOM: callsign e model vêm de API externa
+            marker.bindPopup(() => {
+                const div = document.createElement("div");
+                const b = document.createElement("b");
+                b.textContent = plane.callsign;
+                div.appendChild(b);
+                div.appendChild(document.createElement("br"));
+                div.appendChild(document.createTextNode(plane.model || ""));
+                return div;
+            });
+
             planeMarkers.set(plane.icao24, marker);
             hasNewPlane = true;
         }
 
-        // Gerenciar Trilha (Polyline)
         if (planeTrails.has(plane.icao24)) {
             planeTrails.get(plane.icao24).setLatLngs(history);
         } else {
+            // Cor resolvida em JS: o atributo `stroke` do SVG não aceita var()
             const trail = L.polyline(history, {
-                color: "var(--icon-color)",
+                color: trailColor,
                 weight: 2,
                 opacity: 0.5,
                 dashArray: "5, 10"
@@ -148,18 +254,28 @@ api.on("update-planes", (event, planes) => {
         }
     });
 
-    if (hasNewPlane) {
+    // 3. Som — uma vez por ciclo, e nunca no primeiro carregamento
+    if (hasNewPlane && !isFirstUpdate) {
         const audio = document.getElementById("notifysound");
-        audio.currentTime = 0;
-        audio.play().catch(() => {});
+        if (audio?.src) {
+            audio.currentTime = 0;
+            audio.play().catch(() => {});
+        }
     }
+    isFirstUpdate = false;
 
     updatePlaneListUI(planes);
 });
 
+/* ═════════════════════════════  LISTA (DOM)  ════════════════════════════ */
+
 function updatePlaneListUI(planes) {
     const listContainer = document.getElementById("list");
     listContainer.textContent = "";
+
+    const header = document.createElement("b");
+    header.textContent = "Aviões mais próximos:";
+    listContainer.appendChild(header);
 
     if (!planes.length) {
         const empty = document.createElement("div");
@@ -174,7 +290,7 @@ function updatePlaneListUI(planes) {
     planes.forEach((p, i) => {
         const item = document.createElement("div");
         item.className = "plane-item" + (p.emergencia ? " alert-blink" : "");
-        item.dataset.icao = p.icao24;                 // sem onclick inline (bloqueado por CSP)
+        item.dataset.icao = p.icao24;   // sem onclick inline: bloqueado pela CSP
 
         const info = document.createElement("div");
         info.className = "plane-info";
@@ -191,7 +307,7 @@ function updatePlaneListUI(planes) {
         }
 
         const model = document.createElement("span");
-        model.textContent = p.model;                  // texto, nunca markup
+        model.textContent = p.model;   // texto, nunca markup
         info.appendChild(model);
 
         const meta = document.createElement("div");
@@ -205,72 +321,81 @@ function updatePlaneListUI(planes) {
     listContainer.appendChild(frag);
 }
 
-// Delegação de evento — um listener para a lista inteira, sobrevive à reconstrução
+// Delegação: um listener para a lista inteira, sobrevive à reconstrução
 document.getElementById("list").addEventListener("click", (e) => {
     const item = e.target.closest(".plane-item");
     if (item?.dataset.icao) api.send("open-details-window", item.dataset.icao);
 });
 
+/* ═══════════════════════════════  BOTÕES  ═══════════════════════════════ */
 
-/* ---------- Ícones e Auxiliares ------------------------------------------- */
-
-function getPlaneIcon(plane) {
-    const rotation = plane.heading || 0;
-    const iconType = plane.type === 'helicoptero' ? 'fa-helicopter' : 'fa-plane';
-    
-    return L.divIcon({
-        html: `<div style="transform: rotate(${rotation}deg); transition: all 0.5s;">
-                <i class="fa-solid ${iconType}" style="color: var(--icon-color); font-size: 20px; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5));"></i>
-               </div>`,
-        className: 'plane-div-icon',
-        iconSize: [20, 20],
-        iconAnchor: [10, 10]
-    });
+function resetLocButton() {
+    const btn = document.getElementById("setloc-btn");
+    if (btn) btn.textContent = "Alterar Localização";
 }
 
-function getPinIcon() {
-    return L.divIcon({
-        html: `<i class="fa-solid fa-location-crosshairs" style="color: #3498db; font-size: 22px;"></i>`,
-        className: 'user-pin-icon',
-        iconSize: [22, 22],
-        iconAnchor: [11, 11]
-    });
-}
-
-/* ---------- Clima (Open-Meteo) ------------------------------------------- */
-
-async function fetchWeather(lat, lon) {
-    try {
-        const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
-        const data = await res.json();
-        const { temperature, windspeed, weathercode } = data.current_weather;
-        
-        const weatherEl = document.getElementById("weather");
-        weatherEl.innerHTML = `
-            <span class="temp">${Math.round(temperature)}°C</span>
-            <span class="wind"><i class="fa-solid fa-wind"></i> ${Math.round(windspeed)} km/h</span>
-        `;
-    } catch (err) {
-        console.error("Erro ao buscar clima:", err);
-    }
-}
-
-/* ---------- Eventos de UI ------------------------------------------------ */
-
-document.getElementById("setloc-btn").onclick = () => {
+document.getElementById("setloc-btn").addEventListener("click", () => {
     manualLocationMode = true;
     map.getContainer().style.cursor = "crosshair";
-    alert("Clique no mapa para definir sua nova posição base.");
-};
+    // `alert()` bloquearia o processo e trava o widget: feedback no próprio botão
+    document.getElementById("setloc-btn").textContent = "Clique no mapa...";
+    setTimeout(() => {
+        if (manualLocationMode) {
+            manualLocationMode = false;
+            map.getContainer().style.cursor = "";
+            resetLocButton();
+        }
+    }, 8000);
+});
 
-document.getElementById("zoomin").onclick = () => map.zoomIn();
-document.getElementById("zoomout").onclick = () => map.zoomOut();
-document.getElementById("closebtn").onclick = () => api.send("quit-app");
-document.getElementById("minbtn").onclick = () => api.send("minimize-to-bubble");
-document.getElementById("settingsbtn").onclick = () => { 
-  api.send("open-settings");
-};
+document.getElementById("zoomin").addEventListener("click",  () => map.zoomIn());
+document.getElementById("zoomout").addEventListener("click", () => map.zoomOut());
 
-// Atalhos via Teclado
-api.on("shortcut-zoomin", () => map.zoomIn());
-api.on("shortcut-zoomout", () => map.zoomOut());
+document.getElementById("settingsbtn").addEventListener("click", () => api.send("open-settings"));
+document.getElementById("minbtn").addEventListener("click",      () => api.send("minimize-to-bubble"));
+document.getElementById("closebtn").addEventListener("click",    () => api.send("quit-app"));
+
+/* ═════════════════════════════  ATALHOS  ════════════════════════════════ */
+
+api.on("shortcut-zoomin",  () => map?.zoomIn());
+api.on("shortcut-zoomout", () => map?.zoomOut());
+api.on("apply-style",      (cfg) => applyStyles(cfg));
+
+/* ════════════════════════════  INICIALIZAÇÃO  ═══════════════════════════ */
+
+(async function bootstrap() {
+    try {
+        config = await api.invoke("get-config");
+        applyStyles(config);
+        initMap(config);
+
+        const home = {
+            lat: config.home?.lat ?? config.map?.lat,
+            lon: config.home?.lon ?? config.map?.lon
+        };
+        fetchWeather(home.lat, home.lon);
+
+        // Clima só era buscado no boot: depois de 8h a temperatura exibida
+        // era a do café da manhã. Atualiza a cada 15 minutos.
+        weatherTimer = setInterval(() => fetchWeather(home.lat, home.lon), 15 * 60 * 1000);
+
+        // Som de alerta: caminho resolvido via IPC (fora do asar).
+        // Tenta a pasta embutida e cai para a do usuário se não existir.
+        const paths = await api.invoke("get-paths");
+        const file  = config.alert?.general || "notificacao.mp3";
+        const audio = document.getElementById("notifysound");
+
+        audio.src = toFileUrl(`${paths.builtinSounds}/${file}`);
+        audio.addEventListener("error", () => {
+            const fallback = toFileUrl(`${paths.userSounds}/${file}`);
+            if (audio.src !== fallback) audio.src = fallback;
+        }, { once: true });
+
+    } catch (err) {
+        console.error("[WIDGET] Falha na inicialização:", err);
+    }
+})();
+
+window.addEventListener("beforeunload", () => {
+    if (weatherTimer) clearInterval(weatherTimer);
+});

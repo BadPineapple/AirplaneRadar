@@ -58,7 +58,7 @@ const SECURE_PREFS = {
     sandbox: true,
     webSecurity: true,
     allowRunningInsecureContent: false,
-    preload: path.join(__dirname, "preload.js")
+    preload: path.join(__dirname, "Preload.js")
 };
 
 /* ═════════════════════════════  UTILITÁRIOS  ════════════════════════════ */

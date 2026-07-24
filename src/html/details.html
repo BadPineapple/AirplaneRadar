@@ -2,7 +2,6 @@
 <html lang="pt-br">
 <head>
     <meta charset="utf-8">
-    <title>Telemetria</title>
     <meta http-equiv="Content-Security-Policy" content="
         default-src 'none';
         script-src 'self';
@@ -10,15 +9,16 @@
         img-src 'self' data: https://*.planespotters.net https://*.plnspttrs.net;
         font-src 'self';
     " />
-  <link rel="stylesheet" href="../../assets/vendor/fontawesome/all.min.css" />
-  <link rel="stylesheet" href="css/details_style.css" />
+    <title>Telemetria</title>
+    <link rel="stylesheet" href="../../assets/vendor/fontawesome/all.min.css" />
+    <link rel="stylesheet" href="css/details_style.css" />
 </head>
 <body>
     <div id="drag-region">
-        <span style="font-size: 11px; font-weight: bold; letter-spacing: 2px; color: var(--accent);">
+        <span class="hud-title">
             <i class="fa-solid fa-microchip"></i> TELEMETRIA_SYSTEM_V1.4
         </span>
-        <div class="close-btn" onclick="window.closeDetails()">
+        <div class="close-btn" id="close-btn" title="Fechar">
             <i class="fa-solid fa-xmark"></i>
         </div>
     </div>

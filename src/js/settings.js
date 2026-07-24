@@ -1,310 +1,373 @@
-document.addEventListener("DOMContentLoaded", () => {
-  /* eslint-disable no-console */
-  const { ipcRenderer } = require("electron");
-  const fs   = require("fs");
-  const path = require("path");
+// src/js/settings.js
+document.addEventListener("DOMContentLoaded", async () => {
+  const api = window.api;
 
-  // --- helper de log (pode trocar por seu Logger.js, se quiser) --------------
-  function log(...args)   { console.log("[SETTINGS]", ...args); }
-  function warn(...args)  { console.warn("[SETTINGS]", ...args); }
-  function error(...args) { console.error("[SETTINGS]", ...args); }
-  // --------------------------------------------------------------------------
+  const log   = (...a) => console.log("[SETTINGS]", ...a);
+  const warn  = (...a) => console.warn("[SETTINGS]", ...a);
+  const error = (...a) => console.error("[SETTINGS]", ...a);
 
   let config = {};
 
-  /* ─────────────────────────────  Navegação por abas  ────────────────────── */
+  /* ═══════════════════════════  NAVEGAÇÃO POR ABAS  ═══════════════════════ */
   document.querySelectorAll(".tab-btn").forEach(btn => {
     btn.addEventListener("click", () => {
-      document.querySelectorAll(".tab-btn").forEach(b  => b.classList.remove("active"));
+      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
       document.querySelectorAll(".tab-content").forEach(t => t.classList.add("hidden"));
       btn.classList.add("active");
-      const tabId = btn.getAttribute("data-tab");
-      document.getElementById(tabId).classList.remove("hidden");
-      log("Switched to tab:", tabId);
+      document.getElementById(btn.dataset.tab).classList.remove("hidden");
     });
   });
 
-  /* ───────────────────────────────  Drop-zone mp3  ───────────────────────── */
+  /* ═════════════════════════════  SONS (via IPC)  ═════════════════════════ */
+  // O renderer não tem mais `fs`. A listagem e a cópia acontecem no main.
+
+  async function refreshSoundSelects(keepSelection = true) {
+    const selects = ["alert-general", "alert-favorite"]
+      .map(id => document.getElementById(id))
+      .filter(Boolean);
+
+    const previous = selects.map(sel => sel.value);
+
+    let files = [];
+    try {
+      files = await api.invoke("list-sounds");
+    } catch (e) {
+      warn("Não foi possível listar os sons:", e.message);
+    }
+
+    selects.forEach((sel, i) => {
+      sel.textContent = "";
+      files.forEach(f => {
+        const opt = document.createElement("option");
+        opt.value = f;
+        opt.textContent = f;
+        sel.appendChild(opt);
+      });
+      if (keepSelection && previous[i] && files.includes(previous[i])) {
+        sel.value = previous[i];
+      }
+    });
+
+    return files;
+  }
+
+  /**
+   * Handler único de upload — antes havia dois blocos duplicados,
+   * um usando `PATHS.userSounds` e outro uma variável `soundDir` inexistente.
+   */
+  async function handleSoundFile(file) {
+    if (!file || !file.name.toLowerCase().endsWith(".mp3")) {
+      alert("Apenas arquivos .mp3 são permitidos.");
+      return;
+    }
+
+    // Electron 32+ removeu File.path; webUtils.getPathForFile é o substituto
+    const sourcePath = api.getFilePath(file);
+    if (!sourcePath) {
+      alert("Não foi possível ler o caminho do arquivo.");
+      return;
+    }
+
+    try {
+      const res = await api.invoke("add-sound", { sourcePath, fileName: file.name });
+      if (!res.ok) {
+        error("Falha no upload:", res.message);
+        alert(`Erro ao adicionar o som: ${res.message}`);
+        return;
+      }
+      await refreshSoundSelects();
+      document.getElementById("alert-general").value = file.name;
+      log("Som adicionado:", file.name);
+      alert("Arquivo de som adicionado com sucesso!");
+    } catch (e) {
+      error("Erro no IPC add-sound:", e.message);
+      alert("Erro ao adicionar o arquivo.");
+    }
+  }
+
   const dropZone = document.getElementById("sound-drop-zone");
   if (dropZone) {
-    ["dragover", "dragleave"].forEach(ev =>
+    ["dragover", "dragleave", "drop"].forEach(ev =>
       dropZone.addEventListener(ev, e => {
         e.preventDefault();
         dropZone.classList.toggle("dragover", ev === "dragover");
       })
     );
+    dropZone.addEventListener("drop", e => handleSoundFile(e.dataTransfer.files[0]));
+  }
 
-    dropZone.addEventListener("drop", e => {
-      e.preventDefault();
-      dropZone.classList.remove("dragover");
-      const file = e.dataTransfer.files[0];
-      if (!file || !file.name.endsWith(".mp3")) {
-        return alert("Apenas arquivos .mp3 são permitidos.");
-      }
-      const dest = path.join(PATHS.userSounds, file.name);
-      fs.copyFile(file.path, dest, err => {
-        if (err) {
-          error("Erro ao copiar som:", err);
-          return alert("Erro ao copiar o arquivo.");
-        }
-        log("Som adicionado:", file.name);
-        alert("Arquivo de som adicionado com sucesso!");
-        refreshSoundSelects();
-      });
+  const uploadInput = document.getElementById("upload-sound");
+  if (uploadInput) {
+    uploadInput.addEventListener("change", async e => {
+      await handleSoundFile(e.target.files[0]);
+      e.target.value = "";   // permite reenviar o mesmo arquivo
     });
   }
 
-  /* ─────────────────────────────  Funções auxiliares  ────────────────────── */
-  /* ───────────────────────────  Pastas de som  ───────────────────────── */
-  let PATHS = { userSounds: "", builtinSounds: "" };
+  /* ══════════════════════════  CAPTURA DE ATALHOS  ════════════════════════ */
 
-  ipcRenderer.invoke("get-paths").then(p => {
-    PATHS = p;
-    refreshSoundSelects();
-  });
+  /* CORRIGIDO: `e.key.toUpperCase()` gerava "ARROWUP", "ESCAPE", "ENTER" —
+     nenhum é acelerador válido no Electron. O atalho era aceito pela
+     validação, rejeitado pelo globalShortcut e morria sem aviso. */
+  const KEY_MAP = {
+    ArrowUp: "Up", ArrowDown: "Down", ArrowLeft: "Left", ArrowRight: "Right",
+    " ": "Space", Escape: "Esc", Enter: "Return", "+": "Plus",
+    PageUp: "PageUp", PageDown: "PageDown"
+  };
 
-  function getMp3Files() {
-    const seen = new Set();
-    [PATHS.builtinSounds, PATHS.userSounds].forEach(dir => {
-      if (!dir) return;
-      try {
-        fs.readdirSync(dir).filter(f => f.toLowerCase().endsWith(".mp3"))
-          .forEach(f => seen.add(f));
-      } catch (e) { warn("Pasta de sons indisponível:", dir); }
-    });
-    return [...seen];
+  const NAMED_KEYS = new Set([
+    "Up", "Down", "Left", "Right", "Space", "Esc", "Return", "Plus", "Tab",
+    "Backspace", "Delete", "Insert", "Home", "End", "PageUp", "PageDown"
+  ]);
+
+  function normalizeKey(e) {
+    if (KEY_MAP[e.key]) return KEY_MAP[e.key];
+    if (/^F([1-9]|1[0-9]|2[0-4])$/.test(e.key)) return e.key;   // F1..F24
+    if (NAMED_KEYS.has(e.key)) return e.key;
+    if (e.key.length === 1) return e.key.toUpperCase();
+    return null;
   }
 
-  function refreshSoundSelects() {
-    const selects = ["alert-general", "alert-favorite"].map(id => document.getElementById(id));
-    selects.forEach(sel => (sel.innerHTML = ""));         // limpa
-    getMp3Files().forEach(file => {
-      selects.forEach(sel => {
-        const opt = document.createElement("option");
-        opt.value = opt.textContent = file;
-        sel.appendChild(opt);
-      });
-    });
-  }
-
-  /* ──────────────────────  Shortcuts → captura de teclas  ────────────────── */
   function bindShortcutInput(id) {
     const input = document.getElementById(id);
     if (!input) return;
+
     input.addEventListener("focus", () => (input.value = ""));
     input.addEventListener("keydown", e => {
       e.preventDefault();
       if (["Shift", "Control", "Alt", "Meta"].includes(e.key)) return;
 
+      const key = normalizeKey(e);
+      if (!key) return;
+
       const combo = [];
       if (e.ctrlKey || e.metaKey) combo.push("Ctrl");
-      if (e.shiftKey)            combo.push("Shift");
-      if (e.altKey)              combo.push("Alt");
-
-      let key = e.key === " " ? "Space" : e.key.toUpperCase();
+      if (e.shiftKey)             combo.push("Shift");
+      if (e.altKey)               combo.push("Alt");
       combo.push(key);
+
       input.value = combo.join("+");
-      setTimeout(() => input.focus(), 10);
     });
   }
 
-  ["shortcut-zoomin","shortcut-zoomout","shortcut-refresh",
-   "shortcut-minimize","shortcut-restore"].forEach(bindShortcutInput);
+  ["shortcut-zoomin", "shortcut-zoomout", "shortcut-refresh",
+   "shortcut-minimize", "shortcut-restore"].forEach(bindShortcutInput);
 
-  /* ─────────────────────────────── Validar atalhos ───────────────────────── */
   function validateShortcuts(sc) {
     const vals = Object.values(sc);
-    if (vals.some(v => !v.trim()))            { alert("Preencha todos os atalhos."); return false; }
-    if (new Set(vals).size !== vals.length)   { alert("Há atalhos duplicados!");     return false; }
-    if (vals.some(v => !/^[A-Za-z0-9+ ]{2,}$/.test(v))) {
-      alert("Atalhos inválidos detectados."); return false;
+
+    if (vals.some(v => !v || !v.trim())) {
+      alert("Preencha todos os atalhos.");
+      return false;
+    }
+    if (new Set(vals).size !== vals.length) {
+      alert("Há atalhos duplicados!");
+      return false;
+    }
+
+    // Valida a estrutura real de um acelerador: modificadores + tecla final
+    for (const v of vals) {
+      const parts = v.split("+");
+      const finalKey = parts.pop();
+      const mods = parts;
+
+      const modsOk = mods.every(m => ["Ctrl", "Shift", "Alt"].includes(m));
+      const keyOk  = NAMED_KEYS.has(finalKey)
+                  || /^F([1-9]|1[0-9]|2[0-4])$/.test(finalKey)
+                  || /^[A-Z0-9]$/.test(finalKey);
+
+      if (!modsOk || !keyOk || mods.length === 0) {
+        alert(`Atalho inválido: "${v}".\nUse ao menos um modificador (Ctrl, Shift ou Alt).`);
+        return false;
+      }
     }
     return true;
   }
 
-  /* ─────────────────────────────  Botões RESET seção  ────────────────────── */
+  /* ════════════════════════════  SLIDERS AO VIVO  ═════════════════════════ */
+  const SLIDERS = {
+    "bgopacity":     { label: "opacity-value",     fmt: v => `${Math.round(v * 100)}%` },
+    "bubble-size":   { label: "bubble-size-value", fmt: v => `${v}px` },
+    "search-radius": { label: "radius-value",      fmt: v => `${v} km` }
+  };
+
+  Object.entries(SLIDERS).forEach(([id, { label, fmt }]) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener("input", e => {
+      document.getElementById(label).textContent = fmt(e.target.value);
+    });
+  });
+
+  /* ═══════════════════════════  BOTÕES DE RESET  ══════════════════════════ */
+  function setValue(id, value) {
+    const el = document.getElementById(id);
+    if (el) el.value = value;
+  }
+  function setText(id, value) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = value;
+  }
+
   const resetMap = {
     "reset-style-btn": () => {
-      Object.assign(document.getElementById("bgcolor"),         { value: "#1e1e1e" });
-      Object.assign(document.getElementById("map-icon-color"),  { value: "#ffd700" });
-      Object.assign(document.getElementById("title-color"),     { value: "#ffd700" });
-      Object.assign(document.getElementById("text-color"),      { value: "#ffffff" });
-      Object.assign(document.getElementById("bgopacity"),       { value: 0.6 });
-      document.getElementById("opacity-value").innerText       = "60%";
-      Object.assign(document.getElementById("bubble-color"),    { value: "#1982d2" });
-      Object.assign(document.getElementById("bubble-size"),     { value: 50 });
-      document.getElementById("bubble-size-value").innerText   = "50px";
-      Object.assign(document.getElementById("icon-color"),      { value: "#ffffff" });
-      log("Estilo resetado para padrão.");
+      setValue("bgcolor", "#1e1e1e");
+      setValue("map-icon-color", "#ffd700");
+      setValue("title-color", "#ffd700");
+      setValue("text-color", "#ffffff");
+      setValue("bgopacity", 0.6);
+      setText("opacity-value", "60%");
+      setValue("bubble-color", "#1982d2");
+      setValue("bubble-size", 50);
+      setText("bubble-size-value", "50px");
+      setValue("icon-color", "#ffffff");
+      setValue("search-radius", 50);
+      setText("radius-value", "50 km");
+      document.querySelectorAll('#aircraft-filters input[type="checkbox"]')
+        .forEach(cb => (cb.checked = true));
+      log("Estilo resetado.");
     },
     "reset-shortcuts-btn": () => {
-      document.getElementById("shortcut-zoomin").value   = "Ctrl+0";
-      document.getElementById("shortcut-zoomout").value  = "Ctrl+9";
-      document.getElementById("shortcut-refresh").value  = "Ctrl+R";
-      document.getElementById("shortcut-minimize").value = "Ctrl+M";
-      document.getElementById("shortcut-restore").value  = "Ctrl+Shift+M";
+      setValue("shortcut-zoomin",   "Ctrl+0");
+      setValue("shortcut-zoomout",  "Ctrl+9");
+      setValue("shortcut-refresh",  "Ctrl+R");
+      setValue("shortcut-minimize", "Ctrl+M");
+      setValue("shortcut-restore",  "Ctrl+Shift+M");
       log("Atalhos resetados.");
     },
     "reset-accounts-btn": () => {
-      document.getElementById("opensky-clientid").value     = "";
-      document.getElementById("opensky-clientsecret").value = "";
-      log("Credenciais OpenSky limpas.");
-    },
-    "reset-all-btn": () => {          // chama os três acima
-      Object.keys(resetMap).filter(k => k !== "reset-all-btn").forEach(k => resetMap[k]());
-      refreshSoundSelects();
-      log("TODAS as configurações foram restauradas para padrão.");
+      setValue("opensky-clientid", "");
+      setValue("opensky-clientsecret", "");
+      log("Credenciais limpas.");
     }
   };
 
-  // Liga cada botão ao respectivo reset
-  Object.keys(resetMap).forEach(id => {
+  Object.entries(resetMap).forEach(([id, fn]) => {
     const btn = document.getElementById(id);
-    if (btn) btn.addEventListener("click", resetMap[id]);
+    if (btn) btn.addEventListener("click", fn);
   });
 
-  /* ───────────────────────────  Upload de som (input)  ───────────────────── */
-  const uploadInput = document.getElementById("upload-sound");
-  if (uploadInput) {
-    uploadInput.addEventListener("change", e => {
-      const file = e.target.files[0];
-      if (!file || !file.name.endsWith(".mp3")) {
-        return alert("Selecione um arquivo .mp3 válido.");
-      }
-      const dest = path.join(soundDir, file.name);
-      fs.copyFile(file.path, dest, err => {
-        if (err) {
-          error("Erro ao copiar som:", err);
-          return alert("Erro ao copiar.");
-        }
-        log("Som copiado via <input>: ", file.name);
-        alert("Som adicionado com sucesso!");
-        refreshSoundSelects();
-      });
+  const resetAll = document.getElementById("reset-all-btn");
+  if (resetAll) {
+    resetAll.addEventListener("click", () => {
+      Object.values(resetMap).forEach(fn => fn());
+      refreshSoundSelects(false);
+      log("Todas as configurações restauradas.");
     });
   }
 
-  /* ───────────────────────────  Carrega configuração  ───────────────────── */
-  ipcRenderer.invoke("get-config").then(cfg => {
-    config = cfg;
-    // --- Preenche UI ---
-    const w    = cfg.widget  || {};
-    const b    = cfg.bubble  || {};
-    const s    = cfg.search  || {};
-    const a    = cfg.alert   || {};
-    const sc   = cfg.shortcuts || {};
-    const acct = cfg.accounts?.opensky || {};
+  /* ═══════════════════════════  CARREGAR CONFIG  ══════════════════════════ */
+  try {
+    config = await api.invoke("get-config");
 
-    document.getElementById("bgcolor").value          = w.bgColor  || "#1e1e1e";
-    document.getElementById("map-icon-color").value   = w.mapiconcolor || "#ffd700";
-    document.getElementById("title-color").value      = w.titlecolor   || "#ffd700";
-    document.getElementById("text-color").value       = w.textcolor    || "#ffffff";
-    document.getElementById("bgopacity").value        = w.bgOpacity ?? 0.6;
-    document.getElementById("opacity-value").innerText= `${Math.round((w.bgOpacity ?? 0.6)*100)}%`;
+    const w  = config.widget    || {};
+    const b  = config.bubble    || {};
+    const s  = config.search    || {};
+    const a  = config.alert     || {};
+    const sc = config.shortcuts || {};
 
-    document.getElementById("bubble-color").value     = b.color || "#1982d2";
-    document.getElementById("bubble-size").value      = b.size  || 50;
-    document.getElementById("bubble-size-value").innerText = `${b.size || 50}px`;
-    document.getElementById("icon-color").value       = b.iconColor || "#ffffff";
+    setValue("bgcolor", w.bgColor || "#1e1e1e");
+    setValue("map-icon-color", w.mapiconcolor || "#ffd700");
+    setValue("title-color", w.titlecolor || "#ffd700");
+    setValue("text-color", w.textcolor || "#ffffff");
+    setValue("bgopacity", w.bgOpacity ?? 0.6);
+    setText("opacity-value", `${Math.round((w.bgOpacity ?? 0.6) * 100)}%`);
 
-    document.getElementById("search-radius").value    = s.radius ?? 50;
-    document.getElementById("radius-value").innerText = `${s.radius ?? 50} km`;
+    setValue("bubble-color", b.color || "#1982d2");
+    setValue("bubble-size", b.size || 50);
+    setText("bubble-size-value", `${b.size || 50}px`);
+    setValue("icon-color", b.iconColor || "#ffffff");
 
-    // Filtros
-    const allowed = s.filters || ["comercial","privado","militar","helicoptero","outros"];
-    document.querySelectorAll('#aircraft-filters input[type="checkbox"]').forEach(cb => {
-      cb.checked = allowed.includes(cb.value);
-    });
+    setValue("search-radius", s.radius ?? 50);
+    setText("radius-value", `${s.radius ?? 50} km`);
 
-    // Alertas
-    refreshSoundSelects();
-    setTimeout(() => {
-      document.getElementById("alert-general").value   = a.general  || "notificacao.mp3";
-      document.getElementById("alert-favorite").value  = a.favorite || "favorito.mp3";
-    }, 200);
+    const allowed = s.filters || ["comercial", "privado", "militar", "helicoptero", "outros"];
+    document.querySelectorAll('#aircraft-filters input[type="checkbox"]')
+      .forEach(cb => (cb.checked = allowed.includes(cb.value)));
 
-    // Atalhos
-    document.getElementById("shortcut-zoomin").value   = sc.zoomin   || "Ctrl+0";
-    document.getElementById("shortcut-zoomout").value  = sc.zoomout  || "Ctrl+9";
-    document.getElementById("shortcut-refresh").value  = sc.refresh  || "Ctrl+R";
-    document.getElementById("shortcut-minimize").value = sc.minimize || "Ctrl+M";
-    document.getElementById("shortcut-restore").value  = sc.restore  || "Ctrl+Shift+M";
+    // Sons: aguarda a lista antes de selecionar — o setTimeout(200) anterior
+    // era corrida e falhava em disco lento.
+    const files = await refreshSoundSelects(false);
+    if (files.includes(a.general))  setValue("alert-general", a.general);
+    if (files.includes(a.favorite)) setValue("alert-favorite", a.favorite);
 
-    // Contas
-    ipcRenderer.invoke("get-opensky-credentials").then(cred => {
-      document.getElementById("opensky-clientid").value     = cred.client_id || "";
-      document.getElementById("opensky-clientsecret").value = cred.client_secret || "";
-    });
+    setValue("shortcut-zoomin",   sc.zoomin   || "Ctrl+0");
+    setValue("shortcut-zoomout",  sc.zoomout  || "Ctrl+9");
+    setValue("shortcut-refresh",  sc.refresh  || "Ctrl+R");
+    setValue("shortcut-minimize", sc.minimize || "Ctrl+M");
+    setValue("shortcut-restore",  sc.restore  || "Ctrl+Shift+M");
+
+    // Credenciais vêm decifradas por rota dedicada (safeStorage)
+    const cred = await api.invoke("get-opensky-credentials");
+    setValue("opensky-clientid", cred.client_id || "");
+    setValue("opensky-clientsecret", cred.client_secret || "");
 
     log("Configurações carregadas.");
-  });
+  } catch (e) {
+    error("Falha ao carregar configurações:", e.message);
+    alert("Não foi possível carregar as configurações.");
+  }
 
-  /* ─────────────────────────────  Sliders dinâmicos  ─────────────────────── */
-  ["bgopacity","bubble-size","search-radius"].forEach(id => {
-    const label = { "bgopacity":"opacity-value",
-                    "bubble-size":"bubble-size-value",
-                    "search-radius":"radius-value" }[id];
-    document.getElementById(id).addEventListener("input", e => {
-      const val = id === "bgopacity" ? Math.round(e.target.value*100)+"%"
-               : id === "bubble-size" ? `${e.target.value}px`
-               : `${e.target.value} km`;
-      document.getElementById(label).innerText = val;
-    });
-  });
+  /* ═══════════════════════════════  SALVAR  ═══════════════════════════════ */
+  const saveBtn = document.getElementById("save-btn");
+  if (saveBtn) {
+    saveBtn.addEventListener("click", () => {
+      const newShortcuts = {
+        zoomin:   document.getElementById("shortcut-zoomin").value,
+        zoomout:  document.getElementById("shortcut-zoomout").value,
+        refresh:  document.getElementById("shortcut-refresh").value,
+        minimize: document.getElementById("shortcut-minimize").value,
+        restore:  document.getElementById("shortcut-restore").value
+      };
+      if (!validateShortcuts(newShortcuts)) return;
 
-  /* ─────────────────────────────  Botão SALVAR  ──────────────────────────── */
-  document.getElementById("save-btn").onclick = () => {
-    const newShortcuts = {
-      zoomin  : document.getElementById("shortcut-zoomin").value,
-      zoomout : document.getElementById("shortcut-zoomout").value,
-      refresh : document.getElementById("shortcut-refresh").value,
-      minimize: document.getElementById("shortcut-minimize").value,
-      restore : document.getElementById("shortcut-restore").value
-    };
-    if (!validateShortcuts(newShortcuts)) return;
+      const filters = [...document.querySelectorAll('#aircraft-filters input[type="checkbox"]')]
+        .filter(cb => cb.checked)
+        .map(cb => cb.value);
 
-    const updated = {
-      widget: {
-        ...config.widget,
-        bgColor    : document.getElementById("bgcolor").value,
-        mapiconcolor: document.getElementById("map-icon-color").value,
-        titlecolor : document.getElementById("title-color").value,
-        textcolor  : document.getElementById("text-color").value,
-        bgOpacity  : parseFloat(document.getElementById("bgopacity").value)
-      },
-      bubble: {
-        ...config.bubble,
-        color    : document.getElementById("bubble-color").value,
-        size     : parseInt(document.getElementById("bubble-size").value, 10),
-        iconColor: document.getElementById("icon-color").value
-      },
-      search: {
-        radius : parseInt(document.getElementById("search-radius").value, 10),
-        filters: [...document.querySelectorAll('#aircraft-filters input[type="checkbox"]')]
-          .filter(cb => cb.checked).map(cb => cb.value)
-      },
-      alert: {
-        general : document.getElementById("alert-general").value,
-        favorite: document.getElementById("alert-favorite").value
-      },
-      shortcuts: newShortcuts,
-      accounts: {
-        opensky: {
-          client_id    : document.getElementById("opensky-clientid").value.trim(),
-          client_secret: document.getElementById("opensky-clientsecret").value.trim()
-        }
+      if (filters.length === 0) {
+        alert("Selecione ao menos um tipo de aeronave, senão o radar ficará vazio.");
+        return;
       }
-    };
 
-    ipcRenderer.send("update-config", updated);   // grava no disco
-    ipcRenderer.send("apply-style", updated.widget);
-    log("Configurações salvas.");
-    window.close();
-  };
+      const updated = {
+        widget: {
+          bgColor:      document.getElementById("bgcolor").value,
+          mapiconcolor: document.getElementById("map-icon-color").value,
+          titlecolor:   document.getElementById("title-color").value,
+          textcolor:    document.getElementById("text-color").value,
+          bgOpacity:    parseFloat(document.getElementById("bgopacity").value)
+        },
+        bubble: {
+          color:     document.getElementById("bubble-color").value,
+          size:      parseInt(document.getElementById("bubble-size").value, 10),
+          iconColor: document.getElementById("icon-color").value
+        },
+        search: {
+          radius: parseInt(document.getElementById("search-radius").value, 10),
+          filters
+        },
+        alert: {
+          general:  document.getElementById("alert-general").value,
+          favorite: document.getElementById("alert-favorite").value
+        },
+        shortcuts: newShortcuts,
+        accounts: {
+          opensky: {
+            client_id:     document.getElementById("opensky-clientid").value.trim(),
+            client_secret: document.getElementById("opensky-clientsecret").value.trim()
+          }
+        }
+      };
 
-  /* ─────────────────────────────  Botão CANCELAR  ────────────────────────── */
-  document.getElementById("cancel-btn").onclick = () => {
-    log("Alterações canceladas.");
-    window.close();
-  };
+      // O main faz deepMerge e retransmite `apply-style` com o config completo.
+      // Não é preciso mais enviar spread de `config.widget` nem `apply-style` aqui.
+      api.send("update-config", updated);
+      log("Configurações salvas.");
+      window.close();
+    });
+  }
+
+  const cancelBtn = document.getElementById("cancel-btn");
+  if (cancelBtn) cancelBtn.addEventListener("click", () => window.close());
 });

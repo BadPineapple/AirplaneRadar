@@ -3,7 +3,11 @@ const api = window.api;
 
 console.log("Details.js carregado e aguardando código ICAO...");
 
-window.closeDetails = () => api.send('close-details-window');
+/* ─────────────────────────  Controles da janela  ───────────────────────── */
+document.getElementById("close-btn")
+        .addEventListener("click", () => api.send("close-details-window"));
+
+document.addEventListener("mouseup", () => api.send("save-details-position"));
 
 api.on('load-icao', async (icao24) => {
     resetUI();
