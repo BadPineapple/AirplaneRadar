@@ -1,6 +1,3 @@
-/* ──────────────────────────────  Widget.js  ─────────────────────────────── */
-const api = window.api;
-
 /* ══════════════════════════════  ESTADO  ════════════════════════════════ */
 let map           = null;
 let mapReady      = false;   // evita gravar config durante o setView inicial

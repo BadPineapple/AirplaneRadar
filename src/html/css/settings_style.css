@@ -1,15 +1,23 @@
-html,
-body {
+/* ═══════════════════════════  settings_style.css  ═══════════════════════ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
   margin: 0;
   padding: 0;
   width: 100%;
   max-width: 100%;
-  overflow-x: hidden; /* <-- Impede scroll horizontal */
-  box-sizing: border-box;
+  height: 100%;
+  overflow-x: hidden;
 }
-* {
-  box-sizing: border-box;
+
+body {
+  padding: 5px;
+  background: #1e1e1e;
+  color: #fff;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
 }
+
 #settings-container {
   width: 100%;
   max-width: 500px;
@@ -18,26 +26,48 @@ body {
   overflow-x: hidden;
 }
 
-body {
-  background: #1e1e1e;
-  color: #fff;
-  font-family: sans-serif;
-  padding: 5px;
-  box-sizing: border-box;
-  width: 100%;
-  height: 100%;
-}
-
+/* ────────────────────────────────  Títulos  ────────────────────────────── */
 h2 {
   margin-bottom: 20px;
   color: #ffd700;
 }
+h2 i { margin-right: 6px; }
 
 h3 {
-  color: #ffd700;
   margin: 25px 0 10px;
+  color: #ffd700;
 }
 
+hr {
+  margin: 25px 0;
+  border: 0;
+  border-top: 1px solid #444;
+}
+
+/* ─────────────────────────────────  Abas  ──────────────────────────────── */
+#tabs {
+  display: flex;
+  margin-bottom: 15px;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 6px 12px;
+  background: #333;
+  color: #ffd700;
+  border: none;
+  border-bottom: 2px solid transparent;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+.tab-btn:hover  { background: #444; }
+.tab-btn.active { background: #444; border-bottom-color: #ffd700; }
+
+.tab-content         { display: block; }
+.tab-content.hidden  { display: none; }
+
+/* ──────────────────────────  Grupos de opções  ─────────────────────────── */
 .setting-group {
   width: 100%;
   max-width: 100%;
@@ -47,108 +77,162 @@ h3 {
   font-size: 0.95em;
 }
 
+.setting-group label {
+  margin-bottom: 3px;
+}
+
+/* ─────────────────────────────  Campos de entrada  ─────────────────────── */
 input[type="color"],
 input[type="range"],
+input[type="text"],
+input[type="password"],
+input[type="file"],
 select {
   width: 100%;
   margin-top: 5px;
   padding: 5px;
-  border-radius: 6px;
   background: #222;
   color: #ffd700;
   border: 1px solid #444;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.95em;
+  outline: none;
+  transition: border-color 0.2s;
 }
 
-input[type="range"] {
-  width: 100%;
+input[type="text"]:focus,
+input[type="password"]:focus,
+select:focus {
+  border-color: #ffd700;
 }
 
+/* Campo de captura de atalho */
+.shortcut-input {
+  text-align: center;
+  letter-spacing: 1px;
+  cursor: pointer;
+  caret-color: transparent;
+}
+.shortcut-input:focus { background: #2a2a2a; }
+
+/* Seletor de cor um pouco mais alto para clique fácil */
+input[type="color"] {
+  height: 34px;
+  padding: 2px;
+  cursor: pointer;
+}
+
+input[type="range"] { cursor: pointer; }
+
+input[type="file"] {
+  color: #ccc;
+  cursor: pointer;
+}
+
+/* ────────────────────────  Valores dos sliders  ────────────────────────── */
 #opacity-value,
 #bubble-size-value,
 #radius-value {
-  font-size: 0.85em;
+  margin-top: 5px;
   color: #ccc;
+  font-size: 0.85em;
   text-align: right;
+}
+
+/* ───────────────────────────  Filtros de aeronave  ─────────────────────── */
+#aircraft-filters {
   margin-top: 5px;
 }
-
 #aircraft-filters label {
-  display: block;
-  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
   font-size: 0.9em;
+  cursor: pointer;
+}
+#aircraft-filters input[type="checkbox"] {
+  width: 15px;
+  height: 15px;
+  accent-color: #ffd700;
+  cursor: pointer;
 }
 
+/* ────────────────────────────  Drop-zone de som  ───────────────────────── */
+.drop-zone {
+  margin-top: 10px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 2px dashed #aaa;
+  border-radius: 8px;
+  color: #ccc;
+  text-align: center;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+.drop-zone p { margin: 0; font-size: 0.9em; }
+.drop-zone.dragover {
+  background: rgba(255, 215, 0, 0.06);
+  border-color: #ffd700;
+  color: #ffd700;
+}
+
+/* ─────────────────────────  Botões de reset por seção  ─────────────────── */
+.reset-section-btn {
+  align-self: flex-start;
+  margin-top: 4px;
+  padding: 5px 10px;
+  background: #2a2a2a;
+  color: #ccc;
+  border: 1px solid #444;
+  border-radius: 6px;
+  font-size: 0.85em;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.reset-section-btn:hover { background: #3a3a3a; color: #ffd700; }
+.reset-section-btn i { margin-right: 5px; }
+
+/* ───────────────────────────  Botões principais  ──────────────────────── */
 #buttons {
   display: flex;
   justify-content: space-between;
+  gap: 10px;
   margin-top: 30px;
 }
 
 button {
   padding: 6px 12px;
+  background: #333;
+  color: #ffd700;
   border: none;
   border-radius: 6px;
   font-size: 0.95em;
   cursor: pointer;
-  background: #333;
-  color: #ffd700;
+  transition: background 0.2s;
 }
+button:hover { background: #444; }
+button i { margin-right: 5px; }
 
-button:hover {
-  background: #444;
-}
-
-hr {
-  border: 0;
-  border-top: 1px solid #444;
-  margin: 25px 0;
-}
-
-#tabs {
-  display: flex;
-  margin-bottom: 15px;
-}
-
-.tab-btn {
+#save-btn {
   flex: 1;
-  background: #333;
-  color: #ffd700;
-  padding: 6px 12px;
-  border: none;
-  cursor: pointer;
-  font-weight: bold;
-  border-bottom: 2px solid transparent;
+  background: #2c5c2c;
+  color: #d4ffd4;
 }
+#save-btn:hover { background: #367036; }
 
-.tab-btn:hover {
-  background: #444;
+#cancel-btn {
+  flex: 1;
+  background: #3a2a2a;
+  color: #ffcccc;
 }
+#cancel-btn:hover { background: #4a3333; }
 
-.tab-btn.active {
-  background: #444;
-  border-bottom: 2px solid #ffd700;
+/* Reset global, se presente no HTML */
+#reset-all-btn {
+  width: 100%;
+  margin-top: 15px;
+  background: #402020;
+  color: #ff9999;
 }
-
-.tab-content {
-  display: block;
-}
-
-.tab-content.hidden {
-  display: none;
-}
-
-.drop-zone {
-  border: 2px dashed #aaa;
-  border-radius: 8px;
-  padding: 10px;
-  text-align: center;
-  color: #ccc;
-  margin-top: 10px;
-  transition: background 0.2s, border 0.2s;
-}
-
-.drop-zone.dragover {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: #ffd700;
-  color: #ffd700;
-}
+#reset-all-btn:hover { background: #542a2a; }

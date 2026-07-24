@@ -1,42 +1,42 @@
-html,
-body {
+/* ═══════════════════════════  Bubble_Style.css  ═════════════════════════ */
+
+html, body {
   margin: 0;
   padding: 0;
   width: 100%;
   height: 100%;
   background: transparent;
   overflow: hidden;
+  user-select: none;
 }
+
 #bubble {
-  width: 50px;
-  height: 50px;
-  background: rgba(25, 130, 210, 0.92);
-  border-radius: 50%;
-  box-shadow: 0 2px 10px #0007;
+  /* Arrasto controlado pelo JS, não pela região nativa do Electron */
+  -webkit-app-region: no-drag;
+
+  width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  transition: background 0.18s;
-  user-select: none;
-  position: absolute;
-  left: 0;
-  top: 0;
-}
-#bubble:hover {
-  background: rgba(255, 200, 30, 0.97);
-}
-i {
-  color: #fff;
-  font-size: 23px;
-  filter: drop-shadow(0 0 3px #222);
-  pointer-events: none;
-}
-#bubble:focus {
-  outline: 2px solid #fff;
-  outline-offset: 3px;
+
+  background: #1982d2;              /* sobrescrito em runtime pelo Bubble.js */
+  border-radius: 50%;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.45);
+  cursor: grab;
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
 }
 
+#bubble:hover {
+  transform: scale(1.08);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.55);
+}
+#bubble:active { cursor: grabbing; transform: scale(0.96); }
+
 #bubble-icon {
-  color: black;
+  color: #ffffff;                  /* sobrescrito em runtime */
+  font-size: 55%;                  /* escala com o tamanho da bolha */
+  line-height: 1;
+  pointer-events: none;            /* clique/arrasto pertencem ao #bubble */
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
 }

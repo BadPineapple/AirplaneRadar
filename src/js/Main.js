@@ -58,7 +58,7 @@ const SECURE_PREFS = {
     sandbox: true,
     webSecurity: true,
     allowRunningInsecureContent: false,
-    preload: path.join(__dirname, "Preload.js")
+    preload: path.join(__dirname, "preload.js")
 };
 
 /* ═════════════════════════════  UTILITÁRIOS  ════════════════════════════ */
@@ -237,8 +237,6 @@ ipcMain.on("open-details-window", (event, icao24) => {
 
     detailsWindow.loadFile(path.join(__dirname, "../html/details.html"));
 
-    // Com preload + contextIsolation o listener do renderer já está registrado
-    // quando did-finish-load dispara. O setTimeout(300) anterior era gambiarra.
     detailsWindow.webContents.once("did-finish-load", () => {
         if (!detailsWindow || detailsWindow.isDestroyed()) return;
         detailsWindow.webContents.send("apply-style", config);
@@ -328,6 +326,10 @@ function createWidgetWindow() {
 
     widgetWindow.setAlwaysOnTop(true, "screen-saver");
     widgetWindow.loadFile(path.join(__dirname, "../html/widget.html"));
+
+    if (!app.isPackaged) {
+        widgetWindow.webContents.openDevTools({ mode: "detach" });
+    }
 
     widgetWindow.on("move", () => {
         const [x, y] = widgetWindow.getPosition();

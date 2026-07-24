@@ -1,10 +1,18 @@
-html,
-body {
+/* ═══════════════════════════════  Style.css  ════════════════════════════ */
+
+:root {
+  --title-color: #ffd700;
+  --text-color:  #ffffff;
+  --icon-color:  #ffd700;
+  --bg-color:    rgba(30, 30, 30, 0.6);
+}
+
+html, body {
   margin: 0;
   padding: 0;
-  background: rgba(30, 30, 30, 0);
-  color: white;
-  font-family: sans-serif;
+  background: transparent;
+  color: var(--text-color, #fff);
+  font-family: 'Segoe UI', Tahoma, sans-serif;
   width: 275px;
   max-width: 275px;
   height: 100%;
@@ -12,114 +20,65 @@ body {
   box-sizing: border-box;
   overflow: hidden;
 }
+
+*, *::before, *::after { box-sizing: border-box; }
+
 #container {
-  padding: 10px 3px 5px 2px;
-  background: rgba(30, 30, 30, var(--bg-opacity, 0.6));
-  max-width: 275px;
-  width: 100%;
-  box-sizing: border-box;
   display: flex;
   flex-direction: column;
+  width: 100%;
+  max-width: 275px;
   height: 430px;
+  padding: 10px 3px 5px 2px;
+  background: var(--bg-color, rgba(30, 30, 30, 0.6));
+  border-radius: 12px;
   overflow: hidden;
-  border-radius: 12px; 
 }
+
+/* ─────────────────────────────  Barra de título  ───────────────────────── */
 #dragbar {
   -webkit-app-region: drag;
-  width: 270px;
+  position: relative;
+  width: 100%;
   height: 32px;
   line-height: 32px;
-  text-align: left;
-  padding-left: 5px;
+  padding-left: 8px;
+  margin-bottom: 4px;
   background: rgba(10, 10, 10, 0.3);
   color: var(--title-color, #ffd700);
   font-weight: bold;
+  letter-spacing: 1px;
   border-top-left-radius: 12px;
   border-top-right-radius: 12px;
-  
-  letter-spacing: 1px;
   cursor: grab;
-  user-select: none;
-  margin-bottom: 4px;
-  position: relative;
 }
+
 #window-btns {
+  -webkit-app-region: no-drag;
   position: absolute;
   top: 0;
   right: 5px;
   height: 32px;
   display: flex;
   align-items: center;
-  -webkit-app-region: no-drag;
 }
+
 .window-btn {
   width: 22px;
   height: 22px;
+  margin-left: 2px;
   border: none;
   background: none;
   color: var(--title-color, #ffd700);
   font-size: 14px;
-  margin-left: 2px;
   border-radius: 5px;
   cursor: pointer;
+  outline: none;
   transition: background 0.2s;
-  outline: none;
 }
-.window-btn:hover {
-  background: rgba(255, 255, 255, 0.09);
-}
-#setloc-container {
-  width: 100%;
-  text-align: center;
-  margin-bottom: 5px;
-}
-#setloc-btn {
-  width: 96%;
-  background: hsla(0, 0%, 13%, 0.2) ;
-  color: var(--title-color, #ffd700);
-  border: none;
-  border-radius: 7px;
-  padding: 4px 0;
-  cursor: pointer;
-  font-size: 1em;
-  margin-bottom: 2px;
-}
-#setloc-btn:active {
-  background: #444;
-}
-#map {
-  height: 170px;
-  width: 94%;
-  margin: 0 auto;
-  margin-top: 6px;
-  border-radius: 10px;
-  box-shadow: 0 2px 10px #0004;
-  display: block;
-}
-#zoom-controls {
-  position: absolute;
-  top: 38px;
-  right: 6px;
-  z-index: 999;
-  -webkit-app-region: no-drag;
-}
-#zoom-controls button {
-  width: 24px;
-  height: 24px;
-  border: none;
-  background: rgba(30, 30, 30, 0.75);
-  color: #ffd700;
-  font-size: 15px;
-  margin: 1px 0;
-  border-radius: 5px;
-  cursor: pointer;
-  outline: none;
-  box-shadow: 0 1px 4px #0002;
-}
-#zoom-controls button:hover {
-  background: rgba(255, 255, 255, 0.13);
-}
+.window-btn:hover { background: rgba(255, 255, 255, 0.09); }
 
+/* ────────────────────────────────  Clima  ──────────────────────────────── */
 #weather {
   margin: 0 0 6px 0;
   text-align: center;
@@ -128,9 +87,65 @@ body {
 }
 #weather i { color: var(--title-color, #ffd700); }
 
+/* ──────────────────────────  Botão de localização  ─────────────────────── */
+#setloc-container {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 5px;
+}
+
+#setloc-btn {
+  -webkit-app-region: no-drag;
+  width: 96%;
+  padding: 4px 0;
+  background: hsla(0, 0%, 13%, 0.2);
+  color: var(--title-color, #ffd700);
+  border: none;
+  border-radius: 7px;
+  font-size: 1em;
+  cursor: pointer;
+  margin-bottom: 2px;
+  transition: background 0.2s;
+}
+#setloc-btn:hover  { background: rgba(255, 255, 255, 0.08); }
+#setloc-btn:active { background: #444; }
+
+/* ────────────────────────────────  Mapa  ───────────────────────────────── */
 #map-wrapper { position: relative; }
 
-/* Atribuição do OpenStreetMap — exigida pela Tile Usage Policy */
+#map {
+  height: 170px;
+  width: 94%;
+  margin: 6px auto 0;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px #0004;
+  display: block;
+}
+
+#zoom-controls {
+  -webkit-app-region: no-drag;
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  z-index: 999;
+}
+
+#zoom-controls button {
+  width: 24px;
+  height: 24px;
+  margin: 1px 0;
+  border: none;
+  background: rgba(30, 30, 30, 0.75);
+  color: var(--icon-color, #ffd700);
+  font-size: 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  outline: none;
+  box-shadow: 0 1px 4px #0002;
+}
+#zoom-controls button:hover { background: rgba(255, 255, 255, 0.13); }
+
+/* Atribuição OSM — exigida pela Tile Usage Policy */
 .leaflet-control-attribution {
   font-size: 8px;
   background: rgba(0, 0, 0, 0.45) !important;
@@ -139,144 +154,101 @@ body {
 }
 .leaflet-control-attribution a { color: #bbb !important; }
 
+/* ─────────────────────────  Ícones sobre o mapa  ───────────────────────── */
+.plane-div-icon, .user-div-icon { background: none; border: none; }
+
+.plane-icon {
+  font-size: 14px;
+  line-height: 1;
+  transition: transform 0.5s linear;
+  text-shadow: 0 0 3px #000;
+}
+
+.user-icon {
+  color: #0ff;
+  font-size: 13px;
+  text-shadow: 0 0 4px #000;
+}
+
+/* ────────────────────────────  Lista de voos  ──────────────────────────── */
 #list {
+  flex: 1;
   margin-top: 8px;
-  font-size: 0.93em;
+  padding: 0 2px 0 5px;
   max-width: 98%;
+  font-size: 0.93em;
   overflow-y: auto;
   overflow-x: hidden;
-  padding-left: 5px;
-  padding-right: 2px;
   text-shadow: 0 1px 2px #000a;
-  flex: 1; 
 }
-#list::-webkit-scrollbar {
-  width: 6px;
-}
+#list::-webkit-scrollbar { width: 6px; }
 #list::-webkit-scrollbar-thumb {
   background: rgba(255, 215, 0, 0.2);
   border-radius: 4px;
 }
+#list b { color: var(--title-color, #ffd700); }
 
-.plane {
-  margin-bottom: 5px;
-  padding-bottom: 2px;
+.plane-item {
+  padding: 4px 2px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  font-size: 0.93em;
+  cursor: pointer;
+  transition: background 0.15s;
 }
+.plane-item:hover { background: rgba(255, 255, 255, 0.06); }
+
+.plane-info strong { color: var(--title-color, #ffd700); }
+.plane-info span   { margin-left: 6px; opacity: 0.85; }
+.plane-meta        { font-size: 0.85em; opacity: 0.7; margin-top: 1px; }
+
+.badge {
+  margin-left: 4px;
+  padding: 1px 4px;
+  background: rgba(255, 80, 80, 0.25);
+  color: #ff8080;
+  font-size: 0.75em;
+  border-radius: 3px;
+}
+
+.empty-msg {
+  opacity: 0.6;
+  padding: 8px 2px;
+  font-style: italic;
+}
+
+/* ─────────────────────────────  Emergência  ────────────────────────────── */
+@keyframes blink {
+  0%, 100% { background: transparent; }
+  50%      { background: rgba(255, 0, 0, 0.18); }
+}
+.alert-blink { animation: blink 1s infinite; }
+
+/* Tooltip industrial (preservado) */
 .tooltip-alert {
   position: relative;
   display: inline-block;
-  font-weight: bold;
   margin-left: 6px;
+  font-weight: bold;
   cursor: help;
 }
-
 .tooltip-alert .tooltip-text {
   visibility: hidden;
-  background-color: #222;
-  color: #ffd700;
-  text-align: center;
-  padding: 5px 8px;
-  border-radius: 6px;
+  opacity: 0;
   position: absolute;
-  z-index: 9999;
   bottom: 120%;
   left: 50%;
   transform: translateX(-50%);
-  opacity: 0;
-  transition: opacity 0.2s;
+  z-index: 9999;
+  padding: 5px 8px;
+  background-color: #222;
+  color: var(--title-color, #ffd700);
+  font-size: 0.75em;
+  text-align: center;
   white-space: nowrap;
-  font-size: 0.75em;
+  border-radius: 6px;
   box-shadow: 0 2px 8px #0008;
+  transition: opacity 0.2s;
 }
+.tooltip-alert:hover .tooltip-text { visibility: visible; opacity: 1; }
 
-.tooltip-alert:hover .tooltip-text {
-  visibility: visible;
-  opacity: 1;
-}
-.voce {
-  color: #0ff;
-  font-weight: bold;
-}
-b {
-  color: #ffd700;
-}
-audio {
-  display: none;
-}
-
-/* Ícones do mapa */
-.plane-div-icon, .user-div-icon { background: none; border: none; }
-
-.plane-icon {
-  font-size: 14px;
-  line-height: 1;
-  transition: transform 0.5s linear;
-  text-shadow: 0 0 3px #000;
-}
-
-.user-icon { color: #0ff; font-size: 13px; text-shadow: 0 0 4px #000; }
-
-/* Lista */
-.plane-item {
-  padding: 4px 2px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  cursor: pointer;
-  transition: background 0.15s;
-}
-.plane-item:hover { background: rgba(255, 255, 255, 0.06); }
-
-.plane-info strong { color: var(--title-color, #ffd700); }
-.plane-info span   { margin-left: 6px; opacity: 0.85; }
-.plane-meta        { font-size: 0.85em; opacity: 0.7; }
-
-.badge {
-  background: rgba(255, 80, 80, 0.25);
-  color: #ff8080;
-  font-size: 0.75em;
-  padding: 1px 4px;
-  border-radius: 3px;
-  margin-left: 4px;
-}
-
-.empty-msg { opacity: 0.6; padding: 8px 2px; font-style: italic; }
-
-/* Ícones do mapa */
-.plane-div-icon, .user-div-icon { background: none; border: none; }
-
-.plane-icon {
-  font-size: 14px;
-  line-height: 1;
-  transition: transform 0.5s linear;
-  text-shadow: 0 0 3px #000;
-}
-
-.user-icon { color: #0ff; font-size: 13px; text-shadow: 0 0 4px #000; }
-
-/* Lista */
-.plane-item {
-  padding: 4px 2px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  cursor: pointer;
-  transition: background 0.15s;
-}
-.plane-item:hover { background: rgba(255, 255, 255, 0.06); }
-
-.plane-info strong { color: var(--title-color, #ffd700); }
-.plane-info span   { margin-left: 6px; opacity: 0.85; }
-.plane-meta        { font-size: 0.85em; opacity: 0.7; }
-
-.badge {
-  background: rgba(255, 80, 80, 0.25);
-  color: #ff8080;
-  font-size: 0.75em;
-  padding: 1px 4px;
-  border-radius: 3px;
-  margin-left: 4px;
-}
-
-.empty-msg { opacity: 0.6; padding: 8px 2px; font-style: italic; }
-
-@keyframes blink { 0%, 100% { background: transparent; } 50% { background: rgba(255, 0, 0, 0.18); } }
-.alert-blink { animation: blink 1s infinite; }
+.voce { color: #0ff; font-weight: bold; }
+audio { display: none; }
