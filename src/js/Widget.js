@@ -159,35 +159,6 @@ api.on("update-planes", (event, planes) => {
 
 function updatePlaneListUI(planes) {
     const listContainer = document.getElementById("list");
-    if (planes.length === 0) {
-        listContainer.innerHTML = `<div class="empty-msg">Céu limpo na região...</div>`;
-        return;
-    }
-
-    let html = planes.map((p, i) => {
-        const emergencyClass = p.emergencia ? 'alert-blink' : '';
-        const squawkLabel = p.squawk ? `<span class="badge">SQ ${p.squawk}</span>` : '';
-
-        return `
-            <div class="plane-item ${emergencyClass}" onclick="showPlaneDetails('${p.icao24}')">
-                <div class="plane-info">
-                    <strong>${i+1}. ${p.callsign}</strong> ${squawkLabel}
-                    <span>${p.model}</span>
-                </div>
-                <div class="plane-meta">
-                    ${p.distance} km • ${p.altitude} m • ${p.direction}
-                </div>
-            </div>
-        `;
-    }).join("");
-
-    listContainer.innerHTML = html;
-
-    window.lastPlanesData = planes;
-}
-
-function updatePlaneListUI(planes) {
-    const listContainer = document.getElementById("list");
     listContainer.textContent = "";
 
     if (!planes.length) {
