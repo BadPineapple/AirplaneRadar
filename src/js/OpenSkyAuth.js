@@ -1,14 +1,14 @@
 // src/js/OpenSkyAuth.js
-const { log, warn, error } = require("../src/js/Logger");
+const { log, warn, error } = require("./Logger");
 
 let cachedToken = null;
 let tokenExpiration = null;
 let isRefreshing = null;
 
 async function getOpenSkyToken(config) {
-    const clientId = config.accounts?.opensky?.client_id || '';
-    const clientSecret = config.accounts?.opensky?.client_secret || '';
-
+    const { getOpenSkyCredentials } = require("./ConfigManager");
+    const { client_id: clientId, client_secret: clientSecret } = getOpenSkyCredentials(config);
+    
     if (!clientId || !clientSecret) {
         warn("[AUTH] Client ID ou Secret ausentes no config. Verifique as configurações.");
         return null;

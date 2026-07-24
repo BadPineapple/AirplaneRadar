@@ -1,4 +1,4 @@
-const { ipcRenderer } = require("electron");
+const api = window.api;
 
 // Estado Global do Widget
 let map, userMarker;
@@ -8,9 +8,12 @@ let planeTrails  = new Map();
 let userLat, userLon;
 let manualLocationMode = false;
 
+api.on("update-planes", (planes) => { ... });
+api.on("apply-style", (style) => applyStyles(style));
+
 /* ---------- Inicialização e Configuração ---------------------------------- */
 
-ipcRenderer.invoke("get-config").then((config) => {
+api.invoke("get-config").then((config) => {
     applyStyles(config);
     
     userLat = config.map?.lat ?? -16.6809;
@@ -19,6 +22,12 @@ ipcRenderer.invoke("get-config").then((config) => {
     initMap(userLat, userLon, config.map?.zoom || 13);
     fetchWeather(userLat, userLon);
 });
+
+api.invoke("get-paths").then(paths => {
+        const file = config.alert?.general || "notificacao.mp3";
+        const audio = document.getElementById("notifysound");
+        audio.src = `file://${paths.builtinSounds.replace(/\\/g, "/")}/${file}`;
+    });
 
 function applyStyles(config) {
     const root = document.documentElement;
@@ -37,7 +46,7 @@ function applyStyles(config) {
     root.style.setProperty("--text-color", widget.textcolor || "#ffffff");
 }
 
-ipcRenderer.on("apply-style", (e, style) => applyStyles(style));
+api.on("apply-style", (e, style) => applyStyles(style));
 
 /* ---------- Gestão do Mapa (Leaflet) -------------------------------------- */
 
@@ -66,14 +75,14 @@ function initMap(lat, lon, zoom) {
         manualLocationMode = false;
         map.getContainer().style.cursor = "";
         
-        ipcRenderer.send("manual-location-changed", { lat: userLat, lon: userLon });
+        api.send("manual-location-changed", { lat: userLat, lon: userLon });
         fetchWeather(userLat, userLon);
     });
 }
 
 function syncMapConfig() {
     const center = map.getCenter();
-    ipcRenderer.send("save-map-config", {
+    api.send("save-map-config", {
         lat: center.lat,
         lon: center.lng,
         zoom: map.getZoom(),
@@ -82,8 +91,9 @@ function syncMapConfig() {
 
 /* ---------- Lógica dos Aviões (O Coração do Widget) ----------------------- */
 
-ipcRenderer.on("update-planes", (event, planes) => {
+api.on("update-planes", (event, planes) => {
     const currentIcaos = new Set(planes.map(p => p.icao24));
+    let hasNewPlane = false;
 
     // 1. Remover aviões que sumiram do radar
     for (let [icao, marker] of planeMarkers) {
@@ -112,15 +122,16 @@ ipcRenderer.on("update-planes", (event, planes) => {
         if (planeMarkers.has(plane.icao24)) {
             const marker = planeMarkers.get(plane.icao24);
             marker.setLatLng(coords);
-            marker.setIcon(getPlaneIcon(plane)); // Atualiza rotação
+
+            const el = marker.getElement()?.querySelector("div");
+            if (el) el.style.transform = `rotate(${plane.heading || 0}deg)`;
+            else marker.setIcon(getPlaneIcon(plane));
         } else {
             const marker = L.marker(coords, { icon: getPlaneIcon(plane) })
                 .bindPopup(`<b>${plane.callsign}</b><br>${plane.model}`)
                 .addTo(map);
             planeMarkers.set(plane.icao24, marker);
-            
-            // Tocar som se for um novo avião detectado
-            document.getElementById("notifysound").play().catch(() => {});
+            hasNewPlane = true;
         }
 
         // Gerenciar Trilha (Polyline)
@@ -137,6 +148,12 @@ ipcRenderer.on("update-planes", (event, planes) => {
         }
     });
 
+    if (hasNewPlane) {
+        const audio = document.getElementById("notifysound");
+        audio.currentTime = 0;
+        audio.play().catch(() => {});
+    }
+
     updatePlaneListUI(planes);
 });
 
@@ -152,7 +169,7 @@ function updatePlaneListUI(planes) {
         const squawkLabel = p.squawk ? `<span class="badge">SQ ${p.squawk}</span>` : '';
 
         return `
-            <div class="plane-item ${emergencyClass}" onclick="showPlaneDetails('${p.icaoCode}')">
+            <div class="plane-item ${emergencyClass}" onclick="showPlaneDetails('${p.icao24}')">
                 <div class="plane-info">
                     <strong>${i+1}. ${p.callsign}</strong> ${squawkLabel}
                     <span>${p.model}</span>
@@ -169,16 +186,59 @@ function updatePlaneListUI(planes) {
     window.lastPlanesData = planes;
 }
 
-function showPlaneDetails(icao24) {
-    if (!icao24 || icao24 === "undefined") {
-        console.error("[WIDGET] Erro: Código ICAO inválido no clique.");
+function updatePlaneListUI(planes) {
+    const listContainer = document.getElementById("list");
+    listContainer.textContent = "";
+
+    if (!planes.length) {
+        const empty = document.createElement("div");
+        empty.className = "empty-msg";
+        empty.textContent = "Céu limpo na região...";
+        listContainer.appendChild(empty);
         return;
     }
-    
-    console.log("[WIDGET] Enviando ICAO para o Main:", icao24);
-    
-    ipcRenderer.send("open-details-window", icao24);
+
+    const frag = document.createDocumentFragment();
+
+    planes.forEach((p, i) => {
+        const item = document.createElement("div");
+        item.className = "plane-item" + (p.emergencia ? " alert-blink" : "");
+        item.dataset.icao = p.icao24;                 // sem onclick inline (bloqueado por CSP)
+
+        const info = document.createElement("div");
+        info.className = "plane-info";
+
+        const title = document.createElement("strong");
+        title.textContent = `${i + 1}. ${p.callsign}`;
+        info.appendChild(title);
+
+        if (p.squawk) {
+            const badge = document.createElement("span");
+            badge.className = "badge";
+            badge.textContent = `SQ ${p.squawk}`;
+            info.appendChild(badge);
+        }
+
+        const model = document.createElement("span");
+        model.textContent = p.model;                  // texto, nunca markup
+        info.appendChild(model);
+
+        const meta = document.createElement("div");
+        meta.className = "plane-meta";
+        meta.textContent = `${p.distance} km • ${p.altitude} m • ${p.direction}`;
+
+        item.append(info, meta);
+        frag.appendChild(item);
+    });
+
+    listContainer.appendChild(frag);
 }
+
+// Delegação de evento — um listener para a lista inteira, sobrevive à reconstrução
+document.getElementById("list").addEventListener("click", (e) => {
+    const item = e.target.closest(".plane-item");
+    if (item?.dataset.icao) api.send("open-details-window", item.dataset.icao);
+});
 
 
 /* ---------- Ícones e Auxiliares ------------------------------------------- */
@@ -234,12 +294,12 @@ document.getElementById("setloc-btn").onclick = () => {
 
 document.getElementById("zoomin").onclick = () => map.zoomIn();
 document.getElementById("zoomout").onclick = () => map.zoomOut();
-document.getElementById("closebtn").onclick = () => ipcRenderer.send("quit-app");
-document.getElementById("minbtn").onclick = () => ipcRenderer.send("minimize-to-bubble");
+document.getElementById("closebtn").onclick = () => api.send("quit-app");
+document.getElementById("minbtn").onclick = () => api.send("minimize-to-bubble");
 document.getElementById("settingsbtn").onclick = () => { 
-  ipcRenderer.send("open-settings");
+  api.send("open-settings");
 };
 
 // Atalhos via Teclado
-ipcRenderer.on("shortcut-zoomin", () => map.zoomIn());
-ipcRenderer.on("shortcut-zoomout", () => map.zoomOut());
+api.on("shortcut-zoomin", () => map.zoomIn());
+api.on("shortcut-zoomout", () => map.zoomOut());

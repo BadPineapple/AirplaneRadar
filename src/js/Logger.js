@@ -1,74 +1,85 @@
 /* ─────────────────────────────  Logger.js  ──────────────────────────────── */
-const fs = require("fs");
-const path = require("path");
+const fs  = require("fs");
+const fsp = fs.promises;
 
-// Definimos o local dos logs relativo à raiz do projeto
-const logDir = path.resolve(__dirname, "../../logs");
-const logFile = path.join(logDir, "runtime.log");
+const isMain = process.type === "browser";
 
-/**
- * Garante que o diretório de logs exista.
- * Usamos try/catch para evitar crash se o sistema de arquivos estiver travado.
- */
-function ensureLogDir() {
-    try {
-        if (!fs.existsSync(logDir)) {
-            fs.mkdirSync(logDir, { recursive: true });
-        }
-    } catch (e) {
-        console.error("[LOGGER] Não foi possível criar pasta de logs:", e.message);
-    }
+// No renderer o logger degrada para console — renderers não escrevem em disco.
+let logFile = null;
+if (isMain) {
+    const PATHS = require("./Paths");
+    logFile = PATHS.logFile;
 }
 
-/**
- * Formata os argumentos para uma string legível.
- * Especialmente útil para capturar mensagens de erro completas (stack trace).
- */
+const MAX_LOG_BYTES = 5 * 1024 * 1024;   // 5 MB
+const MAX_QUEUE     = 5000;              // trava de segurança contra loop de log
+
+let queue = [];
+let flushing = false;
+
 function formatArgs(args) {
     return args.map(arg => {
-        if (arg instanceof Error) return arg.stack; // Captura o erro com stack trace
-        if (typeof arg === "object") return JSON.stringify(arg, null, 2);
+        if (arg instanceof Error) return arg.stack;
+        if (typeof arg === "object" && arg !== null) {
+            try { return JSON.stringify(arg); } catch { return "[objeto circular]"; }
+        }
         return String(arg);
     }).join(" ");
 }
 
-/**
- * Escrita em arquivo (Append)
- */
-function append(level, ...args) {
-    ensureLogDir();
-    
-    const now = new Date();
-    const timestamp = now.toLocaleString('pt-BR', { timeZoneName: 'short' });
-    const message = formatArgs(args);
-    const logLine = `[${timestamp}] [${level}] ${message}\n`;
-
+async function rotateIfNeeded() {
     try {
-        // Usamos appendFileSync pela simplicidade no processo principal
-        fs.appendFileSync(logFile, logLine, "utf8");
-    } catch (e) {
-        console.error("[LOGGER] Falha crítica ao gravar log no disco:", e.message);
+        const stat = await fsp.stat(logFile);
+        if (stat.size < MAX_LOG_BYTES) return;
+
+        const archive = `${logFile}.1`;
+        // fs.rename falha no Windows se o destino existir
+        try { await fsp.unlink(archive); } catch {}
+        await fsp.rename(logFile, archive);
+    } catch {
+        // arquivo ainda não existe — nada a rotacionar
     }
 }
 
-/* ────────────────────────── API PÚBLICA ────────────────────────── */
+async function flush() {
+    flushing = true;
+    while (queue.length) {
+        const chunk = queue.splice(0, queue.length).join("");
+        try {
+            await rotateIfNeeded();
+            await fsp.appendFile(logFile, chunk, "utf8");
+        } catch (e) {
+            console.error("[LOGGER] Falha ao gravar log:", e.message);
+        }
+    }
+    flushing = false;
+}
+
+function append(level, ...args) {
+    if (!isMain || !logFile) return;
+    if (queue.length > MAX_QUEUE) return;
+
+    const timestamp = new Date().toISOString();
+    queue.push(`[${timestamp}] [${level}] ${formatArgs(args)}\n`);
+
+    if (!flushing) flush();
+}
+
+/**
+ * Descarga síncrona — usar apenas no 'will-quit', para não perder
+ * as últimas linhas quando o processo morre com a fila cheia.
+ */
+function flushSync() {
+    if (!isMain || !logFile || !queue.length) return;
+    try {
+        fs.appendFileSync(logFile, queue.splice(0, queue.length).join(""), "utf8");
+    } catch {}
+}
 
 module.exports = {
-    log: (...args) => {
-        console.log(...args);
-        append("INFO", ...args);
-    },
-    warn: (...args) => {
-        console.warn(...args);
-        append("WARN", ...args);
-    },
-    error: (...args) => {
-        console.error(...args);
-        append("ERROR", ...args);
-    },
-    // Atalho para registrar o início de uma nova sessão no arquivo
-    initSession: () => {
-        const separator = "\n" + "=".repeat(50) + "\n";
-        append("SYSTEM", `${separator} NOVA SESSÃO INICIADA ${separator}`);
-    }
+    log:   (...args) => { console.log(...args);   append("INFO",  ...args); },
+    warn:  (...args) => { console.warn(...args);  append("WARN",  ...args); },
+    error: (...args) => { console.error(...args); append("ERROR", ...args); },
+    flushSync,
+    initSession: () => append("SYSTEM", "=".repeat(20) + " NOVA SESSÃO " + "=".repeat(20))
 };

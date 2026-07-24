@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!file || !file.name.endsWith(".mp3")) {
         return alert("Apenas arquivos .mp3 são permitidos.");
       }
-      const dest = path.join(__dirname, "../../assets/sound", file.name);
+      const dest = path.join(PATHS.userSounds, file.name);
       fs.copyFile(file.path, dest, err => {
         if (err) {
           error("Erro ao copiar som:", err);
@@ -55,11 +55,24 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* ─────────────────────────────  Funções auxiliares  ────────────────────── */
-  const soundDir = path.join(__dirname, "../../assets/sound");
+  /* ───────────────────────────  Pastas de som  ───────────────────────── */
+  let PATHS = { userSounds: "", builtinSounds: "" };
+
+  ipcRenderer.invoke("get-paths").then(p => {
+    PATHS = p;
+    refreshSoundSelects();
+  });
 
   function getMp3Files() {
-    try { return fs.readdirSync(soundDir).filter(f => f.endsWith(".mp3")); }
-    catch (e) { warn("Não foi possível ler a pasta de sons:", e); return []; }
+    const seen = new Set();
+    [PATHS.builtinSounds, PATHS.userSounds].forEach(dir => {
+      if (!dir) return;
+      try {
+        fs.readdirSync(dir).filter(f => f.toLowerCase().endsWith(".mp3"))
+          .forEach(f => seen.add(f));
+      } catch (e) { warn("Pasta de sons indisponível:", dir); }
+    });
+    return [...seen];
   }
 
   function refreshSoundSelects() {
@@ -218,8 +231,10 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("shortcut-restore").value  = sc.restore  || "Ctrl+Shift+M";
 
     // Contas
-    document.getElementById("opensky-clientid").value     = acct.client_id     || "";
-    document.getElementById("opensky-clientsecret").value = acct.client_secret || "";
+    ipcRenderer.invoke("get-opensky-credentials").then(cred => {
+      document.getElementById("opensky-clientid").value     = cred.client_id || "";
+      document.getElementById("opensky-clientsecret").value = cred.client_secret || "";
+    });
 
     log("Configurações carregadas.");
   });

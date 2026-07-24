@@ -1,52 +1,121 @@
 /* ──────────────────────────────  Background.js  ─────────────────────────── */
-const path  = require("path");
 const fs    = require("fs");
-const { getOpenSkyToken } = require("../../config/OpenSkyAuth");
+const PATHS = require("./Paths");
+const { getOpenSkyToken } = require("./OpenSkyAuth");
 const { log, warn, error } = require("./Logger");
 
-const cacheFile = path.join(__dirname, '../../config/aircraft_cache.json');
+const cacheFile = PATHS.cache;
 const PLANESPOTTERS_API = "https://api.planespotters.net/pub/photos/hex/";
-const aircraftDatabase = require('../../config/TechnicalData.json');
+const OPENSKY_STATES    = "https://opensky-network.org/api/states/all";
+const OPENSKY_METADATA  = "https://opensky-network.org/api/metadata/aircraft/icao/";
 const fetch = globalThis.fetch;
 
-// --- SISTEMA DE CACHE ÚNICO ---
+const MAX_RESULTS   = 5;
+const FETCH_TIMEOUT = 8000;
+
+// Banco técnico — resolvido via Paths (repo em dev, resourcesPath em produção)
+let aircraftDatabase = {};
+try {
+    aircraftDatabase = JSON.parse(fs.readFileSync(PATHS.techData, "utf8"));
+} catch (e) {
+    error("[TECH] Falha ao carregar TechnicalData.json:", e.message);
+}
+
+/* ─────────────────────────────  CACHE  ─────────────────────────────────── */
+const CACHE_TTL      = 24 * 60 * 60 * 1000;
+const CACHE_MAX_KEYS = 2000;
+
 let aircraftCache = {};
+let cacheDirty    = false;
+let cacheChain    = Promise.resolve();
+
 try {
     if (fs.existsSync(cacheFile)) {
         aircraftCache = JSON.parse(fs.readFileSync(cacheFile, "utf8"));
+        pruneCache();
     }
 } catch (e) {
-    warn("[CACHE] Erro ao carregar arquivo de cache.");
+    warn("[CACHE] Cache inválido, iniciando vazio.");
+    aircraftCache = {};
+}
+
+function pruneCache() {
+    const now = Date.now();
+    let entries = Object.entries(aircraftCache)
+        .filter(([, v]) => v?.fetchedAt && (now - new Date(v.fetchedAt).getTime()) < CACHE_TTL);
+
+    if (entries.length > CACHE_MAX_KEYS) {
+        entries.sort((a, b) => new Date(b[1].fetchedAt) - new Date(a[1].fetchedAt));
+        entries = entries.slice(0, CACHE_MAX_KEYS);
+    }
+
+    const before = Object.keys(aircraftCache).length;
+    aircraftCache = Object.fromEntries(entries);
+    if (before !== entries.length) log(`[CACHE] Purga: ${before} -> ${entries.length}`);
 }
 
 function persistCache() {
+    if (!cacheDirty) return cacheChain;
+    cacheDirty = false;
+
+    const snapshot = JSON.stringify(aircraftCache);
+    cacheChain = cacheChain.then(async () => {
+        const tmp = `${cacheFile}.tmp`;
+        try {
+            await fs.promises.writeFile(tmp, snapshot, "utf8");
+            await fs.promises.rename(tmp, cacheFile);
+        } catch (e) {
+            error("[CACHE] Falha ao persistir:", e.message);
+            try { await fs.promises.unlink(tmp); } catch {}
+        }
+    });
+    return cacheChain;
+}
+
+function persistCacheSync() {
+    if (!cacheDirty) return;
     try {
-        fs.writeFileSync(cacheFile, JSON.stringify(aircraftCache, null, 2), "utf8");
+        const tmp = `${cacheFile}.tmp`;
+        fs.writeFileSync(tmp, JSON.stringify(aircraftCache), "utf8");
+        fs.renameSync(tmp, cacheFile);
+        cacheDirty = false;
     } catch (e) {
-        error("[CACHE] Falha ao persistir dados.");
+        error("[CACHE] Falha no salvamento final:", e.message);
     }
 }
 
-// --- UTILITÁRIOS ---
+function writeCache(icao24, fullData) {
+    aircraftCache[icao24] = { fullData, fetchedAt: new Date().toISOString() };
+    cacheDirty = true;
+}
+
+/* ───────────────────────────  UTILITÁRIOS  ─────────────────────────────── */
+function fetchWithTimeout(url, options = {}, timeout = FETCH_TIMEOUT) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeout);
+    return fetch(url, { ...options, signal: controller.signal })
+        .finally(() => clearTimeout(timer));
+}
+
 function calculateDistanceKm(lat1, lon1, lat2, lon2) {
     const R = 6371;
     const dLat = ((lat2 - lat1) * Math.PI) / 180;
     const dLon = ((lon2 - lon1) * Math.PI) / 180;
-    const a = Math.sin(dLat / 2) ** 2 + 
-              Math.cos((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) * 
+    const a = Math.sin(dLat / 2) ** 2 +
+              Math.cos((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) *
               Math.sin(dLon / 2) ** 2;
     return 2 * R * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
 function getDirection(lat1, lon1, lat2, lon2) {
     const y = Math.sin(((lon2 - lon1) * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180);
-    const x = Math.cos((lat1 * Math.PI) / 180) * Math.sin((lat2 * Math.PI) / 180) - 
-    Math.sin((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) * 
-    Math.cos(((lon2 - lon1) * Math.PI) / 180);
+    const x = Math.cos((lat1 * Math.PI) / 180) * Math.sin((lat2 * Math.PI) / 180) -
+              Math.sin((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) *
+              Math.cos(((lon2 - lon1) * Math.PI) / 180);
     const deg = ((Math.atan2(y, x) * 180) / Math.PI + 360) % 360;
-    
+
     if (deg < 22.5 || deg >= 337.5) return "Norte";
-    if (deg < 67.5) return "Nordeste";
+    if (deg < 67.5)  return "Nordeste";
     if (deg < 112.5) return "Leste";
     if (deg < 157.5) return "Sudeste";
     if (deg < 202.5) return "Sul";
@@ -55,55 +124,50 @@ function getDirection(lat1, lon1, lat2, lon2) {
     return "Noroeste";
 }
 
+/**
+ * Heurística de tipo. A regra antiga `cs.startsWith("H")` classificava como
+ * helicóptero qualquer callsign iniciado em H — incluindo prefixos húngaros (HA-),
+ * suíços (HB-) e a Hawaiian (HAL). Com o filtro do item 3 ativo, isso ESCONDIA
+ * voos comerciais legítimos da lista.
+ */
 function getAircraftType(callsign) {
-    const cs = callsign?.trim().toUpperCase() || "";
-    if (/^(AF|FAB|MIL|RCH)/.test(cs)) return "militar";
-    if (cs.includes("HEL") || cs.startsWith("H")) return "helicoptero";
-    if (cs.length <= 4 && cs !== "") return "privado";
+    const cs = (callsign || "").trim().toUpperCase();
+    if (!cs) return "outros";
+
+    if (/^(FAB|RCH|CFC|ASY|BRS|AF[0-9]|MIL)/.test(cs)) return "militar";
+    if (/^(PP|PR|PS|PT|PU|N[0-9])/.test(cs) && cs.length <= 6) return "privado";
+    if (/^(HEL|LIF|RESC|SAMU)/.test(cs)) return "helicoptero";
+    if (/^[A-Z]{3}[0-9]{1,4}$/.test(cs)) return "comercial";
+    if (cs.length <= 4) return "privado";
     return "comercial";
 }
+
 function calculateAge(year) {
-    return year ? new Date().getFullYear() - year : "N/A";
+    if (!year) return "N/A";
+    const built = parseInt(String(year).slice(0, 4), 10);
+    if (isNaN(built) || built < 1930) return "N/A";
+    const age = new Date().getFullYear() - built;
+    return `${age} ano${age === 1 ? "" : "s"}`;
 }
 
 function getTechSpecsByModel(model) {
     if (!model || model === "Desconhecido") return {};
+    const key = String(model).trim().toUpperCase();
 
-    const modelUpper = model.toUpperCase();
-    
-    const keys = Object.keys(aircraftDatabase);
-    const matchedKey = keys.find(key => modelUpper.includes(key));
-
-    if (matchedKey) return aircraftDatabase[matchedKey];
-    if (modelUpper.includes("HELICOPTER") || modelUpper.includes("H1")) return { engines_type: "Turboshaft", plane_class: "H" };
-
-    return {};
+    let entry = aircraftDatabase[key];
+    if (!entry) {
+        const found = Object.keys(aircraftDatabase)
+            .find(k => key.includes(k.toUpperCase()) || k.toUpperCase().includes(key));
+        if (found) entry = aircraftDatabase[found];
+    }
+    return entry || {};
 }
 
-// --- BUSCA DE DETALHES COMPLETOS (AGORA PARAMETRIZADA) ---
-
-// Adicionado o parâmetro 'requiresPhoto' (padrão falso)
-async function getAircraftFullDetails(icao24, config, requiresPhoto = false) {
-    const fallbackData = {
+/* ────────────────────  DETALHES DE UMA AERONAVE  ───────────────────────── */
+function baseData(icao24) {
+    return {
         model: "Desconhecido",
-        icaoCode: icao24 ? icao24.toUpperCase() : "N/A",
-        photo: null,
-        registration_number: "N/A",
-        plane_owner: "Particular",
-        hasCheckedPhoto: false
-    };
-
-    if (!icao24) return fallbackData;
-
-    // 1. Check Cache (24h)
-    const entry = aircraftCache[icao24];
-    if (entry && (Date.now() - new Date(entry.fetchedAt).getTime() < 86400000)) {
-        return entry.fullData;
-    }
-
-    let fullData = {
-        model: "Desconhecido",
-        icaoCode: icao24 ? icao24.toUpperCase() : "N/A",
+        icaoCode: icao24.toUpperCase(),
         Production_line: "N/A",
         Plane_Status: "Ativo",
         registration_date: "N/A",
@@ -122,125 +186,200 @@ async function getAircraftFullDetails(icao24, config, requiresPhoto = false) {
         length: "---",
         wingspan: "---",
         height: "---",
-        photo: null
+        photo: null,
+        hasCheckedPhoto: false
     };
+}
 
-        try {
-            const token = await getOpenSkyToken(config);
-            if (token) {
-                const res = await fetch(`https://opensky-network.org/api/metadata/aircraft/icao/${icao24}`, {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                if (res.ok) {
-                    const os = await res.json();
-                    fullData.model = os.model || fullData.model;
-                    fullData.registration_number = os.registration || "N/A";
-                    fullData.plane_owner = os.operator || "Particular";
-                    fullData.countryOfOrigin = os.owner || "N/A";
-                    fullData.plane_series = os.typeShort || "N/A";
-                    fullData.plane_age = calculateAge(os.built);
-                }
+async function fetchPhoto(icao24, target) {
+    try {
+        // Planespotters exige User-Agent, senão devolve 403
+        const res = await fetchWithTimeout(`${PLANESPOTTERS_API}${icao24}`, {
+            headers: { "User-Agent": "AirplaneRadarWidget/1.4" }
+        });
+        if (res.ok) {
+            const ps = await res.json();
+            if (ps.photos?.length > 0) {
+                target.photo = ps.photos[0].thumbnail_large?.src || null;
+                target.Production_line = ps.photos[0].airline?.name || target.Production_line;
             }
-            // Injetar specs técnicas do banco local
-            Object.assign(fullData, getTechSpecsByModel(fullData.model));
-            needsCacheSave = true;
-        } catch (e) {
-            warn(`[DETAILS] Erro OpenSky ${icao24}:`, e.message);
         }
+        target.hasCheckedPhoto = true;
+        return true;
+    } catch (e) {
+        warn(`[PHOTO] Falha para ${icao24}:`, e.message);
+        return false;
+    }
+}
 
-    // 3. Busca de Imagem Condicional (O Pulo do Gato)
-    if (requiresPhoto && !fullData.hasCheckedPhoto) {
-        try {
-            // O Planespotters EXIGE um User-Agent, senão bloqueia a requisição (Erro 403)
-            const resPhoto = await fetch(`${PLANESPOTTERS_API}${icao24}`, {
-                headers: { 'User-Agent': 'TelemetriaApp/1.5' }
+async function getAircraftFullDetails(icao24, config, requiresPhoto = false) {
+    icao24 = String(icao24 || "").trim().toLowerCase();
+    if (!icao24) return null;
+
+    const entry = aircraftCache[icao24];
+    const fresh = entry && (Date.now() - new Date(entry.fetchedAt).getTime() < CACHE_TTL);
+
+    /* BUG CORRIGIDO: o cache hit retornava ANTES de avaliar requiresPhoto.
+       Como o radar popula o cache com `false` a cada 30s, ao abrir os detalhes
+       (`true`) a entrada já existia e o Planespotters NUNCA era chamado —
+       a foto ficava eternamente em "SEM IMAGEM REGISTRADA".
+       Agora, no cache hit sem foto verificada, buscamos SÓ a foto. */
+    if (fresh) {
+        const cached = entry.fullData;
+        if (!requiresPhoto || cached.hasCheckedPhoto) return cached;
+
+        if (await fetchPhoto(icao24, cached)) {
+            writeCache(icao24, cached);
+            persistCache();
+        }
+        return cached;
+    }
+
+    const fullData = baseData(icao24);
+    let changed = false;
+
+    try {
+        const token = await getOpenSkyToken(config);
+        if (token) {
+            const res = await fetchWithTimeout(`${OPENSKY_METADATA}${icao24}`, {
+                headers: { Authorization: `Bearer ${token}` }
             });
-            
-            if (resPhoto.ok) {
-                const ps = await resPhoto.json();
-                if (ps.photos?.length > 0) {
-                    fullData.photo = ps.photos[0].thumbnail_large.src;
-                    fullData.Production_line = ps.photos[0].airline?.name || "N/A";
-                }
+            if (res.ok) {
+                const os = await res.json();
+                fullData.model               = os.model || fullData.model;
+                fullData.registration_number = os.registration || "N/A";
+                fullData.plane_owner         = os.operator || "Particular";
+                fullData.countryOfOrigin     = os.owner || "N/A";
+                fullData.plane_series        = os.typeShort || "N/A";
+                fullData.plane_age           = calculateAge(os.built);
+                changed = true;
+            } else if (res.status === 404) {
+                changed = true;   // cacheia o "não encontrado" e evita repetir por 24h
             }
-            fullData.hasCheckedPhoto = true; // Marca que já tentou baixar a foto
-            needsCacheSave = true;
-        } catch (e) {
-            warn(`[DETAILS] Erro Planespotters ${icao24}:`, e.message);
         }
+    } catch (e) {
+        warn(`[DETAILS] Erro OpenSky ${icao24}:`, e.message);
     }
 
-    // Salvar no disco apenas se algo mudou
-    if (needsCacheSave) {
-        aircraftCache[icao24] = { fullData, fetchedAt: new Date().toISOString() };
-        persistCache();
+    Object.assign(fullData, getTechSpecsByModel(fullData.model));
+
+    if (requiresPhoto) {
+        if (await fetchPhoto(icao24, fullData)) changed = true;
     }
 
+    if (changed) writeCache(icao24, fullData);
     return fullData;
 }
 
-// --- CORE: BUSCA DE AVIÕES PRÓXIMOS ---
+/* ───────────────────  CORE: BUSCA DE AVIÕES PRÓXIMOS  ──────────────────── */
 async function checkNearbyPlanes(userLocation, config) {
     try {
         const { lat, lon } = userLocation;
         const radiusKm = config?.search?.radius || 50;
-        const delta = radiusKm / 111; 
-        const lamin = lat - delta, lamax = lat + delta;
-        const lomin = lon - delta, lomax = lon + delta;
 
-        const url = `https://opensky-network.org/api/states/all?lamin=${lamin}&lomin=${lomin}&lamax=${lamax}&lomax=${lomax}`;
-        const resp = await fetch(url);
-        
-        if (!resp.ok) throw new Error(`OpenSky Off: ${resp.status}`);
+        /* BBOX CORRIGIDO: a versão antiga usava radius/111 também na longitude.
+           Um grau de longitude encolhe com cos(lat) — em Goiânia (-16.7°) a caixa
+           saía ~4% estreita; no Rio (-22.9°), ~8%. Aeronaves a leste/oeste
+           dentro do raio simplesmente não apareciam. */
+        const deltaLat = radiusKm / 111;
+        const cosLat   = Math.max(Math.cos((lat * Math.PI) / 180), 0.01);
+        const deltaLon = radiusKm / (111 * cosLat);
 
-        const data = await resp.json();
-        if (!data.states) return [];
-
-        const planePromises = data.states.map(async (state) => {
-            try {
-                const [icao24, callsign, country, , , longitude, latitude, baro_alt, , , heading, , , , squawk, spi] = state;
-
-                if (!latitude || !longitude) return null;
-
-                const distance = calculateDistanceKm(lat, lon, latitude, longitude);
-                if (distance > radiusKm) return null;
-
-                const type = getAircraftType(callsign);
-                
-                // CHAMA SEM FOTO: O radar precisa ser rápido! Passamos 'false'
-                const details = await getAircraftFullDetails(icao24, config, false);
-
-                return {
-                    ...details,
-                    callsign: callsign?.trim() || "N/A",
-                    country,
-                    lat: latitude,
-                    lon: longitude,
-                    altitude: Math.round(baro_alt || 0),
-                    distance: Math.round(distance * 10) / 10,
-                    direction: getDirection(lat, lon, latitude, longitude),
-                    emergencia: ["7500", "7600", "7700"].includes(squawk) || !!spi,
-                    heading: heading || 0,
-                    type: type,
-                    title: `Voo ${callsign?.trim() || icao24}`,
-                    body: `${details.model} • ${Math.round(distance)}km • ${country}`
-                };
-            } catch (errInner) {
-                error("[PLANE_PROCESS] Erro ao processar avião:", errInner.message);
-                return null; 
-            }
+        const params = new URLSearchParams({
+            lamin: lat - deltaLat, lamax: lat + deltaLat,
+            lomin: lon - deltaLon, lomax: lon + deltaLon
         });
 
-        const results = await Promise.all(planePromises);
-        return results
-        .filter(Boolean)
-        .sort((a, b) => a.distance - b.distance)
-        .slice(0, 5);
+        // Requisição autenticada quando possível: eleva a quota diária da OpenSky
+        // de 400 para 4000 créditos e reduz o intervalo mínimo entre chamadas.
+        const token = await getOpenSkyToken(config);
+        const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
+        const resp = await fetchWithTimeout(`${OPENSKY_STATES}?${params}`, { headers });
+        if (!resp.ok) throw new Error(`OpenSky respondeu ${resp.status}`);
+
+        const data = await resp.json();
+        if (!Array.isArray(data.states)) return [];
+
+        /* ETAPA 1 — Triagem local, ZERO rede.
+           Distância e tipo saem do próprio state vector. */
+        const allowed = config?.search?.filters;
+        const hasFilter = Array.isArray(allowed) && allowed.length > 0;
+        const seen = new Set();
+        const candidates = [];
+
+        for (const state of data.states) {
+            const [icao24, callsign, country, , , longitude, latitude,
+                   baro_alt, on_ground, velocity, heading, , , , squawk, spi] = state;
+
+            if (!icao24 || latitude == null || longitude == null) continue;
+
+            const id = String(icao24).trim().toLowerCase();
+            if (seen.has(id)) continue;
+            seen.add(id);
+
+            const distance = calculateDistanceKm(lat, lon, latitude, longitude);
+            if (distance > radiusKm) continue;
+
+            const type = getAircraftType(callsign);
+            if (hasFilter && !allowed.includes(type)) continue;
+
+            candidates.push({
+                icao24: id, callsign, country, latitude, longitude,
+                baro_alt, on_ground, velocity, heading, squawk, spi, distance, type
+            });
+        }
+
+        /* ETAPA 2 — Ordena e CORTA antes de qualquer I/O.
+           Aqui está a economia: só os 5 finalistas geram requisição. */
+        candidates.sort((a, b) => a.distance - b.distance);
+        const finalists = candidates.slice(0, MAX_RESULTS);
+
+        log(`[RADAR] ${data.states.length} no bbox -> ${candidates.length} no raio -> ${finalists.length} detalhados`);
+
+        /* ETAPA 3 — Detalhes apenas dos finalistas (sem foto: o radar é rápido) */
+        const results = await Promise.all(finalists.map(async c => {
+            let details;
+            try {
+                details = await getAircraftFullDetails(c.icao24, config, false);
+            } catch (e) {
+                warn("[RADAR] Detalhe indisponível para", c.icao24);
+            }
+            if (!details) details = baseData(c.icao24);
+
+            return {
+                ...details,
+                icao24: c.icao24,
+                callsign: c.callsign?.trim() || "N/A",
+                country: c.country,
+                lat: c.latitude,
+                lon: c.longitude,
+                altitude: Math.round(c.baro_alt || 0),
+                speed: c.velocity ? Math.round(c.velocity * 3.6) : null,
+                onGround: !!c.on_ground,
+                distance: Math.round(c.distance * 10) / 10,
+                direction: getDirection(lat, lon, c.latitude, c.longitude),
+                emergencia: ["7500", "7600", "7700"].includes(c.squawk) || !!c.spi,
+                squawk: c.squawk || null,
+                heading: c.heading || 0,
+                type: c.type,
+                title: `Voo ${c.callsign?.trim() || c.icao24}`,
+                body: `${details.model} • ${Math.round(c.distance)}km • ${c.country}`
+            };
+        }));
+
+        persistCache();   // uma única gravação por ciclo, não uma por aeronave
+        return results;
 
     } catch (e) {
-        error("[BACKGROUND] Falha na busca:", e.message);
+        error("[RADAR] Falha na busca:", e.message);
         return [];
     }
 }
 
-module.exports = { checkNearbyPlanes, getAircraftFullDetails };
+module.exports = { 
+    checkNearbyPlanes, 
+    getAircraftFullDetails, 
+    persistCache,
+    persistCacheSync 
+};

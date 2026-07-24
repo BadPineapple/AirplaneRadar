@@ -1,104 +1,167 @@
 // src/js/ConfigManager.js
-const fs = require('fs');
-const path = require('path');
-const { log, warn, error } = require('./Logger');
+const fs   = require("fs");
+const path = require("path");
+const { safeStorage } = require("electron");
+const PATHS = require("./Paths");
+const { log, warn, error } = require("./Logger");
 
-// Caminho absoluto para a pasta de configuração
-const configDir = path.join(__dirname, '../../config');
-const configPath = path.join(configDir, 'config.json');
+const configPath = PATHS.config;
 
-// Padrões robustos (incluindo o que usamos nos outros arquivos)
 const defaultConfig = {
-    widget: { 
-        x: 20, 
-        y: 600, 
-        width: 275, 
-        height: 430 
+    widget: {
+        x: 20, y: 600, width: 275, height: 430,
+        bgColor: "#1e1e1e", mapiconcolor: "#ffd700",
+        titlecolor: "#ffd700", textcolor: "#ffffff", bgOpacity: 0.6
     },
-    bubble: { 
-        x: 20, 
-        y: 600 
+    bubble:  { x: 20, y: 600, color: "#1982d2", size: 50, iconColor: "#ffffff" },
+    details: { x: undefined, y: undefined },
+    map:     { lat: -16.6809, lon: -49.2539, zoom: 13 },
+    home:    { lat: null, lon: null },         
+    startup: { autoLaunch: true },
+    search:  { radius: 50, filters: ["comercial", "privado", "militar", "helicoptero", "outros"] },
+    alert:   { general: "notificacao.mp3", favorite: "favorito.mp3" },
+    shortcuts: {
+        zoomin: "Ctrl+0", zoomout: "Ctrl+9", refresh: "Ctrl+R",
+        minimize: "Ctrl+M", restore: "Ctrl+Shift+M"
     },
-    map: { 
-        lat: -16.6809,
-        lon: -49.2539, 
-        zoom: 13 
-    },
-    search: {
-        radius: 50,
-        filters: ["comercial", "privado", "militar", "helicoptero"]
-    },
-    accounts: {
-        opensky: {
-            client_id: "",
-            client_secret: ""
-        }
-    }
+    accounts: { opensky: { client_id: "", client_secret_enc: "" } }
 };
 
+/* ───────────────────────────  Merge profundo  ──────────────────────────── */
+function deepMerge(base, override) {
+    const out = { ...base };
+    for (const [key, value] of Object.entries(override || {})) {
+        if (value && typeof value === "object" && !Array.isArray(value)) {
+            out[key] = deepMerge(base[key] || {}, value);
+        } else if (value !== undefined) {
+            out[key] = value;
+        }
+    }
+    return out;
+}
+
+/* ─────────────────────────  Criptografia do secret  ────────────────────── */
+function canEncrypt() {
+    try { return safeStorage.isEncryptionAvailable(); }
+    catch { return false; }
+}
+
 /**
- * Garante que a pasta e o arquivo existam.
- * Faz um "merge" para garantir que chaves novas existam sem apagar as antigas.
+ * Normaliza credenciais: se houver secret em texto puro, cifra e remove o original.
+ * Chamado no save — que sempre ocorre após o app estar pronto.
  */
-function ensureConfigFile() {
+function normalizeSecrets(config) {
+    const acc = config?.accounts?.opensky;
+    if (!acc) return config;
+
+    if (acc.client_secret) {
+        if (canEncrypt()) {
+            try {
+                acc.client_secret_enc = safeStorage
+                    .encryptString(acc.client_secret)
+                    .toString("base64");
+                delete acc.client_secret;
+                log("[CONFIG] Credencial OpenSky cifrada com safeStorage.");
+            } catch (e) {
+                warn("[CONFIG] Falha ao cifrar credencial:", e.message);
+            }
+        } else {
+            warn("[CONFIG] safeStorage indisponível — secret permanecerá em texto puro.");
+        }
+    }
+    return config;
+}
+
+/**
+ * Retorna as credenciais em claro. Uso restrito ao processo principal.
+ */
+function getOpenSkyCredentials(config) {
+    const acc = config?.accounts?.opensky || {};
+    let secret = acc.client_secret || "";
+
+    if (!secret && acc.client_secret_enc) {
+        try {
+            secret = safeStorage.decryptString(Buffer.from(acc.client_secret_enc, "base64"));
+        } catch (e) {
+            warn("[CONFIG] Não foi possível decifrar o secret (perfil/máquina diferente?).");
+            secret = "";
+        }
+    }
+    return { client_id: acc.client_id || "", client_secret: secret };
+}
+
+/* ──────────────────────────  Leitura / Escrita  ────────────────────────── */
+function loadConfig() {
     try {
-        // 1. Garante que a pasta 'config' existe
-        if (!fs.existsSync(configDir)) {
-            fs.mkdirSync(configDir, { recursive: true });
-            log("[CONFIG] Pasta de configuração criada.");
-        }
+        PATHS.ensureDirs();
 
-        // 2. Se o arquivo não existe, cria com o padrão
         if (!fs.existsSync(configPath)) {
-            log("[CONFIG] Arquivo config.json não encontrado. Criando padrão...");
+            log("[CONFIG] config.json inexistente. Criando padrão em:", configPath);
             saveConfig(defaultConfig);
-            return defaultConfig;
+            return { ...defaultConfig };
         }
 
-        // 3. Se existe, lê e garante que todas as chaves novas estão lá (Deep Merge simples)
-        const data = fs.readFileSync(configPath, 'utf8');
-        const userConfig = JSON.parse(data);
-        
-        // Unir as chaves do padrão com as do usuário (preservando o que o usuário já alterou)
-        const mergedConfig = {
-            ...defaultConfig,
-            ...userConfig,
-            widget: { ...defaultConfig.widget, ...userConfig.widget },
-            map: { ...defaultConfig.map, ...userConfig.map },
-            accounts: { ...defaultConfig.accounts, ...userConfig.accounts }
-        };
-
-        return mergedConfig;
+        const raw = JSON.parse(fs.readFileSync(configPath, "utf8"));
+        return deepMerge(defaultConfig, raw);
     } catch (err) {
-        warn("[CONFIG] Erro ao validar config. Recriando padrão...", err.message);
+        error("[CONFIG] Arquivo corrompido. Restaurando padrão:", err.message);
+        try {
+            fs.copyFileSync(configPath, `${configPath}.corrompido`);
+        } catch {}
         saveConfig(defaultConfig);
-        return defaultConfig;
+        return { ...defaultConfig };
     }
 }
 
-function loadConfig() {
+/* ──────────────────────────  Escrita assíncrona  ───────────────────────── */
+let writeChain   = Promise.resolve();
+let pendingWrite = null;
+
+async function atomicWrite(destPath, data) {
+    const fsp = fs.promises;
+    const tmp = `${destPath}.tmp`;
     try {
-        const raw = fs.readFileSync(configPath, 'utf8');
-        return JSON.parse(raw);
+        await fsp.writeFile(tmp, data, "utf8");
+        await fsp.rename(tmp, destPath);
     } catch (err) {
-        error("[CONFIG] Falha ao carregar. Usando defaults.", err.message);
-        return defaultConfig;
+        error("[CONFIG] Erro ao salvar:", err.message);
+        try { await fsp.unlink(tmp); } catch {}
     }
 }
 
 function saveConfig(config) {
+    normalizeSecrets(config);
+    pendingWrite = JSON.stringify(config, null, 2);
+
+    writeChain = writeChain.then(async () => {
+        if (pendingWrite === null) return;
+        const data = pendingWrite;
+        pendingWrite = null;
+        await atomicWrite(configPath, data);
+    });
+
+    return writeChain;
+}
+
+function saveConfigSync(config) {
     try {
-        // Salva com indentação de 2 espaços para ser legível por humanos
-        fs.writeFileSync(configPath, JSON.stringify(config, null, 2), 'utf8');
-        log("[CONFIG] Configuração persistida no disco.");
+        normalizeSecrets(config);
+        const tmp = `${configPath}.tmp`;
+        fs.writeFileSync(tmp, JSON.stringify(config, null, 2), "utf8");
+        fs.renameSync(tmp, configPath);
+        pendingWrite = null;
     } catch (err) {
-        error("[CONFIG] Erro fatal ao salvar arquivo:", err);
+        error("[CONFIG] Erro no salvamento final:", err.message);
     }
 }
 
 module.exports = {
-    ensureConfigFile,
     loadConfig,
     saveConfig,
-    defaultConfig
+    saveConfigSync,
+    getOpenSkyCredentials,
+    deepMerge,
+    defaultConfig,
+    configPath,
+    ensureConfigFile: loadConfig
 };

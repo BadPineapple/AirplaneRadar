@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <title>Bolha Radar</title>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
-    />
+    <meta http-equiv="Content-Security-Policy" content="
+      default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self';
+    " />
+    <link rel="stylesheet" href="../../assets/vendor/fontawesome/all.min.css" />
     <link rel="stylesheet" href="css/Bubble_Style.css" />
   </head>
   <body>
@@ -14,54 +14,38 @@
       <i id="bubble-icon" class="fa-solid fa-plane-up"></i>
     </div>
     <script>
-      const fs = require('fs');
-      const path = require('path');
-
-      const configPath = path.join(__dirname, '../../config/config.json');
-      let config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
-
-      const { ipcRenderer } = require("electron");
-      let dragging = false,
-        offsetX = 0,
-        offsetY = 0;
-
+      const api = window.api;
       const bubble = document.getElementById("bubble");
-      const icon = document.getElementById('bubble-icon');
+      const icon   = document.getElementById("bubble-icon");
 
-      // Aplica tamanho
-      const size = config.bubble?.size || 60;
-      bubble.style.width = `${size}px`;
-      bubble.style.height = `${size}px`;
+      api.invoke("get-config").then(config => {
+        const size = config.bubble?.size || 60;
+        bubble.style.width  = `${size}px`;
+        bubble.style.height = `${size}px`;
+        bubble.style.background = config.bubble?.color || "#1982d2";
+        icon.style.color = config.bubble?.iconColor || "#ffffff";
+      });
 
-      // Cor de fundo e do ícone
-      bubble.style.background = config.bubble?.color || '#1982d2';
-      icon.style.color = config.bubble?.iconColor || 'white';
+      let dragging = false, offsetX = 0, offsetY = 0;
 
-      
-      // Arrastar a bolha pela tela
-      bubble.addEventListener("mousedown", (e) => {
-        dragging = true;
-        offsetX = e.clientX;
-        offsetY = e.clientY;
+      bubble.addEventListener("mousedown", e => {
+        dragging = true; offsetX = e.clientX; offsetY = e.clientY;
         document.body.style.cursor = "grabbing";
       });
-      document.addEventListener("mouseup", (e) => {
+      document.addEventListener("mouseup", () => {
+        if (!dragging) return;
         dragging = false;
         document.body.style.cursor = "";
+        api.send("save-bubble-position");
       });
-      document.addEventListener("mousemove", (e) => {
+      document.addEventListener("mousemove", e => {
         if (!dragging) return;
-        // Pega a posição da janela atual e move conforme o mouse
-        const { screenX, screenY } = window;
-        let nx = screenX + (e.clientX - offsetX);
-        let ny = screenY + (e.clientY - offsetY);
-        ipcRenderer.send("move-bubble", { x: nx, y: ny });
+        api.send("move-bubble", {
+          x: window.screenX + (e.clientX - offsetX),
+          y: window.screenY + (e.clientY - offsetY)
+        });
       });
-
-      // Clicar na bolha restaura o widget
-      bubble.addEventListener("dblclick", () => {
-        ipcRenderer.send("restore-from-bubble");
-      });
+      bubble.addEventListener("dblclick", () => api.send("restore-from-bubble"));
     </script>
   </body>
 </html>

@@ -3,8 +3,15 @@
 <head>
     <meta charset="utf-8">
     <title>Telemetria</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="stylesheet" href="css/details_style.css" />
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'none';
+        script-src 'self';
+        style-src 'self' 'unsafe-inline';
+        img-src 'self' data: https://*.planespotters.net https://*.plnspttrs.net;
+        font-src 'self';
+    " />
+  <link rel="stylesheet" href="../../assets/vendor/fontawesome/all.min.css" />
+  <link rel="stylesheet" href="css/details_style.css" />
 </head>
 <body>
     <div id="drag-region">

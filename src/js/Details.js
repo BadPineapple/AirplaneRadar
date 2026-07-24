@@ -1,34 +1,20 @@
 // src/js/Details.js
-const { ipcRenderer } = require('electron');
+const api = window.api;
 
 console.log("Details.js carregado e aguardando código ICAO...");
 
-window.closeDetails = () => {
-    ipcRenderer.send('close-details-window');
-};
+window.closeDetails = () => api.send('close-details-window');
 
-// Agora a janela recebe apenas o ICAO e faz a requisição dos dados completos
-ipcRenderer.on('load-icao', async (event, icao24) => {
-    console.log("[DETAILS] Buscando dados diretos para o ICAO:", icao24);
-
-    // 1. Define estado visual de carregamento
+api.on('load-icao', async (icao24) => {
     resetUI();
     const loader = document.getElementById('photo-loader');
-    if (loader) {
-        loader.style.display = "block";
-        loader.innerText = "BAIXANDO DADOS...";
-    }
+    if (loader) { loader.style.display = "block"; loader.innerText = "BAIXANDO DADOS..."; }
 
     try {
-        // 2. Dispara a busca pesada no Main.js (Background)
-        const data = await ipcRenderer.invoke('fetch-plane-details-direct', icao24);
-        
+        const data = await api.invoke('fetch-plane-details-direct', icao24);
         if (!data) throw new Error("Aeronave não retornou dados.");
-
-        console.log("[DETAILS] Dados processados:", data);
         fillUI(data);
     } catch (err) {
-        console.error("[DETAILS] Falha na telemetria:", err);
         if (loader) loader.innerText = "FALHA NA CONEXÃO";
     }
 });
@@ -77,7 +63,7 @@ function fillUI(data) {
 }
 
 // Sincronizar tema
-ipcRenderer.on("apply-style", (event, config) => {
+api.on("apply-style", (config) => {
     if (config.widget?.titlecolor) {
         document.documentElement.style.setProperty('--accent', config.widget.titlecolor);
     }
