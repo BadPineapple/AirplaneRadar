@@ -266,6 +266,12 @@ api.on("update-planes", (planes) => {
 
 /* ═════════════════════════════  LISTA (DOM)  ════════════════════════════ */
 
+function formatRoute(route) {
+    const o = route?.origin?.iata || route?.origin?.icao;
+    const d = route?.destination?.iata || route?.destination?.icao;
+    return (o && d) ? `${o} → ${d}` : null;
+}
+
 function updatePlaneListUI(planes) {
     const listContainer = document.getElementById("list");
     listContainer.textContent = "";
@@ -286,8 +292,9 @@ function updatePlaneListUI(planes) {
 
     planes.forEach((p, i) => {
         const item = document.createElement("div");
-        item.className = "plane-item" + (p.emergencia ? " alert-blink" : "");
+        item.className = "plane-item" + (p.emergencia ? " alert-blink" : "") + (p.favorite ? " favorite" : "");
         item.dataset.icao = p.icao24;   // sem onclick inline: bloqueado pela CSP
+        item.dataset.callsign = p.callsign || "";
 
         const info = document.createElement("div");
         info.className = "plane-info";
@@ -312,6 +319,22 @@ function updatePlaneListUI(planes) {
         meta.textContent = `${p.distance} km • ${p.altitude} m • ${p.direction}`;
 
         item.append(info, meta);
+
+        const route = formatRoute(p.route);
+        if (route) {
+            const routeEl = document.createElement("div");
+            routeEl.className = "plane-route";
+            routeEl.textContent = route;
+            item.appendChild(routeEl);
+        }
+
+        if (p.favorite) {
+            const star = document.createElement("i");
+            star.className = "fa-solid fa-star fav-star";
+            star.title = "Aeronave favorita";
+            item.appendChild(star);
+        }
+
         frag.appendChild(item);
     });
 
@@ -321,7 +344,9 @@ function updatePlaneListUI(planes) {
 // Delegação: um listener para a lista inteira, sobrevive à reconstrução
 document.getElementById("list").addEventListener("click", (e) => {
     const item = e.target.closest(".plane-item");
-    if (item?.dataset.icao) api.send("open-details-window", item.dataset.icao);
+    if (item?.dataset.icao) {
+        api.send("open-details-window", { icao24: item.dataset.icao, callsign: item.dataset.callsign || null });
+    }
 });
 
 /* ═══════════════════════════════  BOTÕES  ═══════════════════════════════ */

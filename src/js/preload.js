@@ -20,7 +20,8 @@ const SEND = new Set([
 // Rotas com resposta
 const INVOKE = new Set([
     "get-config", "get-paths", "get-opensky-credentials",
-    "fetch-plane-details-direct", "list-sounds", "add-sound"
+    "fetch-plane-details-direct", "list-sounds", "add-sound",
+    "toggle-favorite"
 ]);
 
 contextBridge.exposeInMainWorld("api", {

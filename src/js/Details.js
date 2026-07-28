@@ -15,13 +15,36 @@ document.addEventListener("keydown", (e) => {
 
 document.addEventListener("mouseup", () => api.send("save-details-position"));
 
-api.on('load-icao', async (icao24) => {
+let currentIcao = null;
+
+document.getElementById("favorite-btn").addEventListener("click", async () => {
+    if (!currentIcao) return;
+    try {
+        const { favorite } = await api.invoke("toggle-favorite", currentIcao);
+        setFavoriteBtn(favorite);
+    } catch (err) {
+        console.error("[DETAILS] Falha ao favoritar:", err.message);
+    }
+});
+
+function setFavoriteBtn(isFavorite) {
+    const btn = document.getElementById("favorite-btn");
+    if (!btn) return;
+    btn.classList.toggle("favorite", !!isFavorite);
+    const icon = btn.querySelector("i");
+    if (icon) icon.className = isFavorite ? "fa-solid fa-star" : "fa-regular fa-star";
+}
+
+api.on('load-icao', async (payload) => {
+    const { icao24, callsign } = typeof payload === "string" ? { icao24: payload, callsign: null } : (payload || {});
+    currentIcao = icao24;
+
     resetUI();
     const loader = document.getElementById('photo-loader');
     if (loader) { loader.style.display = "block"; loader.innerText = "BAIXANDO DADOS..."; }
 
     try {
-        const data = await api.invoke('fetch-plane-details-direct', icao24);
+        const data = await api.invoke('fetch-plane-details-direct', { icao24, callsign });
         if (!data) throw new Error("Aeronave não retornou dados.");
         fillUI(data);
     } catch (err) {
@@ -36,14 +59,27 @@ function resetUI() {
         img.classList.remove('loaded');
         img.src = "";
     }
-    
+
     // Lista de IDs do HTML
     const fields = ["model", "registration_number", "icaoCode", "plane_owner", "engines_count", "engines_type", "max_speed", "max_range", "length", "wingspan", "height", "plane_class", "plane_age", "Plane_Status", "Production_line", "callsign"];
-    
+
     fields.forEach(id => {
         const el = document.getElementById(id);
         if (el) el.innerText = "Buscando...";
     });
+
+    ["route_origin", "route_destination"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.innerText = "---";
+    });
+
+    setFavoriteBtn(false);
+}
+
+function formatAirport(a) {
+    if (!a) return "---";
+    const code = a.iata || a.icao;
+    return code ? (a.city ? `${code} • ${a.city}` : code) : "---";
 }
 
 // Preenche os dados reais na tela
@@ -57,6 +93,13 @@ function fillUI(data) {
             el.innerText = (value && value !== "N/A" && value !== "") ? value : "---";
         }
     });
+
+    const originEl = document.getElementById("route_origin");
+    if (originEl) originEl.innerText = formatAirport(data.route?.origin);
+    const destEl = document.getElementById("route_destination");
+    if (destEl) destEl.innerText = formatAirport(data.route?.destination);
+
+    setFavoriteBtn(data.favorite);
 
     if (data.photo && img) {
         img.src = data.photo;

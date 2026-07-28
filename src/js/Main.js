@@ -110,16 +110,41 @@ ipcMain.handle("get-paths", () => ({
 // Credenciais em claro — rota exclusiva da tela de Configurações
 ipcMain.handle("get-opensky-credentials", () => getOpenSkyCredentials(config));
 
-ipcMain.handle("fetch-plane-details-direct", async (event, icao24) => {
+ipcMain.handle("fetch-plane-details-direct", async (event, payload) => {
+    const { icao24, callsign } = typeof payload === "string" ? { icao24: payload, callsign: null } : (payload || {});
     log("[DETAILS] Busca completa solicitada:", icao24);
     try {
-        const data = await getAircraftFullDetails(icao24, config, true);
+        const data = await getAircraftFullDetails(icao24, config, true, callsign);
         persistCache();
-        return data;
+        if (!data) return null;
+        return { ...data, favorite: (config.favorites || []).includes(String(icao24 || "").toLowerCase()) };
     } catch (err) {
         error("[DETAILS] Falha na busca:", err.message);
         return null;
     }
+});
+
+// Alterna favorito e força um refresh imediato para a lista já nascer priorizada
+ipcMain.handle("toggle-favorite", (event, icao24) => {
+    const id = String(icao24 || "").trim().toLowerCase();
+    if (!id) return { favorite: false };
+
+    const set = new Set(config.favorites || []);
+    let isFavorite;
+    if (set.has(id)) {
+        set.delete(id);
+        isFavorite = false;
+    } else {
+        set.add(id);
+        isFavorite = true;
+    }
+
+    config.favorites = [...set];
+    saveConfig(config);
+    refreshPlanes(true);
+
+    log("[FAVORITE]", id, isFavorite ? "adicionada" : "removida");
+    return { favorite: isFavorite };
 });
 
 /* ═══════════════════════════  IPC: SONS  ════════════════════════════════ */
@@ -211,13 +236,14 @@ ipcMain.on("save-bubble-position", () => {
 
 /* ═══════════════════════  IPC: JANELA DE DETALHES  ══════════════════════ */
 
-ipcMain.on("open-details-window", (event, icao24) => {
+ipcMain.on("open-details-window", (event, payload) => {
+    const { icao24, callsign } = typeof payload === "string" ? { icao24: payload, callsign: null } : (payload || {});
     if (!icao24) return;
 
     if (detailsWindow && !detailsWindow.isDestroyed()) {
         if (detailsWindow.isMinimized()) detailsWindow.restore();
         detailsWindow.focus();
-        detailsWindow.webContents.send("load-icao", icao24);
+        detailsWindow.webContents.send("load-icao", { icao24, callsign });
         return;
     }
 
@@ -240,7 +266,7 @@ ipcMain.on("open-details-window", (event, icao24) => {
     detailsWindow.webContents.once("did-finish-load", () => {
         if (!detailsWindow || detailsWindow.isDestroyed()) return;
         detailsWindow.webContents.send("apply-style", config);
-        detailsWindow.webContents.send("load-icao", icao24);
+        detailsWindow.webContents.send("load-icao", { icao24, callsign });
         detailsWindow.show();
         log("[DETAILS] Janela aberta para:", icao24);
     });

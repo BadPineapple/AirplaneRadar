@@ -189,16 +189,28 @@ html, body {
 #list b { color: var(--title-color, #ffd700); }
 
 .plane-item {
-  padding: 4px 2px;
+  position: relative;
+  padding: 4px 20px 4px 2px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   cursor: pointer;
   transition: background 0.15s;
 }
 .plane-item:hover { background: rgba(255, 255, 255, 0.06); }
+.plane-item.favorite { background: rgba(255, 215, 0, 0.06); }
 
 .plane-info strong { color: var(--title-color, #ffd700); }
 .plane-info span   { margin-left: 6px; opacity: 0.85; }
 .plane-meta        { font-size: 0.85em; opacity: 0.7; margin-top: 1px; }
+.plane-route       { font-size: 0.85em; opacity: 0.75; margin-top: 1px; }
+
+.fav-star {
+  position: absolute;
+  top: 6px;
+  right: 2px;
+  color: #ffd700;
+  font-size: 0.9em;
+  text-shadow: 0 0 3px #0008;
+}
 
 .badge {
   margin-left: 4px;

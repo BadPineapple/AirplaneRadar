@@ -18,7 +18,8 @@ const defaultConfig = {
     map:     { lat: -16.6809, lon: -49.2539, zoom: 13 },
     home:    { lat: null, lon: null },         
     startup: { autoLaunch: true },
-    search:  { radius: 50, filters: ["comercial", "privado", "militar", "helicoptero", "outros"] },
+    search:  { radius: 50, maxResults: 5, filters: ["comercial", "privado", "militar", "helicoptero", "outros"] },
+    favorites: [],
     alert:   { general: "notificacao.mp3", favorite: "favorito.mp3" },
     shortcuts: {
         zoomin: "Ctrl+0", zoomout: "Ctrl+9", refresh: "Ctrl+R",

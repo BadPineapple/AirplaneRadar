@@ -11,10 +11,15 @@ const OPENSKY_STATES    = "https://opensky-network.org/api/states/all";
 // Metadados de aeronave (modelo/registro/operador) agora vêm de APIs públicas alternativas.
 const ADSBDB_METADATA = "https://api.adsbdb.com/v0/aircraft/";
 const HEXDB_METADATA  = "https://hexdb.io/api/v1/aircraft/";
+// Rota (origem/destino) por callsign — mesma dupla de fontes, sem autenticação.
+const ADSBDB_CALLSIGN = "https://api.adsbdb.com/v0/callsign/";
+const HEXDB_ROUTE     = "https://hexdb.io/api/v1/route/icao/";
 const fetch = globalThis.fetch;
 
-const MAX_RESULTS   = 5;
-const FETCH_TIMEOUT = 8000;
+const DEFAULT_MAX_RESULTS = 5;
+const MIN_MAX_RESULTS     = 1;
+const MAX_MAX_RESULTS     = 20;
+const FETCH_TIMEOUT       = 8000;
 
 // Banco técnico — resolvido via Paths (repo em dev, resourcesPath em produção)
 let aircraftDatabase = {};
@@ -253,7 +258,71 @@ async function fetchAircraftMetadata(icao24) {
     return null;
 }
 
-async function getAircraftFullDetails(icao24, config, requiresPhoto = false) {
+/**
+ * Rota (origem/destino) por callsign de voo. Em memória apenas — diferente
+ * do cache de aeronave, não precisa sobreviver a reinícios: é barato refazer
+ * e o app já refaz a busca de aviões a cada 30s de qualquer forma.
+ */
+const ROUTE_CACHE_TTL = 24 * 60 * 60 * 1000;
+const routeCache = new Map();
+
+function airportInfo(a) {
+    if (!a) return null;
+    return {
+        icao: a.icao_code || null,
+        iata: a.iata_code || null,
+        city: a.municipality || null,
+        name: a.name || null
+    };
+}
+
+async function fetchFlightRoute(callsign) {
+    const cs = String(callsign || "").trim().toUpperCase();
+    if (!cs) return null;
+
+    const cached = routeCache.get(cs);
+    if (cached && (Date.now() - cached.fetchedAt) < ROUTE_CACHE_TTL) return cached.data;
+
+    let route = null;
+    try {
+        const res = await fetchWithTimeout(`${ADSBDB_CALLSIGN}${cs}`);
+        if (res.ok) {
+            const fr = (await res.json())?.response?.flightroute;
+            if (fr) route = { origin: airportInfo(fr.origin), destination: airportInfo(fr.destination) };
+        }
+    } catch (e) {
+        warn(`[ROUTE] adsbdb falhou para ${cs}:`, e.message);
+    }
+
+    if (!route) {
+        try {
+            const res = await fetchWithTimeout(`${HEXDB_ROUTE}${cs}`);
+            if (res.ok) {
+                const json = await res.json();
+                const [from, to] = String(json?.route || "").split("-");
+                if (from && to) {
+                    route = {
+                        origin:      { icao: from, iata: null, city: null, name: null },
+                        destination: { icao: to,   iata: null, city: null, name: null }
+                    };
+                }
+            }
+        } catch (e) {
+            warn(`[ROUTE] hexdb falhou para ${cs}:`, e.message);
+        }
+    }
+
+    routeCache.set(cs, { data: route, fetchedAt: Date.now() });
+    return route;
+}
+
+async function withRoute(data, callsign) {
+    if (!callsign || !data) return data;
+    const route = await fetchFlightRoute(callsign);
+    return route ? { ...data, route } : data;
+}
+
+async function getAircraftFullDetails(icao24, config, requiresPhoto = false, callsign = null) {
     icao24 = String(icao24 || "").trim().toLowerCase();
     if (!icao24) return null;
 
@@ -267,13 +336,13 @@ async function getAircraftFullDetails(icao24, config, requiresPhoto = false) {
        Agora, no cache hit sem foto verificada, buscamos SÓ a foto. */
     if (fresh) {
         const cached = entry.fullData;
-        if (!requiresPhoto || cached.hasCheckedPhoto) return cached;
+        if (!requiresPhoto || cached.hasCheckedPhoto) return withRoute(cached, callsign);
 
         if (await fetchPhoto(icao24, cached)) {
             writeCache(icao24, cached);
             persistCache();
         }
-        return cached;
+        return withRoute(cached, callsign);
     }
 
     const fullData = baseData(icao24);
@@ -302,7 +371,7 @@ async function getAircraftFullDetails(icao24, config, requiresPhoto = false) {
     }
 
     if (changed) writeCache(icao24, fullData);
-    return fullData;
+    return withRoute(fullData, callsign);
 }
 
 /* ───────────────────  CORE: BUSCA DE AVIÕES PRÓXIMOS  ──────────────────── */
@@ -310,6 +379,11 @@ async function checkNearbyPlanes(userLocation, config) {
     try {
         const { lat, lon } = userLocation;
         const radiusKm = config?.search?.radius || 50;
+        const maxResults = Math.min(
+            MAX_MAX_RESULTS,
+            Math.max(MIN_MAX_RESULTS, config?.search?.maxResults || DEFAULT_MAX_RESULTS)
+        );
+        const favorites = new Set(config?.favorites || []);
 
         /* BBOX CORRIGIDO: a versão antiga usava radius/111 também na longitude.
            Um grau de longitude encolhe com cos(lat) — em Goiânia (-16.7°) a caixa
@@ -360,14 +434,16 @@ async function checkNearbyPlanes(userLocation, config) {
 
             candidates.push({
                 icao24: id, callsign, country, latitude, longitude,
-                baro_alt, on_ground, velocity, heading, squawk, spi, distance, type
+                baro_alt, on_ground, velocity, heading, squawk, spi, distance, type,
+                favorite: favorites.has(id)
             });
         }
 
         /* ETAPA 2 — Ordena e CORTA antes de qualquer I/O.
-           Aqui está a economia: só os 5 finalistas geram requisição. */
-        candidates.sort((a, b) => a.distance - b.distance);
-        const finalists = candidates.slice(0, MAX_RESULTS);
+           Favoritas sempre primeiro; dentro de cada grupo, as mais próximas.
+           Só os finalistas (limite configurável) geram requisição. */
+        candidates.sort((a, b) => (b.favorite - a.favorite) || (a.distance - b.distance));
+        const finalists = candidates.slice(0, maxResults);
 
         log(`[RADAR] ${data.states.length} no bbox -> ${candidates.length} no raio -> ${finalists.length} detalhados`);
 
@@ -375,7 +451,7 @@ async function checkNearbyPlanes(userLocation, config) {
         const results = await Promise.all(finalists.map(async c => {
             let details;
             try {
-                details = await getAircraftFullDetails(c.icao24, config, false);
+                details = await getAircraftFullDetails(c.icao24, config, false, c.callsign);
             } catch (e) {
                 warn("[RADAR] Detalhe indisponível para", c.icao24);
             }
@@ -397,6 +473,7 @@ async function checkNearbyPlanes(userLocation, config) {
                 squawk: c.squawk || null,
                 heading: c.heading || 0,
                 type: c.type,
+                favorite: c.favorite,
                 title: `Voo ${c.callsign?.trim() || c.icao24}`,
                 body: `${details.model} • ${Math.round(c.distance)}km • ${c.country}`
             };
