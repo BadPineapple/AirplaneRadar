@@ -62,6 +62,13 @@ body {
   color: var(--accent);
 }
 
+#window-btns {
+  -webkit-app-region: no-drag;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
 /* Mesmo botão de janela do widget principal: caixa de clique fixa
    (22x22), não depende do glifo do ícone ter carregado para ser clicável. */
 .window-btn {
@@ -76,7 +83,9 @@ body {
   cursor: pointer;
   transition: background 0.2s, color 0.2s;
 }
-.window-btn:hover { background: rgba(255, 255, 255, 0.09); color: #ff4444; }
+.window-btn:hover { background: rgba(255, 255, 255, 0.09); }
+#close-btn:hover    { color: #ff4444; }
+#favorite-btn.favorite { color: #ffd700; }
 
 /* ──────────────────────────  Conteúdo rolável  ─────────────────────────── */
 #main-content {

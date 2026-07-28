@@ -19,8 +19,13 @@
             <span class="hud-title">
                 <i class="fa-solid fa-microchip"></i> TELEMETRIA_SYSTEM_V1.4
             </span>
-            <div class="window-btn" id="close-btn" title="Fechar (Esc)">
-                <i class="fa-solid fa-xmark"></i>
+            <div id="window-btns">
+                <div class="window-btn" id="favorite-btn" title="Marcar como favorita">
+                    <i class="fa-regular fa-star"></i>
+                </div>
+                <div class="window-btn" id="close-btn" title="Fechar (Esc)">
+                    <i class="fa-solid fa-xmark"></i>
+                </div>
             </div>
         </div>
 
@@ -35,6 +40,10 @@
                 <div class="info-box"><label>Registro</label><div id="registration_number" class="value">---</div></div>
                 <div class="info-box"><label>Código ICAO</label><div id="icaoCode" class="value">---</div></div>
                 <div class="info-box full"><label>Operador</label><div id="plane_owner" class="value">---</div></div>
+
+                <div class="section-header">ROTA</div>
+                <div class="info-box"><label>Origem</label><div id="route_origin" class="value">---</div></div>
+                <div class="info-box"><label>Destino</label><div id="route_destination" class="value">---</div></div>
 
                 <div class="section-header">ESPECIFICAÇÕES TÉCNICAS</div>
                 <div class="info-box"><label>Motores</label><div id="engines_count" class="value">---</div></div>

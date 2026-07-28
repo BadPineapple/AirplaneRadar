@@ -5,9 +5,9 @@ yarn-debug.log*
 yarn-error.log*
 package-lock.json
 
-# Diretórios de build
+# Diretórios de build (saída gerada — build/ é recurso versionado do
+# electron-builder, ex.: installer.nsh e ícones, não fica aqui)
 dist/
-build/
 release/
 out/
 

@@ -188,7 +188,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   const SLIDERS = {
     "bgopacity":     { label: "opacity-value",     fmt: v => `${Math.round(v * 100)}%` },
     "bubble-size":   { label: "bubble-size-value", fmt: v => `${v}px` },
-    "search-radius": { label: "radius-value",      fmt: v => `${v} km` }
+    "search-radius": { label: "radius-value",      fmt: v => `${v} km` },
+    "max-results":   { label: "max-results-value", fmt: v => `${v}` }
   };
 
   Object.entries(SLIDERS).forEach(([id, { label, fmt }]) => {
@@ -223,6 +224,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       setValue("icon-color", "#ffffff");
       setValue("search-radius", 50);
       setText("radius-value", "50 km");
+      setValue("max-results", 5);
+      setText("max-results-value", "5");
       document.querySelectorAll('#aircraft-filters input[type="checkbox"]')
         .forEach(cb => (cb.checked = true));
       log("Estilo resetado.");
@@ -280,6 +283,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     setValue("search-radius", s.radius ?? 50);
     setText("radius-value", `${s.radius ?? 50} km`);
+    setValue("max-results", s.maxResults ?? 5);
+    setText("max-results-value", `${s.maxResults ?? 5}`);
 
     const allowed = s.filters || ["comercial", "privado", "militar", "helicoptero", "outros"];
     document.querySelectorAll('#aircraft-filters input[type="checkbox"]')
@@ -345,6 +350,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         },
         search: {
           radius: parseInt(document.getElementById("search-radius").value, 10),
+          maxResults: parseInt(document.getElementById("max-results").value, 10),
           filters
         },
         alert: {
