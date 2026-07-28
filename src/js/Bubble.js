@@ -1,6 +1,6 @@
 // src/js/Bubble.js
-const api = window.api;
-
+// NÃO redeclarar `api` (ver Details.js) — colide com a propriedade
+// não configurável instalada pelo contextBridge e quebra o script inteiro.
 const bubble = document.getElementById("bubble");
 const icon   = document.getElementById("bubble-icon");
 
