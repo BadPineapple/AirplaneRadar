@@ -7,7 +7,10 @@ const { log, warn, error } = require("./Logger");
 const cacheFile = PATHS.cache;
 const PLANESPOTTERS_API = "https://api.planespotters.net/pub/photos/hex/";
 const OPENSKY_STATES    = "https://opensky-network.org/api/states/all";
-const OPENSKY_METADATA  = "https://opensky-network.org/api/metadata/aircraft/icao/";
+// A OpenSky desativou o endpoint /api/metadata/aircraft/icao/ (retorna 410 Gone).
+// Metadados de aeronave (modelo/registro/operador) agora vêm de APIs públicas alternativas.
+const ADSBDB_METADATA = "https://api.adsbdb.com/v0/aircraft/";
+const HEXDB_METADATA  = "https://hexdb.io/api/v1/aircraft/";
 const fetch = globalThis.fetch;
 
 const MAX_RESULTS   = 5;
@@ -142,14 +145,6 @@ function getAircraftType(callsign) {
     return "comercial";
 }
 
-function calculateAge(year) {
-    if (!year) return "N/A";
-    const built = parseInt(String(year).slice(0, 4), 10);
-    if (isNaN(built) || built < 1930) return "N/A";
-    const age = new Date().getFullYear() - built;
-    return `${age} ano${age === 1 ? "" : "s"}`;
-}
-
 function getTechSpecsByModel(model) {
     if (!model || model === "Desconhecido") return {};
     const key = String(model).trim().toUpperCase();
@@ -193,9 +188,10 @@ function baseData(icao24) {
 
 async function fetchPhoto(icao24, target) {
     try {
-        // Planespotters exige User-Agent, senão devolve 403
+        // Planespotters agora exige uma URL/e-mail de contato no User-Agent
+        // (formato "Nome/versão (+contato)"); sem isso, responde 403.
         const res = await fetchWithTimeout(`${PLANESPOTTERS_API}${icao24}`, {
-            headers: { "User-Agent": "AirplaneRadarWidget/1.4" }
+            headers: { "User-Agent": "AirplaneRadarWidget/1.4 (+https://github.com/BadPineapple/AirplaneRadar)" }
         });
         if (res.ok) {
             const ps = await res.json();
@@ -210,6 +206,51 @@ async function fetchPhoto(icao24, target) {
         warn(`[PHOTO] Falha para ${icao24}:`, e.message);
         return false;
     }
+}
+
+/**
+ * Metadados (modelo, registro, operador, país) via APIs públicas sem chave.
+ * adsbdb.com é a fonte principal (dados mais completos, inclui país do
+ * proprietário); hexdb.io cobre aeronaves ausentes na primeira (fallback).
+ */
+async function fetchAircraftMetadata(icao24) {
+    try {
+        const res = await fetchWithTimeout(`${ADSBDB_METADATA}${icao24}`);
+        if (res.ok) {
+            const ac = (await res.json())?.response?.aircraft;
+            if (ac) {
+                return {
+                    model:        [ac.manufacturer, ac.type].filter(Boolean).join(" ") || null,
+                    typeCode:     ac.icao_type || null,
+                    registration: ac.registration || null,
+                    owner:        ac.registered_owner || null,
+                    country:      ac.registered_owner_country_name || null
+                };
+            }
+        }
+    } catch (e) {
+        warn(`[DETAILS] adsbdb falhou para ${icao24}:`, e.message);
+    }
+
+    try {
+        const res = await fetchWithTimeout(`${HEXDB_METADATA}${icao24}`);
+        if (res.ok) {
+            const json = await res.json();
+            if (json?.ModeS) {
+                return {
+                    model:        [json.Manufacturer, json.Type].filter(Boolean).join(" ") || null,
+                    typeCode:     json.ICAOTypeCode || null,
+                    registration: json.Registration || null,
+                    owner:        json.RegisteredOwners || null,
+                    country:      null
+                };
+            }
+        }
+    } catch (e) {
+        warn(`[DETAILS] hexdb falhou para ${icao24}:`, e.message);
+    }
+
+    return null;
 }
 
 async function getAircraftFullDetails(icao24, config, requiresPhoto = false) {
@@ -237,31 +278,24 @@ async function getAircraftFullDetails(icao24, config, requiresPhoto = false) {
 
     const fullData = baseData(icao24);
     let changed = false;
+    let typeCode = null;
 
     try {
-        const token = await getOpenSkyToken(config);
-        if (token) {
-            const res = await fetchWithTimeout(`${OPENSKY_METADATA}${icao24}`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-            if (res.ok) {
-                const os = await res.json();
-                fullData.model               = os.model || fullData.model;
-                fullData.registration_number = os.registration || "N/A";
-                fullData.plane_owner         = os.operator || "Particular";
-                fullData.countryOfOrigin     = os.owner || "N/A";
-                fullData.plane_series        = os.typeShort || "N/A";
-                fullData.plane_age           = calculateAge(os.built);
-                changed = true;
-            } else if (res.status === 404) {
-                changed = true;   // cacheia o "não encontrado" e evita repetir por 24h
-            }
+        const meta = await fetchAircraftMetadata(icao24);
+        if (meta) {
+            fullData.model               = meta.model || fullData.model;
+            fullData.registration_number = meta.registration || "N/A";
+            fullData.plane_owner         = meta.owner || "Particular";
+            fullData.countryOfOrigin     = meta.country || "N/A";
+            fullData.plane_series        = meta.typeCode || "N/A";
+            typeCode = meta.typeCode;
         }
+        changed = true;   // cacheia o resultado (ou a ausência dele) por 24h
     } catch (e) {
-        warn(`[DETAILS] Erro OpenSky ${icao24}:`, e.message);
+        warn(`[DETAILS] Erro ao buscar metadados ${icao24}:`, e.message);
     }
 
-    Object.assign(fullData, getTechSpecsByModel(fullData.model));
+    Object.assign(fullData, getTechSpecsByModel(typeCode || fullData.model));
 
     if (requiresPhoto) {
         if (await fetchPhoto(icao24, fullData)) changed = true;

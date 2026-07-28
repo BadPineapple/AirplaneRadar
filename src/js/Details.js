@@ -1,11 +1,17 @@
 // src/js/Details.js
-const api = window.api;
-
+// NÃO redeclarar `api`: contextBridge.exposeInMainWorld cria window.api como
+// propriedade não configurável. `const api = window.api` colide com ela e
+// lança SyntaxError ("Identifier 'api' has already been declared"), que
+// invalida o script inteiro antes mesmo da primeira linha rodar.
 console.log("Details.js carregado e aguardando código ICAO...");
 
 /* ─────────────────────────  Controles da janela  ───────────────────────── */
 document.getElementById("close-btn")
         .addEventListener("click", () => api.send("close-details-window"));
+
+document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") api.send("close-details-window");
+});
 
 document.addEventListener("mouseup", () => api.send("save-details-position"));
 
@@ -66,9 +72,22 @@ function fillUI(data) {
     }
 }
 
-// Sincronizar tema
-api.on("apply-style", (config) => {
-    if (config.widget?.titlecolor) {
-        document.documentElement.style.setProperty('--accent', config.widget.titlecolor);
-    }
-});
+// Sincroniza com o mesmo tema do widget principal (config.widget)
+function applyStyle(config) {
+    const w = config?.widget || {};
+    const root = document.documentElement.style;
+
+    const titleColor = w.titlecolor || "#ffd700";
+    root.setProperty("--accent", titleColor);
+    root.setProperty("--title-color", titleColor);
+    root.setProperty("--text-color", w.textcolor || "#ffffff");
+
+    const hex = (w.bgColor || "#1e1e1e").replace("#", "");
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+    const opacity = w.bgOpacity ?? 0.6;
+    root.setProperty("--bg-color", `rgba(${r}, ${g}, ${b}, ${opacity})`);
+}
+
+api.on("apply-style", applyStyle);

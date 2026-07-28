@@ -1,9 +1,13 @@
 /* ═══════════════════════════  details_style.css  ════════════════════════ */
+/* Segue o mesmo padrão visual/variáveis do widget principal (Style.css):
+   cantos arredondados, fundo translúcido configurável via config.widget. */
 
 :root {
-  --accent: #ffd700;
-  --bg:     rgba(10, 10, 15, 0.98);
-  --border: #333;
+  --accent:      #ffd700;   /* alias de --title-color, mantido por compat. */
+  --title-color: #ffd700;
+  --text-color:  #ffffff;
+  --bg-color:    rgba(30, 30, 30, 0.6);
+  --border:      #333;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -12,29 +16,42 @@
 ::-webkit-scrollbar-track { background: #050505; }
 ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
 
-body {
+html, body {
   margin: 0;
   padding: 0;
-  height: 100vh;
+  height: 100%;
+  background: transparent;
+}
+
+body {
   display: flex;
   flex-direction: column;
-  background: var(--bg);
-  color: #eee;
   font-family: 'Segoe UI', Tahoma, sans-serif;
-  border: 1px solid var(--border);
+  color: var(--text-color);
   user-select: none;
+}
+
+#container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  background: var(--bg-color);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
 }
 
 /* ──────────────────────────  Barra arrastável  ─────────────────────────── */
 #drag-region {
   -webkit-app-region: drag;
   flex-shrink: 0;
-  height: 35px;
+  height: 32px;
+  line-height: 32px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 15px;
-  background: rgba(0, 0, 0, 0.3);
+  padding: 0 8px 0 15px;
+  background: rgba(10, 10, 10, 0.3);
   border-bottom: 1px solid #222;
 }
 
@@ -45,13 +62,21 @@ body {
   color: var(--accent);
 }
 
-.close-btn {
+/* Mesmo botão de janela do widget principal: caixa de clique fixa
+   (22x22), não depende do glifo do ícone ter carregado para ser clicável. */
+.window-btn {
   -webkit-app-region: no-drag;
-  color: #666;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+  border-radius: 5px;
   cursor: pointer;
-  transition: 0.3s;
+  transition: background 0.2s, color 0.2s;
 }
-.close-btn:hover { color: #ff4444; transform: scale(1.2); }
+.window-btn:hover { background: rgba(255, 255, 255, 0.09); color: #ff4444; }
 
 /* ──────────────────────────  Conteúdo rolável  ─────────────────────────── */
 #main-content {
